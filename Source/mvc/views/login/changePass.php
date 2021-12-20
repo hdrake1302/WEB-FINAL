@@ -15,10 +15,13 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link
       rel="stylesheet"
-      href="http://localhost/WEB-FINAL/Source/mvc/assets/style/login.css"
+      href="./assets/style/changePass.css"
     />
   </head>
   <body>
+    <button type="submit">
+        <a href="?controller=login&action=logout">Log out</a>
+    </button>
     <div
       class="
         container container-login
@@ -44,36 +47,34 @@
         <div class="text-center col-sm-12 col-lg-4">
           <img
             src="https://colorlib.com/etc/lf/Login_v1/images/img-01.png"
-            alt="Login image"
-            class="login-img"
+            alt="Change password image"
+            class="change-img"
           />
         </div>
         <div class="col-sm-12 col-lg-8">
-          <h2 class="text-center">Login</h2>
-          <form method="POST" action="?controller=login&action=login">
+          <h2 class="text-center">Change password</h2>
+          <form method="POST" action="?controller=changePass&action=changePassword">
             <div class="form-group">
-              <label for="email">Username:</label>
+              <label for="newPwd">New Password:</label>
               <input
                 type="text"
                 class="form-control"
-                placeholder="Enter your username:"
-                name="username"
-                id="username"
+                placeholder="Enter your new password"
+                name="newPwd"
+                id="newPwd"
               />
             </div>
             <div class="form-group">
-              <label for="password">Password:</label>
+              <label for="confirmPwd">Confirm your new password:</label>
               <input
                 type="password"
                 class="form-control"
-                placeholder="Enter your password"
-                name="password"
-                id="password"
+                placeholder="Re-enter your password"
+                name="confirmPwd"
+                id="confirmPwd"
               />
             </div>
-            <div class="checkbox">
-              <label><input type="checkbox" /> Remember me</label>
-            </div>
+
             <button
               type="submit"
               name="submit"
