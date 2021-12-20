@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 20, 2021 at 08:38 AM
+-- Generation Time: Dec 20, 2021 at 09:27 AM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.12
 
@@ -42,7 +42,7 @@ CREATE TABLE `account` (
 
 INSERT INTO `account` (`id`, `username`, `password`, `role`, `activated`, `token`) VALUES
 (1, 'admin', '$2a$10$0quxCVd2qSCHfWyfxP8w2eQsf0AhLx8ORqAftvFXHLEL3PyiWdG1a', 3, 1, '1'),
-(2, 'nhanvien1', '$2y$10$.oz/.AD4SXN3A4F9j6v8ZehKCDnz32NhXKFpZIyga2hzAuxKElvUC', 1, 1, 'token1');
+(2, 'nhanvien1', '123', 1, 0, 'token1');
 
 -- --------------------------------------------------------
 
@@ -158,27 +158,6 @@ INSERT INTO `role` (`id`, `description`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `student`
---
-
-CREATE TABLE `student` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `age` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `student`
---
-
-INSERT INTO `student` (`id`, `name`, `age`) VALUES
-(1, 'Lam Truong', 20),
-(2, 'Dan Truong', 21),
-(3, 'Cam Ly', 19);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `task`
 --
 
@@ -210,28 +189,6 @@ CREATE TABLE `task_record` (
   `file` varchar(100) DEFAULT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `teacher`
---
-
-CREATE TABLE `teacher` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `specialty` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `teacher`
---
-
-INSERT INTO `teacher` (`id`, `name`, `specialty`) VALUES
-(1, 'Tuan Hung', 'Toan'),
-(2, 'Bang Kieu', 'Ly'),
-(3, 'Hong Nhung', 'Hoa'),
-(4, 'Quang Vinh', 'Sinh');
 
 --
 -- Indexes for dumped tables
@@ -286,12 +243,6 @@ ALTER TABLE `role`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `student`
---
-ALTER TABLE `student`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `task`
 --
 ALTER TABLE `task`
@@ -307,12 +258,6 @@ ALTER TABLE `task_record`
   ADD KEY `task_id` (`task_id`),
   ADD KEY `personID` (`personID`),
   ADD KEY `role` (`role`);
-
---
--- Indexes for table `teacher`
---
-ALTER TABLE `teacher`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -349,12 +294,6 @@ ALTER TABLE `role`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `student`
---
-ALTER TABLE `student`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
 -- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
@@ -365,12 +304,6 @@ ALTER TABLE `task`
 --
 ALTER TABLE `task_record`
   MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `teacher`
---
-ALTER TABLE `teacher`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
