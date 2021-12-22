@@ -19,10 +19,15 @@ body {
 .container-login {
   height: 100vh;
 }
+
 .wrap-login {
+  display: flex;
   width: 100%;
   height: 70%;
+  align-items: center;
+  padding: 160px;
 }
-.mh {
-  background-color: #1c92d2;
+
+.wrap-form {
+  width: 100%;
 }
