@@ -1,20 +1,25 @@
 <?php
-require_once('models/User.php');
+// Admin can't access task controller
+if ($_SESSION['role'] == 3) {
+    header("Location: ./index.php");
+}
+
+require_once('models/Task.php');
 require_once('base_controller.php');
 
-class UserController extends BaseController
+class TaskController extends BaseController
 {
 
     function __construct()
     {
-        $this->name = 'user';
+        $this->name = 'task';
     }
 
     public function index()
     {
 
-        $users = User::getAll();
-        $data = array('users' => $users);
+        $tasks = Task::getAll();
+        $data = array('tasks' => $tasks);
         $this->render('index', $data);
     }
 

@@ -5,26 +5,130 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Template</title>
+    <!-- Bootstrap & Jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="./template.css" />
     <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
+    <!-- CSS -->
+    <link rel="stylesheet" href="./template.css" />
+
+    <!-- Icons -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <!-- 
+      COLOR:
+      https://uigradients.com/#BlueRaspberry 
+    -->
   </head>
   <body>
     <header class="header">
       <div class="container-fluid">
-        <div class="row">
-          <div class="col-sm-8">MetaTask</div>
-          <div class="col-sm-4">Profile</div>
+        <div class="row header-content">
+          <div class="col-sm-8">
+            <div class="logo">
+              <i class="bx bxl-meta"></i><span class="log-name">MetaTask</span>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div
+              id="log-out"
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="Log out"
+            >
+              <a href="#"><i class="bx bx-log-out"></i></a>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="sidebar">
-        <div class="logo_content"></div>
-      </div>
     </header>
+    <div class="sidebar">
+      <div class="avatar">
+        <img
+          src="https://www.nj.com/resizer/zovGSasCaR41h_yUGYHXbVTQW2A=/1280x0/smart/cloudfront-us-east-1.images.arcpublishing.com/advancelocal/SJGKVE5UNVESVCW7BBOHKQCZVE.jpg"
+          alt="Avatar"
+          class="avatar-img"
+        />
+        <h4 class="avatar-name">Johnny Pfizer</h4>
+      </div>
+      <div class="menu">
+        <i class="bx bx-menu" id="menu-btn"></i>
+      </div>
+      <ul class="nav-list">
+        <li>
+          <a
+            href="#"
+            data-toggle="tooltip"
+            data-placement="right"
+            title="Dashboard"
+          >
+            <i class="bx bx-grid-alt"></i>
+            <span class="links-name">Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a
+            href="#"
+            data-toggle="tooltip"
+            data-placement="right"
+            title="Profile"
+          >
+            <i class="bx bxs-user-circle"></i>
+            <span class="links-name">Profile</span>
+          </a>
+        </li>
+        <li>
+          <a
+            href="#"
+            data-toggle="tooltip"
+            data-placement="right"
+            title="Task Management"
+          >
+            <i class="bx bx-task"></i>
+            <span class="links-name">Task Management</span>
+          </a>
+        </li>
+        <li>
+          <a
+            href="#"
+            data-toggle="tooltip"
+            data-placement="right"
+            title="Leaves Management"
+          >
+            <i class="bx bx-run"></i>
+            <span class="links-name">Leaves Management</span>
+          </a>
+        </li>
+        <li>
+          <a
+            href="#"
+            data-toggle="tooltip"
+            data-placement="right"
+            title="Users Management"
+          >
+            <i class="bx bxs-face"></i>
+            <span class="links-name">Users Management</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="home-content">
+      <h2>Home content</h2>
+    </div>
   </body>
+  <script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+
+    $("#menu-btn").click(function () {
+      $(".sidebar").toggleClass("active");
+    });
+  </script>
 </html>
