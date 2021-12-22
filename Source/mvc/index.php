@@ -3,9 +3,6 @@
 require_once('config.php');
 require_once('function.php');
 
-$controller = 'changePass';
-$action = 'view';
-
 // If user have logged in
 session_start();
 if (!isset($_SESSION['id'])) {

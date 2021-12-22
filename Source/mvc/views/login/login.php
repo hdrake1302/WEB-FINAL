@@ -13,6 +13,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+  <!-- Javascript -->
+  <script src="./assets/js/main.js"></script>
   <!-- CSS -->
   <link rel="stylesheet" href="./assets/style/style.css" />
 
@@ -69,10 +71,29 @@
             </div>
           </div>
           <div class="mb-2 float-right"><a href="#">Forgot password?</a></div>
-          <button type="submit" name="submit" class="btn btn-default btn-primary w-100">
+          <button data-toggle="modal" data-target="#myModal" type="submit" name="submit" class="btn btn-default btn-primary w-100" id="login-button">
             Submit
           </button>
         </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal" id="myModal">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger">
+          <div class="errorText text-center text-white"></div>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+        <div class="modal-footer">
+          <div>
+            <button type="button" id="modal-close" class="btn btn-secondary" data-dismiss="modal">
+              Đóng
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
