@@ -1,6 +1,6 @@
 <?php
 // If user already login then head back to index
-if (isset($_SESSION['id'])) {
+if (isset($_SESSION['id']) && $_SESSION['activated'] != 0) {
     header("Location: ./index.php");
 }
 require_once('models/Login.php');
@@ -46,21 +46,6 @@ class LoginController
             $_SESSION['activated'] = $result['activated'];
 
             $role = $result['role'];
-            switch ($role) {
-                case 1:
-                    // Nhan Vien
-                    $this->name = 'changePass';
-                    $controller = 'login';
-                    $action = "view";
-                    break;
-                case 2:
-                    // Truong Phong
-                    break;
-                case 3:
-                    // Giam Doc
-                    break;
-                default:
-            }
         }
         header("Location: ./index.php");
     }
