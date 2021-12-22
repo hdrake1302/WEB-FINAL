@@ -14,9 +14,9 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
   <!-- Javascript -->
-  <script src="./assets/js/main.js"></script>
+  <script src="./main.js"></script>
   <!-- CSS -->
-  <link rel="stylesheet" href="./assets/style/style.css" />
+  <link rel="stylesheet" href="./style.css" />
 
   <!-- Boxicon Icons -->
   <link href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css" rel="stylesheet" />

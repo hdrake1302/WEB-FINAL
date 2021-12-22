@@ -14,10 +14,10 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
 
     <!-- JS -->
-    <script src="./assets/js/template.js"></script>
+    <script src="./main.js"></script>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="./assets/style/template.css" />
+    <link rel="stylesheet" href="./style.css" />
 
     <!-- Icons -->
     <link href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css" rel="stylesheet" />
