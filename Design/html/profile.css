@@ -9,30 +9,13 @@ body {
   position: relative;
   min-height: 100vh;
   width: 100%;
-  overflow: hidden;
 }
 
-/* LOGIN & CHANGE PASSWORD CSS */
-.login-body {
-  background: #1c92d2; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to left,
-    #f2fcfe,
-    #1c92d2
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to left,
-    #f2fcfe,
-    #1c92d2
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-
-/* TEMPLATE CSS */
 .header {
   position: fixed;
   top: 0;
   left: 0;
-
+  z-index: 1;
   background: #00b4db; /* fallback for old browsers */
   background: -webkit-linear-gradient(
     to right,
@@ -69,7 +52,17 @@ body {
   padding: 0 24px;
   transition: all 0.3s ease;
 }
+.header-content .menu i {
+  float: right;
+  margin: 8px;
+}
 
+.header-content .menu {
+  display: none;
+}
+.header-content .menu i {
+  text-align: center;
+}
 .sidebar {
   position: fixed;
   top: 64px;
@@ -114,7 +107,7 @@ body {
 .sidebar .avatar .avatar-img {
   width: 100px;
   height: 100px;
-  border-radius: 60px;
+  border-radius: 100px;
 }
 
 .menu {
@@ -143,6 +136,10 @@ body {
   margin: 0 5px;
 }
 
+.sidebar .nav-list #res-log-out {
+  display: none;
+}
+
 .header #log-out a,
 .sidebar .nav-list a {
   color: #fff;
@@ -156,7 +153,7 @@ body {
   text-align: center;
 }
 
-.sidebar .nav-list li a {
+.sidebar .nav-list li > a {
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -166,10 +163,14 @@ body {
 
 .header #log-out a:hover,
 .sidebar #menu-btn:hover,
+.header-content .menu i:hover,
 .sidebar .nav-list li a:hover {
   color: #0083b0;
   background-color: #fff;
+  cursor: pointer;
 }
+
+.header-content .menu i,
 .sidebar .nav-list li i {
   height: 50px;
   min-width: 50px;
@@ -201,3 +202,70 @@ body {
   width: calc(100% - 240px);
 }
 /* END OF HOME CONTENT */
+
+/* PROFILE CSS */
+.profile-info,
+.profile-img {
+  height: 360px;
+}
+.profile-img img {
+  width: 240px;
+  height: 160px;
+  border-radius: 24px;
+}
+
+.profile-info .info-header {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #0083b0;
+}
+
+.profile-info .info-list li {
+  margin: 16px;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.profile-info .info-list .info-label {
+  color: #0083b0;
+}
+.profile-info .info-list .info-content {
+  color: #adadad;
+}
+
+/* Smart Phone: < 576px */
+@media only screen and (max-width: 36em) {
+  /* TEMPLATE */
+  .sidebar {
+    transform: translateX(-100%);
+    transition: all 0.2s ease;
+  }
+  .sidebar.active {
+    transform: translateX(0%);
+    width: 100%;
+  }
+  .sidebar.active ~ .home-content {
+    display: none;
+  }
+
+  .sidebar.active .nav-list li > a {
+    font-size: 20px;
+  }
+
+  .home-content {
+    top: 64px;
+    left: 0;
+    width: 100%;
+    margin: 12px 0 0 0;
+    transition: all 0.3s ease;
+  }
+}
+/* MEDIUM */
+@media only screen and (max-width: 48em) {
+  /* PROFILE  */
+  .profile-img img {
+    width: 340px;
+    height: 200px;
+  }
+}

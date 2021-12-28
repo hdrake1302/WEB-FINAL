@@ -53,7 +53,17 @@ body {
   padding: 0 24px;
   transition: all 0.3s ease;
 }
+.header-content .menu i {
+  float: right;
+  margin: 8px;
+}
 
+.header-content .menu {
+  display: none;
+}
+.header-content .menu i {
+  text-align: center;
+}
 .sidebar {
   position: fixed;
   top: 64px;
@@ -127,6 +137,10 @@ body {
   margin: 0 5px;
 }
 
+.sidebar .nav-list #res-log-out {
+  display: none;
+}
+
 .header #log-out a,
 .sidebar .nav-list a {
   color: #fff;
@@ -140,7 +154,7 @@ body {
   text-align: center;
 }
 
-.sidebar .nav-list li a {
+.sidebar .nav-list li > a {
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -150,10 +164,14 @@ body {
 
 .header #log-out a:hover,
 .sidebar #menu-btn:hover,
+.header-content .menu i:hover,
 .sidebar .nav-list li a:hover {
   color: #0083b0;
   background-color: #fff;
+  cursor: pointer;
 }
+
+.header-content .menu i,
 .sidebar .nav-list li i {
   height: 50px;
   min-width: 50px;
@@ -185,3 +203,30 @@ body {
   width: calc(100% - 240px);
 }
 /* END OF HOME CONTENT */
+
+/* Smart Phone: < 576px */
+@media only screen and (max-width: 36em) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: all 0.2s ease;
+  }
+  .sidebar.active {
+    transform: translateX(0%);
+    width: 100%;
+  }
+  .sidebar.active ~ .home-content {
+    display: none;
+  }
+
+  .sidebar.active .nav-list li > a {
+    font-size: 20px;
+  }
+
+  .home-content {
+    top: 64px;
+    left: 0;
+    width: 100%;
+    margin: 12px 0 0 0;
+    transition: all 0.3s ease;
+  }
+}

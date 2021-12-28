@@ -67,33 +67,21 @@
                   <i class="bx bxs-lock-alt"></i>
                 </span>
               </div>
-              <input type="text" class="form-control" name="password" id="password" placeholder="Password" aria-label="Username" aria-describedby="icon-password" />
+              <input type="password" class="form-control" name="password" id="password" placeholder="Password" aria-label="Username" aria-describedby="icon-password" />
             </div>
           </div>
-          <div class="mb-2 float-right"><a href="#">Forgot password?</a></div>
-          <button data-toggle="modal" data-target="#myModal" type="submit" name="submit" class="btn btn-default btn-primary w-100" id="login-button">
+          <div class="form-group">
+            <div id="fail-alert" class="alert alert-danger mt-2" style="opacity: 0; display:none">
+              This type of file is not allowed
+            </div>
+            <div id="success-alert" class="alert alert-success mt-2" style="opacity: 0; display:none">
+              This type of file is allowed
+            </div>
+          </div>
+          <button type="submit" name="submit" class="btn btn-default btn-primary w-100" id="login-button">
             Submit
           </button>
         </form>
-      </div>
-    </div>
-  </div>
-  <div class="modal" id="myModal">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header bg-danger">
-          <div class="errorText text-center text-white"></div>
-          <button type="button" class="close" data-dismiss="modal">
-            &times;
-          </button>
-        </div>
-        <div class="modal-footer">
-          <div>
-            <button type="button" id="modal-close" class="btn btn-secondary" data-dismiss="modal">
-              Đóng
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   </div>

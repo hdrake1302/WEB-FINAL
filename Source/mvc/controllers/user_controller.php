@@ -25,8 +25,31 @@ class UserController extends BaseController
         $this->render('view', array('user' => $user));
     }
 
-    public function changePassword()
+    public function viewProfile()
     {
+        $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
+
+        // ONLY LET USER TO VIEW THEIR OWN PROFILE
+        if ($_SESSION['id'] !== $id) {
+            header("Location: ./index.php");
+        }
+
+        $user = User::get($id);
+        $this->render('viewProfile', array('user' => $user));
+    }
+
+    public function confirmChange()
+    {
+        $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
+
+        // ONLY LET USER TO VIEW THEIR OWN PROFILE
+        if ($_SESSION['id'] !== $id) {
+            header("Location: ./index.php");
+        }
+
+        $_SESSION['activated'] = 0;
+        $user = User::updateActivated($id);
+        header("Location: ./index.php?controller=changePass&action=view");
     }
 
     public function edit()
