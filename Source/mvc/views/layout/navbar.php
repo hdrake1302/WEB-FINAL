@@ -18,7 +18,7 @@
         </a>
     </li>
     <li>
-        <a href="#" data-toggle="tooltip" data-placement="right" title="Leaves Management">
+        <a href="?controller=leave&action=index" data-toggle="tooltip" data-placement="right" title="Leaves Management">
             <i class="bx bx-run"></i>
             <span class="links-name">Leaves Management</span>
         </a>
