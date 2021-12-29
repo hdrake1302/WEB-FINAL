@@ -30,7 +30,7 @@ if (!isset($_FILES)) {
     die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
 }
 
-$supported_extensions = array("txt", "doc", "docx", "xls", "xlsx", "jpg", "png", "mp3", "mp4", "pdf", "rar", "zip");
+$supported_extensions = array("jpg", "png");
 
 $extension = pathinfo($_FILES['file']['name'])['extension'];
 

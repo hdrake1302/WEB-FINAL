@@ -118,17 +118,16 @@ $(document).ready(() => {
             .addClass("selected")
             .html(fileName);
     });
-    const suppported_extensions = [
-        "jpg",
-        "png",
-    ];
 
     $("#upload-btn").click(function(evt) {
         evt.preventDefault();
+        const suppported_extensions = [
+        "jpg",
+        "png",
+        ];
         let input = document.getElementById("document");
 
         if (!input.files[0]) {
-            // alert("Please select a file before clicking upload");
             showError("Please select a file before clicking upload");
             throw new Error("Please select a file before clicking upload");
         }
@@ -188,6 +187,87 @@ $(document).ready(() => {
         return filename.split(".").pop();
     }
     // END OF VIEW PROFILE
+
+    // START OF LEAVES MANAGEMENT
+    // LIMIT REQUEST DATE
+    let today = new Date();
+    today.setDate(today.getDate() + 1);
+    today = today.toISOString().slice(0, 10);
+    $('#leave-date').attr('min', today);
+    $('#leave-date').val(today);
+
+    
+    // WHEN USER CLICK CREATE BUTTON
+    $('#leave-request-btn').click(function(evt) {
+        const suppported_extensions = [
+        "jpg",
+        "png",
+        "docx",
+        "pdf"
+        ];
+
+        let days = $('#leave-days').val();
+        let dateCreated = $('#leave-date').val();
+        let description = $('#leave-description').val();
+        let input = document.getElementById('leave-file');
+        
+        if (!input.files[0]) {
+        showError("Please select a file before clicking upload");
+        throw new Error("Please select a file before clicking upload");
+        }
+        let file = input.files[0];
+        let extension = getExtension(file.name);
+        let size = file.size;
+
+        if (size >= 500 * 1024 * 1024) {
+            showError("File size exceeds the maximum size");
+            throw new Error("File size exceeds the maximum size");
+        }
+        if (!suppported_extensions.includes(extension)) {
+            showError("File type is not supported!");
+            throw new Error("File type is not supported!");
+        }
+        
+        let data = new FormData();
+        data.append("days", days);
+        data.append("date_created", dateCreated);
+        data.append("description", file);
+        data.append("file_name", file.name);
+        data.append("file", file);
+        
+        let xhr = new XMLHttpRequest();
+
+        xhr.upload.addEventListener("progress", function(e) {
+            let loaded = e.loaded;
+            let total = e.total;
+            let progress = (loaded * 100) / total;
+
+            $(".progress-bar").attr("style", "width: " + progress + "%;");
+        });
+
+        xhr.onload = function() {
+            if (xhr.readyState === xhr.DONE) {
+                if (xhr.status === 200) {
+                    response = JSON.parse(xhr.responseText);
+                    if (response.code === 0) {
+                        // SUCCESS
+                        success("Uploaded Successfully!")
+                    }else{
+                        // FAIL
+                        showError(response.message);
+                    }
+                    // RESET PROGRESS BAR
+                    setTimeout(function(){
+                        $(".progress-bar").attr("style", "width: 0");
+                    }, 2000);
+                }
+            }
+        };
+
+        xhr.open("POST", "?controller=leave&action=createRequest", true);
+        xhr.send(data);
+    });
+    // END OF LEAVES MANAGEMENT
 });
 
 

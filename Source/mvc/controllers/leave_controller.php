@@ -18,7 +18,8 @@ class LeaveController extends BaseController
     {
 
         $leaves = Leave::getAll();
-        $data = array('leaves' => $leaves);
+        $leavesRecord = Leave::getRecord($_SESSION['id']);
+        $data = array('leaves' => $leaves, 'leaves_record' => $leavesRecord);
         $this->render('index', $data);
     }
 
@@ -27,6 +28,16 @@ class LeaveController extends BaseController
         $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
         $user = User::get($id);
         $this->render('view', array('user' => $user));
+    }
+
+    public function createRequest()
+    {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            http_response_code(405);
+            die(json_encode(array('code' => 4, 'message' => 'API này chỉ hỗ trợ POST')));
+        }
+
+        print_r($_POST);
     }
 
     public function changePassword()
