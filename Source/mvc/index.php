@@ -25,10 +25,9 @@ if (!isset($_SESSION['id'])) {
     } else {
         $role = $_SESSION['role'];
 
-        if ($role == 1 && $_SESSION['activated'] == 0) {
-            // Staff
-            $controller = 'changePass';
-            $action = 'view';
+        if ($_SESSION['activated'] == 0) {
+            $controller = 'login';
+            $action = 'viewChangePassword';
         } else {
             $controller = 'user';
             $action = 'index';

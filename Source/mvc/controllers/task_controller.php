@@ -30,9 +30,6 @@ class TaskController extends BaseController
         $this->render('view', array('user' => $user));
     }
 
-    public function changePassword()
-    {
-    }
 
     public function edit()
     {

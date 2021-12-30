@@ -1,6 +1,8 @@
 <?php
 
 require_once('config.php');
+require_once('function.php');
+
 class Leave
 {
     public $id;
@@ -53,12 +55,59 @@ class Leave
         return $data;
     }
 
-    public static function createRequest($leavesRecord)
+
+    public static function checkDate($leave_id)
     {
-        $sql = "INSERT INTO leaves_record(leave_id, description, file, days, date_wanted, status) VALUES (:leave_id, :description, :file, :days, :date_wanted, :status)";
+        /*
+            CHECK IF THE NEWEST REQUEST DATE IS LESS THAN 7 DAYS OR NOT
+            TRUE IF IT IS ALRIGHT TO CREATE REQUEST
+            FALSE IS THE OPPOSITE
+        */
+
+        $sql = "SELECT date_accepted FROM leave_record WHERE leave_id = :leave_id AND status <> 'waiting' ORDER BY id DESC LIMIT 1";
         $conn = DB::getConnection();
         $stm = $conn->prepare($sql);
-        $stm->execute(array('leave_id' => $leavesRecord['leave_id'], 'description' => $leavesRecord['description'], 'file' => $leavesRecord['file'], 'days' => $leavesRecord['days'], 'date_wanted' => $leavesRecord['date_wanted'], 'status' => "waiting"));
+        $stm->execute(array('leave_id' => $leave_id));
+
+        if (!$stm->rowCount() == 1) {
+            // IF THERE ISN'T ANY REQUEST YET THEN RETURN FALSE
+            return TRUE;
+        }
+
+        $dateAccepted = $stm->fetch()['date_accepted'];
+
+        $currentDate = new DateTime($dateAccepted, new DateTimeZone('Asia/Ho_Chi_Minh'));
+        $today = new DateTime('', new DateTimeZone('Asia/Ho_Chi_Minh'));
+
+        $days_between = calculateDaysBetween($currentDate, $today);
+
+        if ($days_between < 7) {
+            return FALSE;
+        }
+        return TRUE;
+    }
+
+    public static function checkWaiting($leave_id)
+    {
+        /*
+            CHECK IF THERE IS ANY ANY REQUEST THAT HAVING A 'waiting' STATUS
+            TRUE IF IT IS ALRIGHT TO CREATE REQUEST
+            FALSE IS THE OPPOSITE
+        */
+        $sql = "select * from leave_record where leave_id = :leave_id AND status = 'waiting'";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('leave_id' => $leave_id));
+
+        return !$stm->rowCount() == 1;
+    }
+
+    public static function createRequest($leavesRecord)
+    {
+        $sql = "INSERT INTO leave_record(leave_id, description, file_name, file, days, date_wanted, status) VALUES (:leave_id, :description, :file_name, :file, :days, :date_wanted, :status)";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('leave_id' => $leavesRecord['leave_id'], 'description' => $leavesRecord['description'], 'file_name' => $leavesRecord['file_name'], 'file' => $leavesRecord['file'], 'days' => $leavesRecord['days'], 'date_wanted' => $leavesRecord['date_wanted'], 'status' => "waiting"));
 
         return $stm->rowCount() == 1;
     }

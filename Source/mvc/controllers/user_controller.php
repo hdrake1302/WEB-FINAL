@@ -49,7 +49,7 @@ class UserController extends BaseController
 
         $_SESSION['activated'] = 0;
         $user = User::updateActivated($id);
-        header("Location: ./index.php?controller=changePass&action=view");
+        header("Location: ./index.php?controller=login&action=viewChangePassword");
     }
 
     public function edit()

@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-sm-3"></div>
             <div class="col-sm-3 text-center"><b>ID: </b></div>
-            <div class="col-sm-3 text-center"><?= $s->id ?></div>
+            <div class="col-sm-3 text-center" id="personID"><?= $s->id ?></div>
             <div class="col-sm-3"></div>
         </div>
         <div class="row">
@@ -35,12 +35,12 @@
         <div class="row">
             <div class="col-sm-4"></div>
             <div class="col-sm-4">
-                <button data-toggle="modal" data-target="#leaveRequestModal" class="btn btn-primary btn-block mb-5 mt-5">Leave Request</button>
+                <button data-toggle="modal" data-target="#leave-request-modal" class="btn btn-primary btn-block mb-5 mt-5" id="leave-request-btn">Leave Request</button>
             </div>
             <div class="col-sm-4"></div>
         </div>
 
-        <div class="modal" id="leaveRequestModal">
+        <div class="modal" id="leave-request-modal">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -93,7 +93,7 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" id="leave-request-btn" name="submit" class="btn btn-sm btn-primary">Create</button>
+                        <button type="submit" id="create-request-btn" name="submit" class="btn btn-sm btn-primary">Create</button>
                     </div>
                 </div>
             </div>
@@ -128,7 +128,7 @@
                 <td><?= $s['days'] ?></td>
                 <td><?= $s['date_created'] ?></td>
                 <td><?= $s['date_wanted'] ?></td>
-                <td><?= $s['status'] ?></td>
+                <td class="leave-status"><?= $s['status'] ?></td>
                 <td>
                     <a class="btn btn-sm btn-primary" href="?controller=user&action=view&id=<?= $s['id'] ?>">View</a>
                 </td>

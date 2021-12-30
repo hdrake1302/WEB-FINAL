@@ -5,9 +5,8 @@ $supported_controllers = array(
     'leave' => array('index', 'view', 'createRequest', 'edit', 'save', 'delete'),
     'login' => array(
         'login', 'logout',
-        'view'
+        'view', 'viewChangePassword', 'changePassword'
     ),
-    'changePass' => array('view', 'changePassword'),
     'pages' => array('error')
 );
 

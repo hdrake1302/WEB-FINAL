@@ -44,7 +44,7 @@ if ($file_size >= convertToByte(500)) {
     die(json_encode(array('code' => 3, 'message' => "file exceeds the maximum allowed size")));
 }
 
-$upload_path = "$path\\assets\\uploads\\";
+$upload_path = "$path\\assets\\uploads\\avatars\\";
 $file_tmp = $_FILES['file']['tmp_name'];
 $file_name = $_FILES['file']['name'];
 
@@ -54,11 +54,11 @@ if (file_exists($upload_path . $file_name)) {
 
 $result = move_uploaded_file($file_tmp, $upload_path . $file_name);
 if ($result) {
-    $update_result = updateAvatar($_SESSION['id'], 'http://localhost/WEB-FINAL/Source/mvc/assets/uploads/' . $file_name);
+    $update_result = updateAvatar($_SESSION['id'], URL . 'assets/uploads/avatars/' . $file_name);
     if ($update_result === false) {
         die(json_encode(array('code' => 1, 'message' => "FAILED")));
     }
-    $_SESSION['avatar'] = 'http://localhost/WEB-FINAL/Source/mvc/assets/uploads/' . $file_name;
+    $_SESSION['avatar'] = 'http://localhost/WEB-FINAL/Source/mvc/assets/uploads/avatars/' . $file_name;
     echo json_encode(array('code' => 0, 'message' => "Successfully uploaded"));
 } else {
     die(json_encode(array('code' => 1, 'message' => "FAILED")));

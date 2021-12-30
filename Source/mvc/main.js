@@ -79,7 +79,7 @@ $(document).ready(() => {
             showError("Mật khẩu không khớp với nhau!");
         } else {
             $(this).unbind('click');
-            $.post("?controller=changePass&action=changePassword", {currentPwd: currentPassword, newPwd: newPassword, confirmPwd: confirmPassword, submit: true}, function(data){
+            $.post("?controller=login&action=changePassword", {currentPwd: currentPassword, newPwd: newPassword, confirmPwd: confirmPassword, submit: true}, function(data){
                 try {
                     data = JSON.parse(data);
                     showError(data.message);
@@ -94,7 +94,7 @@ $(document).ready(() => {
     })
     // --------------- END OF CHANGE PASSWORD -----------------
     
-    // START OF TEMPLATE
+    // --------------- START OF TEMPLATE ----------------------
     $(function() {
             $('[data-toggle="tooltip"]').tooltip();
         });
@@ -106,9 +106,9 @@ $(document).ready(() => {
     $(".modal #confirm-change").click(function(e){
         console.log(sessionStorage.getItem('id'));
     });
-    // END OF TEMPLATE
+    // --------------- END OF TEMPLATE -------------------------
     
-    // START OF VIEW PROFILE
+    // --------------- START OF VIEW PROFILE -------------------
 
     // Add the following code if you want the name of the file appear on select
     $(".custom-file-input").on("change", function() {
@@ -166,7 +166,7 @@ $(document).ready(() => {
                     if (response.code === 0) {
                         // SUCCESS
                         success("Uploaded Successfully!")
-                        $(".profile-img img").attr('src', path + "uploads/" + file.name);
+                        $(".profile-img img").attr('src', path + "uploads/avatars/" + file.name);
                     }else{
                         // FAIL
                         showError(response.message);
@@ -188,7 +188,8 @@ $(document).ready(() => {
     }
     // END OF VIEW PROFILE
 
-    // START OF LEAVES MANAGEMENT
+    // ----------- START OF LEAVES MANAGEMENT ---------------
+
     // LIMIT REQUEST DATE
     let today = new Date();
     today.setDate(today.getDate() + 1);
@@ -196,9 +197,19 @@ $(document).ready(() => {
     $('#leave-date').attr('min', today);
     $('#leave-date').val(today);
 
-    
+    // Status == waiting then we don't let user request
+    let leaveStatuses = $(".leave-status");
+    for (let i = 0; i < leaveStatuses.length; i++) {
+        s = leaveStatuses[i].innerText;
+        if (s === 'waiting'){
+            $('#leave-request-btn').attr("disabled", true);
+            break;
+        }
+    }
+
     // WHEN USER CLICK CREATE BUTTON
-    $('#leave-request-btn').click(function(evt) {
+    $('#create-request-btn').click(function(evt) {
+        
         const suppported_extensions = [
         "jpg",
         "png",
@@ -206,11 +217,12 @@ $(document).ready(() => {
         "pdf"
         ];
 
+        let personID = parseInt($('#personID').text());
         let days = $('#leave-days').val();
-        let dateCreated = $('#leave-date').val();
+        let dateWanted = $('#leave-date').val();
         let description = $('#leave-description').val();
         let input = document.getElementById('leave-file');
-        
+
         if (!input.files[0]) {
         showError("Please select a file before clicking upload");
         throw new Error("Please select a file before clicking upload");
@@ -229,9 +241,10 @@ $(document).ready(() => {
         }
         
         let data = new FormData();
+        data.append("leave_id", personID);
         data.append("days", days);
-        data.append("date_created", dateCreated);
-        data.append("description", file);
+        data.append("date_wanted", dateWanted);
+        data.append("description", description);
         data.append("file_name", file.name);
         data.append("file", file);
         
@@ -251,7 +264,7 @@ $(document).ready(() => {
                     response = JSON.parse(xhr.responseText);
                     if (response.code === 0) {
                         // SUCCESS
-                        success("Uploaded Successfully!")
+                        success(response.message);
                     }else{
                         // FAIL
                         showError(response.message);
@@ -259,6 +272,7 @@ $(document).ready(() => {
                     // RESET PROGRESS BAR
                     setTimeout(function(){
                         $(".progress-bar").attr("style", "width: 0");
+                        $('#leave-request-modal').modal('hide');
                     }, 2000);
                 }
             }
@@ -267,7 +281,7 @@ $(document).ready(() => {
         xhr.open("POST", "?controller=leave&action=createRequest", true);
         xhr.send(data);
     });
-    // END OF LEAVES MANAGEMENT
+    // --------------------- END OF LEAVES MANAGEMENT ---------------------
 });
 
 

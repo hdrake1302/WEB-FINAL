@@ -3,7 +3,8 @@
     define('USER','root');
     define('PASS','');
     define('DB','quanlytask');
-
+    define('URL', "http://localhost/WEB-FINAL/Source/mvc/");
+    
     class DB {
         private static $conn;
         public static function getConnection() {
@@ -14,4 +15,3 @@
             return self::$conn;
         }
     }
-?>

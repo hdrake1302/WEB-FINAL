@@ -14,13 +14,19 @@
     <li>
         <a href="#" data-toggle="tooltip" data-placement="right" title="Task Management">
             <i class="bx bx-task"></i>
-            <span class="links-name">Task Management</span>
+            <span class="links-name">Tasks Management</span>
         </a>
     </li>
     <li>
         <a href="?controller=leave&action=index" data-toggle="tooltip" data-placement="right" title="Leaves Management">
             <i class="bx bx-run"></i>
             <span class="links-name">Leaves Management</span>
+        </a>
+    </li>
+    <li>
+        <a href="?controller=leave&action=index" data-toggle="tooltip" data-placement="right" title="Requests Management">
+            <i class='bx bxs-user-voice'></i>
+            <span class="links-name">Requests</span>
         </a>
     </li>
     <li>
