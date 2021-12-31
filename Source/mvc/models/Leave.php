@@ -159,4 +159,8 @@ class Leave
 
         return $stm->rowCount() == 1;
     }
+
+    public static function acceptRequest()
+    {
+    }
 }

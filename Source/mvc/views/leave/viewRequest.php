@@ -1,3 +1,20 @@
+<?php $s = $data['leave_request'];
+$file = $s['file'];
+$file_name = $s['file_name'];
+
+$href = "href='$file'";
+$download = "download='$file_name'";
+$title = "title='$file_name'";
+$disabled = "";
+
+if (empty($file) || $file === null) {
+    $href = "";
+    $download = "";
+    $title = "title='NO FILE!'";
+    $disabled = "disabled";
+}
+
+?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 col-md-8 offset-md-2">
@@ -7,45 +24,120 @@
                     <ul class="info-list">
                         <li class="row">
                             <div class="col-12 col-md-6 info-label">
-                                Full name:
+                                ID:
                             </div>
                             <div class="col-12 col-md-6 info-content">
-                                Hoang Tan Duc
-                            </div>
-                        </li>
-                        <li class="row">
-                            <div class="col-12 col-md-6 info-label">Last name:</div>
-                            <div class="col-12 col-md-6 info-content">
-                                Hoang Tan Duc
+                                <?= $s['id'] ?>
                             </div>
                         </li>
                         <li class="row">
-                            <div class="col-12 col-md-6 info-label">Email:</div>
+                            <div class="col-12 col-md-6 info-label">Person ID:</div>
                             <div class="col-12 col-md-6 info-content">
-                                Hoang Tan Duc
+                                <?= $s['leave_id'] ?>
                             </div>
                         </li>
                         <li class="row">
-                            <div class="col-12 col-md-6 info-label">Phone Number:</div>
+                            <div class="col-12 col-md-6 info-label">Full Name:</div>
                             <div class="col-12 col-md-6 info-content">
-                                Hoang Tan Duc
+                                <?= User::getFullName($s['leave_id']) ?>
                             </div>
                         </li>
                         <li class="row">
-                            <div class="col-12 col-md-6 info-label">Department:</div>
+                            <div class="col-12 col-md-6 info-label">Number of Days Requested:</div>
                             <div class="col-12 col-md-6 info-content">
-                                Hoang Tan Duc
+                                <?= $s['days'] ?>
+                            </div>
+                        </li>
+                        <li class="row">
+                            <div class="col-12 col-md-6 info-label">Description</div>
+                            <div class="col-12 col-md-6 info-content">
+                                <textarea class="info-content w-100" style="resize: none" rows="5" disabled><?= $s['description']  ?></textarea>
+
+                        </li>
+                        <li class="row">
+                            <div class="col-12 col-md-6 info-label">Attachment:</div>
+                            <div class="col-12 col-md-6 info-content">
+                                <a <?= $href ?> <?= $download ?> <?= $title ?>>
+                                    <button class="btn btn-primary mt-2 <?= $disabled ?>">
+                                        <i class='bx bxs-download'></i> Click To Download
+                                    </button>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="row">
+                            <div class="col-12 col-md-6 info-label">Date Created:</div>
+                            <div class="col-12 col-md-6 info-content">
+                                <?= $s['date_created'] ?>
+                            </div>
+                        </li>
+                        <li class="row">
+                            <div class="col-12 col-md-6 info-label">Date Wanted:</div>
+                            <div class="col-12 col-md-6 info-content">
+                                <?= $s['date_wanted'] ?>
                             </div>
                         </li>
                         <div class="row">
-                            <div class="col-12">
-                                <button class="btn btn-primary m-2 w-100" data-toggle="modal" data-target="#upload-modal">
-                                    Change Avatar
+                            <div class="col-12 col-md-6">
+                                <button class="btn btn-primary m-2 w-100" data-toggle="modal" data-target="#accept-request-modal">
+                                    Accept
+                                </button>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <button class="btn btn-danger m-2 w-100" data-toggle="modal" data-target="#reject-request-modal">
+                                    Reject
                                 </button>
                             </div>
                         </div>
                     </ul>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ACCEPT REQUEST MODAL -->
+<div class="modal" tabindex="-1" role="dialog" id="accept-request-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to ACCEPT the request?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="accept-request-confirm">
+                    Confirm
+                </button>
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- REJECT REQUEST MODAL -->
+<div class="modal" tabindex="-1" role="dialog" id="reject-request-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to REJECT the request?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="reject-request-confirm">
+                    Confirm
+                </button>
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

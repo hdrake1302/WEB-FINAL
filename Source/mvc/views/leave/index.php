@@ -35,13 +35,12 @@ $s = $data['leave'];
                                 <?= $s->total_leaves ?>
                             </div>
                         </li>
-                        <li class="row">
-                            <div class="col-12 col-md-6 text-center info-label">Total_Leaves:</div>
-                            <div class="col-12 col-md-6 text-center info-content">
-                                <button data-toggle="modal" data-target="#leave-request-modal" class="btn btn-primary btn-block mb-5 mt-5" id="leave-request-btn">Leave Request</button>
-                            </div>
-                        </li>
                     </ul>
+                    <div class="row">
+                        <div class="col-12 col-md-8 offset-md-2 text-center">
+                            <button data-toggle="modal" data-target="#leave-request-modal" class="btn btn-primary btn-block" id="leave-request-btn">Leave Request</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -107,39 +106,42 @@ $s = $data['leave'];
         </div>
     </div>
 </div>
-<div class="text-primary text-center mb-3">
-    <h3>HISTORY</h3>
-</div>
 
-<table class="table-responsive-sm table table-hover">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Description</th>
-            <th>Days</th>
-            <th>Date Created</th>
-            <th>Date Wanted</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <!-- CONTENT -->
-    <tbody id="table-body">
-        <?php
-        foreach ($data['leaves_record'] as $s) {
-        ?>
+<div class="container-fluid mt-5">
+    <div class="text-primary text-center mb-3">
+        <h3>HISTORY</h3>
+    </div>
+
+    <table class="table-responsive-sm table table-hover">
+        <thead>
             <tr>
-                <td><?= $s['id'] ?></td>
-                <td><?= $s['description'] ?></td>
-                <td><?= $s['days'] ?></td>
-                <td><?= $s['date_created'] ?></td>
-                <td><?= $s['date_wanted'] ?></td>
-                <td class="leave-status"><?= $s['status'] ?></td>
-                <td>
-                    <a class="btn btn-sm btn-primary" href="?controller=user&action=view&id=<?= $s['id'] ?>">View</a>
-                </td>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Days</th>
+                <th>Date Created</th>
+                <th>Date Wanted</th>
+                <th>Status</th>
             </tr>
-        <?php
-        }
-        ?>
-    </tbody>
-</table>
+        </thead>
+        <!-- CONTENT -->
+        <tbody id="table-body">
+            <?php
+            foreach ($data['leaves_record'] as $s) {
+            ?>
+                <tr>
+                    <td><?= $s['id'] ?></td>
+                    <td><?= $s['description'] ?></td>
+                    <td><?= $s['days'] ?></td>
+                    <td><?= $s['date_created'] ?></td>
+                    <td><?= $s['date_wanted'] ?></td>
+                    <td class="leave-status"><?= $s['status'] ?></td>
+                    <td>
+                        <a class="btn btn-sm btn-primary" href="?controller=user&action=view&id=<?= $s['id'] ?>">View</a>
+                    </td>
+                </tr>
+            <?php
+            }
+            ?>
+        </tbody>
+    </table>
+</div>
