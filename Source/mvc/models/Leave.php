@@ -2,6 +2,8 @@
 
 require_once('config.php');
 require_once('function.php');
+require_once('Department.php');
+require_once('User.php');
 
 class Leave
 {
@@ -25,6 +27,20 @@ class Leave
         $this->total_leaves = $total_leaves;
     }
 
+    public static function get($id)
+    {
+        $sql = "select * from leave_info where person_id = :id";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('id' => $id));
+
+        if ($item = $stm->fetch()) {
+            return new Leave($item['person_id'], $item['role'], $item['used_leaves'], $item['total_leaves']);
+        }
+
+        return null;
+    }
+
     public static function getAll()
     {
         $sql = "select * from leave_info";
@@ -37,6 +53,38 @@ class Leave
             $data[] = new Leave($item['person_id'], $item['role'], $item['used_leaves'], $item['total_leaves']);
         }
         return $data;
+    }
+
+    public static function getAllRequests($leave_id)
+    {
+        // Lấy hết request từ nhân viên có cũng phòng ban với quản lý
+        $sql = "SELECT * FROM leave_record WHERE leave_id in (SELECT id FROM account_info where department = :department and id <> :leave_id) AND status = 'waiting'";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('leave_id' => $leave_id, 'department' => Department::findID($leave_id)));
+
+        $data = array();
+
+        foreach ($stm->fetchAll() as $item) {
+            $data[] =  array('id' => $item['id'], 'leave_id' => $item['leave_id'], 'description' => $item['description'], 'file_name' => $item['file_name'],  'file' => $item['file'], 'days' => $item['days'], 'date_created' => $item['date_created'], 'date_wanted' => $item['date_wanted'], 'status' => $item['status']);
+        }
+
+        return $data;
+    }
+
+    public static function getRequest($id, $leave_id)
+    {
+        // Lấy hết request từ nhân viên có cũng phòng ban với quản lý
+        $sql = "SELECT * FROM leave_record WHERE leave_id in (SELECT id FROM account_info where department = :department and id <> :leave_id) AND status = 'waiting' AND id = :id";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('id' => $id, 'leave_id' => $leave_id, 'department' => Department::findID($leave_id)));
+
+        if ($item = $stm->fetch()) {
+            return array('id' => $item['id'], 'leave_id' => $item['leave_id'], 'description' => $item['description'], 'file_name' => $item['file_name'],  'file' => $item['file'], 'days' => $item['days'], 'date_created' => $item['date_created'], 'date_wanted' => $item['date_wanted'], 'status' => $item['status']);
+        }
+
+        return null;
     }
 
     public static function getRecord($id)

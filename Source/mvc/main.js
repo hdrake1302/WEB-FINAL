@@ -167,6 +167,7 @@ $(document).ready(() => {
                         // SUCCESS
                         success("Uploaded Successfully!")
                         $(".profile-img img").attr('src', path + "uploads/avatars/" + file.name);
+                        $(".avatar img").attr('src', path + "uploads/avatars/" + file.name);
                     }else{
                         // FAIL
                         showError(response.message);
@@ -178,8 +179,8 @@ $(document).ready(() => {
                 }
             }
         };
-
-        xhr.open("POST", path + "api/" + "upload.php", true);
+// path + "api/" + "upload.php"
+        xhr.open("POST", '?controller=user&action=uploadAvatar', true);
         xhr.send(data);
     });
 

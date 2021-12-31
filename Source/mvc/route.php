@@ -1,8 +1,8 @@
 <?php
 $supported_controllers = array(
-    'user' => array('index', 'view', 'viewProfile', 'confirmChange', 'edit', 'save', 'delete'),
+    'user' => array('index', 'view', 'viewProfile', 'confirmChange', 'uploadAvatar', 'save', 'delete'),
     'task' => array('index', 'view', 'edit', 'save', 'delete'),
-    'leave' => array('index', 'view', 'createRequest', 'edit', 'save', 'delete'),
+    'leave' => array('index', 'view', 'indexRequest', 'viewRequest', 'createRequest', 'edit', 'save', 'delete'),
     'login' => array(
         'login', 'logout',
         'view', 'viewChangePassword', 'changePassword'

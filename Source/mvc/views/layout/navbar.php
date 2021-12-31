@@ -18,13 +18,13 @@
         </a>
     </li>
     <li>
-        <a href="?controller=leave&action=index" data-toggle="tooltip" data-placement="right" title="Leaves Management">
+        <a href="?controller=leave&action=index&id=<?= $_SESSION['id'] ?>" data-toggle="tooltip" data-placement="right" title="Leaves Management">
             <i class="bx bx-run"></i>
             <span class="links-name">Leaves Management</span>
         </a>
     </li>
     <li>
-        <a href="?controller=leave&action=index" data-toggle="tooltip" data-placement="right" title="Requests Management">
+        <a href="?controller=leave&action=indexRequest" data-toggle="tooltip" data-placement="right" title="Requests Management">
             <i class='bx bxs-user-voice'></i>
             <span class="links-name">Requests</span>
         </a>

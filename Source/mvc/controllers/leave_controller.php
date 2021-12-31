@@ -17,18 +17,36 @@ class LeaveController extends BaseController
 
     public function index()
     {
+        // Giao diện quản lý ngày nghỉ phép của nhân viên và trưởng phòng
+        $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
+        if ($_SESSION['id'] !== $id || $_SESSION['role'] == 3) {
+            header("Location: ./index.php");
+        }
 
-        $leaves = Leave::getAll();
+        $leave = Leave::get($id);
         $leavesRecord = Leave::getRecord($_SESSION['id']);
-        $data = array('leaves' => $leaves, 'leaves_record' => $leavesRecord);
+        $data = array('leave' => $leave, 'leaves_record' => $leavesRecord);
         $this->render('index', $data);
     }
 
-    public function view()
+    public function indexRequest()
     {
+        // Giao diện quản lý yêu cầu nghỉ phép của Trưởng phòng và Giám đốc
+        $id = $_SESSION['id'];
+
+        $leaveRequests = Leave::getAllRequests($id);
+        $data = array('leave_requests' => $leaveRequests);
+        $this->render('indexRequest', $data);
+    }
+
+    public function viewRequest()
+    {
+        // Giao diện xem chi tiết một yêu cầu
         $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
-        $user = User::get($id);
-        $this->render('view', array('user' => $user));
+
+        $leaveRequest = Leave::getRequest($id, $_SESSION['id']);
+        $data = array('leave_request' => $leaveRequest);
+        $this->render('viewRequest', $data);
     }
 
     public function createRequest()
@@ -44,6 +62,11 @@ class LeaveController extends BaseController
 
         if (empty($_POST['leave_id']) || empty($_POST['description']) || empty($_POST['days']) || empty($_POST['date_wanted'])) {
             die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
+        }
+
+        if (!isDate($_POST['date_wanted'])) {
+            // Không phải format của date
+            die(json_encode(array('code' => 2, 'message' => 'Invalid format of date_wanted')));
         }
 
         if (!Leave::checkWaiting($_POST['leave_id'])) {
@@ -95,9 +118,9 @@ class LeaveController extends BaseController
 
         $result = Leave::createRequest($_POST);
         if ($result) {
-            echo json_encode(array('code' => 0, 'message' => 'CREATE REQUEST SUCCESSFULLY'));
+            echo json_encode(array('code' => 0, 'message' => 'Tạo yêu cầu nghỉ phép thành công!'));
         } else {
-            die(json_encode(array('code' => 3, 'message' => 'FAILED!')));
+            die(json_encode(array('code' => 3, 'message' => 'Failed!')));
         }
     }
 

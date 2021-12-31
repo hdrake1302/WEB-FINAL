@@ -68,6 +68,32 @@ class User
         return null;
     }
 
+    public static function getFullName($id)
+    {
+        $sql = "select firstname, lastname from account_info where id = :id";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('id' => $id));
+
+        if ($item = $stm->fetch()) {
+            return $item['lastname'] . ' ' . $item['firstname'];
+        }
+        return null;
+    }
+
+    public static function getRole($id)
+    {
+        $sql = "select role from account where id = :id";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('id' => $id));
+
+        if ($item = $stm->fetch()) {
+            return $item['role'];
+        }
+        return null;
+    }
+
     public static function delete($id)
     {
         $sql = "delete from account_info where id = :id";
@@ -103,7 +129,7 @@ class User
         $sql = "update account_info set avatar = :img_path where id = :id";
         $conn = DB::getConnection();
         $stm = $conn->prepare($sql);
-        $stm->execute(array('id' => $id, 'avatar' => $img_path));
+        $stm->execute(array('id' => $id, 'img_path' => $img_path));
 
         return $stm->rowCount() == 1;
     }
