@@ -26,13 +26,13 @@ if (empty($file) || $file === null) {
                             <div class="col-12 col-md-6 info-label">
                                 ID:
                             </div>
-                            <div class="col-12 col-md-6 info-content">
+                            <div class="col-12 col-md-6 info-content" id="leave-request-id">
                                 <?= $s['id'] ?>
                             </div>
                         </li>
                         <li class="row">
                             <div class="col-12 col-md-6 info-label">Person ID:</div>
-                            <div class="col-12 col-md-6 info-content">
+                            <div class="col-12 col-md-6 info-content" id="leave-request-personID">
                                 <?= $s['leave_id'] ?>
                             </div>
                         </li>
@@ -44,7 +44,7 @@ if (empty($file) || $file === null) {
                         </li>
                         <li class="row">
                             <div class="col-12 col-md-6 info-label">Number of Days Requested:</div>
-                            <div class="col-12 col-md-6 info-content">
+                            <div class="col-12 col-md-6 info-content" id="leave-request-daysRequested">
                                 <?= $s['days'] ?>
                             </div>
                         </li>
@@ -108,8 +108,16 @@ if (empty($file) || $file === null) {
             <div class="modal-body">
                 <p>Are you sure you want to ACCEPT the request?</p>
             </div>
+            <div class="form-group">
+                <div id="fail-alert" class="alert alert-danger mt-2" style="opacity: 0; display:none">
+                    Success
+                </div>
+                <div id="success-alert" class="alert alert-success mt-2" style="opacity: 0; display:none;">
+                    Failure
+                </div>
+            </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="accept-request-confirm">
+                <button type="button" class="btn btn-primary" id="leave-accept-request">
                     Confirm
                 </button>
 
@@ -132,8 +140,14 @@ if (empty($file) || $file === null) {
             <div class="modal-body">
                 <p>Are you sure you want to REJECT the request?</p>
             </div>
+            <div id="fail-alert2" class="alert alert-danger mt-2" style="opacity: 0; display:none">
+                Success
+            </div>
+            <div id="success-alert2" class="alert alert-success mt-2" style="opacity: 0; display:none;">
+                Failure
+            </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" id="reject-request-confirm">
+                <button type="button" class="btn btn-danger" id="leave-reject-request">
                     Confirm
                 </button>
 

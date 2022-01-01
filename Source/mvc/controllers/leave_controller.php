@@ -124,22 +124,51 @@ class LeaveController extends BaseController
         }
     }
 
-    public function changePassword()
+    public function acceptRequest()
     {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            http_response_code(405);
+            die(json_encode(array('code' => 4, 'message' => 'API này chỉ hỗ trợ POST')));
+        }
+
+        if (!isset($_POST['id']) || !isset($_POST['leave_id']) || !isset($_POST['days'])) {
+            die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
+        }
+
+        if (empty($_POST['id']) || empty($_POST['leave_id']) || empty($_POST['days'])) {
+            die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
+        }
+
+        $result = Leave::acceptRequest($_POST['id'], $_POST['leave_id'], $_POST['days']);
+
+        if ($result) {
+            echo json_encode(array('code' => 0, 'message' => 'Chấp nhận yêu cầu nghỉ phép thành công'));
+        } else {
+            die(json_encode(array('code' => 3, 'message' => 'Chấp nhận yêu cầu nghỉ phép thất bại!')));
+        }
     }
 
-    public function edit()
+    public function rejectRequest()
     {
-        echo 'Edit page of Student';
-    }
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            http_response_code(405);
+            die(json_encode(array('code' => 4, 'message' => 'API này chỉ hỗ trợ POST')));
+        }
 
-    public function save()
-    {
-        echo 'Save page of Student';
-    }
+        if (!isset($_POST['id'])) {
+            die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
+        }
 
-    public function delete()
-    {
-        echo 'Delete page of Student';
+        if (empty($_POST['id'])) {
+            die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
+        }
+
+        $result = Leave::rejectRequest($_POST['id']);
+
+        if ($result) {
+            echo json_encode(array('code' => 0, 'message' => 'Từ chối yêu cầu nghỉ phép thành công'));
+        } else {
+            die(json_encode(array('code' => 3, 'message' => 'Từ chối yêu cầu nghỉ phép thất bại!')));
+        }
     }
 }

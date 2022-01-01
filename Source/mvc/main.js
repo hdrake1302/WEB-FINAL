@@ -1,4 +1,5 @@
 $(document).ready(() => {
+    let home_url = "http://localhost/WEB-FINAL/Source/mvc/";
     function showError(text) {
         $("#fail-alert").text(text);
         $("#fail-alert").fadeTo(2000, 500).slideUp(500, function() {
@@ -179,7 +180,6 @@ $(document).ready(() => {
                 }
             }
         };
-// path + "api/" + "upload.php"
         xhr.open("POST", '?controller=user&action=uploadAvatar', true);
         xhr.send(data);
     });
@@ -283,6 +283,71 @@ $(document).ready(() => {
         xhr.send(data);
     });
     // --------------------- END OF LEAVES MANAGEMENT ---------------------
+
+    // --------------------- START OF VIEW REQUEST ---------------------
+
+    // ACCEPT REQUEST
+    $("#leave-accept-request").click(function(evt) {
+        evt.preventDefault();
+
+        let id = parseInt($("#leave-request-id").text());
+        let personID = parseInt($("#leave-request-personID").text());
+        let daysRequested = parseInt($("#leave-request-daysRequested").text());
+
+        let data = {'id': id, 'leave_id': personID, 'days': daysRequested};
+
+        $.ajax({
+            url: "?controller=leave&action=acceptRequest",
+            method: "POST",
+            data: data,
+            success: function(result){
+                result = JSON.parse(result);
+
+                if(result.code === 0){
+                    success(result.message);
+                    setTimeout(function(){
+                        window.location.href = "?controller=leave&action=indexRequest";
+                    }, 2000);
+                }else{
+                    showError(result.message);
+                }
+            }
+        });
+    });
+
+    // REJECT REQUEST
+    $("#leave-reject-request").click(function(evt) {
+        evt.preventDefault();
+
+        let id = parseInt($("#leave-request-id").text());
+        let data = {'id': id};
+
+        $.ajax({
+            url: "?controller=leave&action=rejectRequest",
+            method: "POST",
+            data: data,
+            success: function(result){
+                result = JSON.parse(result);
+
+                if(result.code === 0){
+                    $("#success-alert2").text(result.message);
+                    $("#success-alert2").fadeTo(2000, 500).slideUp(500, function() {
+                        $("#success-alert2").slideUp(500);
+                    });
+                    setTimeout(function(){
+                        window.location.href = "?controller=leave&action=indexRequest";
+                    }, 2000);
+                }else{
+                    $("#fail-alert2").text(result.message);
+                    $("#fail-alert2").fadeTo(2000, 500).slideUp(500, function() {
+                        $("#fail-alert2").slideUp(500);
+                    });
+                }
+            }
+        });
+    });
+
+    // --------------------- END OF VIEW REQUEST ---------------------
 });
 
 

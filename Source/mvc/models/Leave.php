@@ -55,6 +55,19 @@ class Leave
         return $data;
     }
 
+    public static function getUsedDays($personID)
+    {
+        $sql = "select used_leaves from leave_info where person_id = :personID";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('personID' => $personID));
+
+        if ($item = $stm->fetch()) {
+            return intval($item['used_leaves']);
+        }
+
+        return null;
+    }
     public static function getAllRequests($leave_id)
     {
         // Lấy hết request từ nhân viên có cũng phòng ban với quản lý
@@ -74,7 +87,7 @@ class Leave
 
     public static function getRequest($id, $leave_id)
     {
-        // Lấy hết request từ nhân viên có cũng phòng ban với quản lý
+        // Lấy hết request từ nhân viên có cùng phòng ban với quản lý
         $sql = "SELECT * FROM leave_record WHERE leave_id in (SELECT id FROM account_info where department = :department and id <> :leave_id) AND status = 'waiting' AND id = :id";
         $conn = DB::getConnection();
         $stm = $conn->prepare($sql);
@@ -160,7 +173,54 @@ class Leave
         return $stm->rowCount() == 1;
     }
 
-    public static function acceptRequest()
+    public static function acceptRequest($id, $personID, $days)
     {
+        $usedDays = Leave::getUsedDays($personID);
+        $updateDays = $usedDays + $days;
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $dateAccepted = new DateTime();
+
+        $dateAccepted = $dateAccepted->format('y-m-d H:i:s a');
+
+        // Set status to approved
+        $sql1 = "UPDATE leave_record SET status='approved' WHERE id = :id";
+        // Update days when approved
+        $sql2 = "UPDATE leave_info SET used_leaves = :updateDays WHERE person_id = :personID";
+        $sql3 = "UPDATE leave_record SET date_accepted=:dateAccepted WHERE id = :id";
+
+        $conn = DB::getConnection();
+
+        $stm1 = $conn->prepare($sql1);
+        $stm1->execute(array('id' => $id));
+
+        $stm2 = $conn->prepare($sql2);
+        $stm2->execute(array('updateDays' => $updateDays, 'personID' => $personID));
+
+        $stm3 = $conn->prepare($sql3);
+        $stm3->execute(array('dateAccepted' => $dateAccepted, 'id' => $id));
+
+        return ($stm1->rowCount() == 1) && ($stm2->rowCount() == 1) && ($stm3->rowCount() == 1);
+    }
+
+    public static function rejectRequest($id)
+    {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $dateAccepted = new DateTime();
+
+        $dateAccepted = $dateAccepted->format('y-m-d H:i:s a');
+
+        // Set status to refused
+        $sql1 = "UPDATE leave_record SET status='refused' WHERE id = :id";
+        $sql2 = "UPDATE leave_record SET date_accepted=:dateAccepted WHERE id = :id";
+
+        $conn = DB::getConnection();
+
+        $stm1 = $conn->prepare($sql1);
+        $stm1->execute(array('id' => $id));
+
+        $stm2 = $conn->prepare($sql2);
+        $stm2->execute(array('dateAccepted' => $dateAccepted, 'id' => $id));
+
+        return ($stm1->rowCount() == 1) && ($stm2->rowCount() == 1);
     }
 }
