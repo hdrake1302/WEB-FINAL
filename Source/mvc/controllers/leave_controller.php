@@ -18,12 +18,11 @@ class LeaveController extends BaseController
     public function index()
     {
         // Giao diện quản lý ngày nghỉ phép của nhân viên và trưởng phòng
-        $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
-        if ($_SESSION['id'] !== $id || $_SESSION['role'] == 3) {
+        if ($_SESSION['role'] == 3) {
             header("Location: ./index.php");
         }
 
-        $leave = Leave::get($id);
+        $leave = Leave::get($_SESSION['id']);
         $leavesRecord = Leave::getRecord($_SESSION['id']);
         $data = array('leave' => $leave, 'leaves_record' => $leavesRecord);
         $this->render('index', $data);

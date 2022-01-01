@@ -89,6 +89,14 @@ class LoginController
             die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
         }
 
+        if ($currentPwd === $newPwd) {
+            die(json_encode(array('code' => 2, 'message' => 'Mật khẩu hiện tại không được trùng với mật khẩu mới')));
+        }
+
+        if ($newPwd !== $confirmPwd) {
+            die(json_encode(array('code' => 2, 'message' => 'Mật khẩu mới và mật khẩu xác nhận với giống nhau')));
+        }
+
         if (!password_verify($currentPwd, $_SESSION['password'])) {
             die(json_encode(array('code' => 3, 'message' => 'Sai mật khẩu!')));
         }

@@ -94,24 +94,30 @@ class User
         return null;
     }
 
-    public static function delete($id)
+    public static function getAvatar($id)
     {
-        $sql = "delete from account_info where id = :id";
+        $sql = "select avatar from account_info where id = :id";
         $conn = DB::getConnection();
         $stm = $conn->prepare($sql);
         $stm->execute(array('id' => $id));
 
-        return $stm->rowCount() == 1;
+        if ($item = $stm->fetch()) {
+            return $item['avatar'];
+        }
+        return null;
     }
 
-    public static function update($s)
+    public static function getToken($id)
     {
-        $sql = "update account_info set name = :name, age = :age where id = :id";
+        $sql = "select token from account where id = :id";
         $conn = DB::getConnection();
         $stm = $conn->prepare($sql);
-        $stm->execute(array('id' => $s->id, 'name' => $s->name, 'age' => $s->age));
+        $stm->execute(array('id' => $id));
 
-        return $stm->rowCount() == 1;
+        if ($item = $stm->fetch()) {
+            return $item['token'];
+        }
+        return null;
     }
 
     public static function updateActivated($id)

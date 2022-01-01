@@ -4,7 +4,7 @@ CREATE TABLE account_info (
   lastname varchar(30) NOT NULL,
   email varchar(50) DEFAULT NULL,
   phone varchar(30) DEFAULT NULL,
-  avatar varchar(100), -- avatar image path
+  avatar varchar(200) -- avatar image path
   department int(6) unsigned NOT NULL,
     
   FOREIGN KEY (id) REFERENCES account(id),

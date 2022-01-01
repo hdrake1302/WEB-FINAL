@@ -29,14 +29,7 @@ class UserController extends BaseController
     // ---------------- USER PROFILE --------------------
     public function viewProfile()
     {
-        $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
-
-        // ONLY LET USER TO VIEW THEIR OWN PROFILE
-        if ($_SESSION['id'] !== $id) {
-            header("Location: ./index.php");
-        }
-
-        $user = User::get($id);
+        $user = User::get($_SESSION['id']);
         $this->render('viewProfile', array('user' => $user));
     }
 
@@ -72,6 +65,7 @@ class UserController extends BaseController
 
         $extension = pathinfo($_FILES['file']['name'])['extension'];
 
+        // Kiểm tra extension
         if (!in_array($extension, $supported_extensions)) {
             die(json_encode(array('code' => 2, 'message' => "The file type is not allowed")));
         }
@@ -86,36 +80,35 @@ class UserController extends BaseController
         $file_tmp = $_FILES['file']['tmp_name'];
         $file_name = $_FILES['file']['name'];
 
-        if (file_exists($upload_path . $file_name)) {
+        // Đặt tên ảnh với token để tránh bị lấy dữ liệu
+        $file = USER::getToken($_SESSION['id']) . "_" . $file_name;
+
+
+        if (file_exists($upload_path . $file)) {
             die(json_encode(array('code' => 4, 'message' => "File already exists!")));
         }
 
-        $update_result = User::updateAvatar($_SESSION['id'], URL . 'assets/uploads/avatars/' . $file_name);
+        // Ảnh đại diện cũ
+        $oldAvatar = pathinfo(User::getAvatar($_SESSION['id']))['basename'];
+        $avatarPath = URL . 'assets/uploads/avatars/' . $file;
+
+        $update_result = User::updateAvatar($_SESSION['id'], $avatarPath);
         if ($update_result === false) {
             die(json_encode(array('code' => 1, 'message' => "Không thể upload lên database!")));
         }
 
-        $result = move_uploaded_file($file_tmp, $upload_path . $file_name);
+        $result = move_uploaded_file($file_tmp, $upload_path . $file);
         if ($result) {
-            $_SESSION['avatar'] = URL . 'assets/uploads/avatars/' . $file_name;
-            echo json_encode(array('code' => 0, 'message' => "Successfully uploaded"));
+            if ($oldAvatar) {
+                // Xóa ảnh cũ
+                unlink($upload_path . $oldAvatar);
+            }
+            $_SESSION['avatar'] = $avatarPath;
+
+            echo json_encode(array('code' => 0, 'message' => "Cập nhật ảnh đại diện thành công", 'avatar' => $avatarPath));
         } else {
-            die(json_encode(array('code' => 1, 'message' => "FAILED")));
+            die(json_encode(array('code' => 1, 'message' => "FAILED!")));
         }
     }
     // ---------------- USER PROFILE --------------------
-    public function edit()
-    {
-        echo 'Edit page of Student';
-    }
-
-    public function save()
-    {
-        echo 'Save page of Student';
-    }
-
-    public function delete()
-    {
-        echo 'Delete page of Student';
-    }
 }

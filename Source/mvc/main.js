@@ -78,6 +78,8 @@ $(document).ready(() => {
             showError("Độ dài mật khẩu không phù hợp! (Ít nhất 6 kí tự)");
         } else if (newPassword != confirmPassword) {
             showError("Mật khẩu không khớp với nhau!");
+        }else if (currentPassword === newPassword) {
+            showError("Mật khẩu mới không được trùng với mật khẩu cũ!");
         } else {
             $(this).unbind('click');
             $.post("?controller=login&action=changePassword", {currentPwd: currentPassword, newPwd: newPassword, confirmPwd: confirmPassword, submit: true}, function(data){
@@ -167,8 +169,8 @@ $(document).ready(() => {
                     if (response.code === 0) {
                         // SUCCESS
                         success("Uploaded Successfully!")
-                        $(".profile-img img").attr('src', path + "uploads/avatars/" + file.name);
-                        $(".avatar img").attr('src', path + "uploads/avatars/" + file.name);
+                        $(".profile-img img").attr('src', response.avatar);
+                        $(".avatar img").attr('src', response.avatar);
                     }else{
                         // FAIL
                         showError(response.message);
