@@ -1,6 +1,8 @@
 <?php
 
 require_once('config.php');
+require_once('function.php');
+
 class User
 {
     public $id;
@@ -55,6 +57,7 @@ class User
         return null;
     }
 
+
     public static function getDepartmentName($id)
     {
         $sql = "select name from department where id = :id";
@@ -66,6 +69,45 @@ class User
             return $item['name'];
         }
         return null;
+    }
+
+    public static function createAccount($data)
+    {
+        /*
+        Function to create a new account for new employees
+        This funtion must be only accessed by admin
+        Input:
+            $data includes ($firstname, $lastname, $email, $phone, $username, $department)
+        Output:
+            True if create successfully else False
+        */
+
+        $sql1 = "INSERT INTO account (username, password, token) 
+                            VALUES (:username, :password, :token)";
+        // $sql2 = "INSERT INTO account_info (firstname, lastname, email, phone, department) 
+        //                     VALUES (:firstname, :lastname, :email, :phone, :department)";
+
+        $conn = DB::getConnection();
+        $stm1 = $conn->prepare($sql1);
+        // $stm2 = $conn->prepare($sql2);
+
+        $stm1 = $conn->execute(array(
+            'username' => $data['username'],
+            'password' => $data['username'],
+            'token' => generateToken()
+        ));
+
+        // $stm2 = $conn->execute(array(
+        //     'firstname' => $data['firstname'],
+        //     'lastname' => $data['lastname'],
+        //     'email' => $data['email'],
+        //     'phone' => $data['phone'],
+        //     'department' => $data['department']
+        // ));
+
+        print_r($stm1);
+        die();
+        return $stm1->rowCount() == 1;
     }
 
     public static function getFullName($id)
@@ -90,6 +132,19 @@ class User
 
         if ($item = $stm->fetch()) {
             return $item['role'];
+        }
+        return null;
+    }
+
+    public static function getRoleName($roleID)
+    {
+        $sql = "select description from role where id = :roleID";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('roleID' => $roleID));
+
+        if ($item = $stm->fetch()) {
+            return $item['description'];
         }
         return null;
     }

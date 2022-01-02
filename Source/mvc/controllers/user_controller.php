@@ -33,23 +33,21 @@ class UserController extends BaseController
         $this->render('viewProfile', array('user' => $user));
     }
 
-
     public function confirmChange()
     {
-        $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
-
-        // ONLY LET USER TO VIEW THEIR OWN PROFILE
-        if ($_SESSION['id'] !== $id) {
-            header("Location: ./index.php");
-        }
-
+        /*
+        Function that let the user change their passsword
+        */
         $_SESSION['activated'] = 0;
-        $user = User::updateActivated($id);
+        $user = User::updateActivated($_SESSION['id']);
         header("Location: ./index.php?controller=login&action=viewChangePassword");
     }
 
     public function uploadAvatar()
     {
+        /*
+        An API that let user change their avatar
+        */
         $path = dirname(dirname(__FILE__));
 
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
@@ -111,4 +109,32 @@ class UserController extends BaseController
         }
     }
     // ---------------- USER PROFILE --------------------
+
+    // ---------------- ADMIN --------------------
+    public function createAccount()
+    {
+        /*
+        An API to create an new account for a employee
+        */
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            http_response_code(405);
+            die(json_encode(array('code' => 4, 'message' => 'API này chỉ hỗ trợ POST')));
+        }
+
+        if (!isset($_POST['firstname']) || !isset($_POST['lastname']) || !isset($_POST['email']) || !isset($_POST['phone']) || !isset($_POST['username']) || !isset($_POST['department'])) {
+            die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
+        }
+
+        if (empty($_POST['firstname']) || empty($_POST['lastname']) || empty($_POST['email']) || empty($_POST['phone']) || empty($_POST['username']) || empty($_POST['department'])) {
+            die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
+        }
+
+        $result = User::createAccount($_POST);
+        if ($result) {
+            echo json_encode(array('code' => 0, 'message' => 'Tạo tài khoản thành công'));
+        } else {
+            die(json_encode(array('code' => 3, 'message' => 'Tạo tài khoản thất bại!')));
+        }
+    }
+    // ---------------- ADMIN --------------------
 }

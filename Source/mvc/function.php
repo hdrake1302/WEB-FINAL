@@ -30,6 +30,21 @@ function calculateDaysBetween($currentDate, $laterDate)
 
 function fileNameHash($file_name)
 {
+    /* 
+    Function to hash a file name using bcrypt
+    Input: $file_name(str)
+    Output: hashed string without '/'
+    */
     $file_name = password_hash($file_name, PASSWORD_BCRYPT);
     return str_replace("/", "", $file_name);
+}
+
+function generateToken()
+{
+    /* 
+    Function to generate a token for the User
+    Input: None
+    Output: 32 random characters 
+    */
+    return bin2hex(random_bytes(16));
 }

@@ -105,10 +105,6 @@ $(document).ready(() => {
     $(".menu i").click(function() {
         $(".sidebar").toggleClass("active");
     });
-
-    $(".modal #confirm-change").click(function(e){
-        console.log(sessionStorage.getItem('id'));
-    });
     // --------------- END OF TEMPLATE -------------------------
     
     // --------------- START OF VIEW PROFILE -------------------

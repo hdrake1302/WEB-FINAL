@@ -4,7 +4,7 @@ CREATE TABLE account (
   password varchar(100) NOT NULL,
   role int(6) UNSIGNED DEFAULT 1,
   activated tinyint(4) DEFAULT 0,
-  token varchar(30) DEFAULT NULL,
+  token varchar(50) UNIQUE DEFAULT NULL,
     
   FOREIGN KEY (role) REFERENCES role(id)
 )

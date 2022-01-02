@@ -40,19 +40,25 @@
                             </div>
                         </li>
                         <li class="row">
+                            <div class="col-12 col-md-4 info-label">Role:</div>
+                            <div class="col-12 col-md-8 info-content">
+                                <?= USER::getRoleName(USER::getRole($user->id)) ?>
+                            </div>
+                        </li>
+                        <li class="row">
                             <div class="col-12 col-md-4 info-label">Department:</div>
                             <div class="col-12 col-md-8 info-content">
-                                <?= $user->department ?>
+                                <?= USER::getDepartmentName($user->department) ?>
                             </div>
                         </li>
                         <div class="row">
                             <div class="col-12 col-md-3">
-                                <button class="btn btn-success w-100" data-toggle="modal" data-target="#changePass-modal">
+                                <button class="btn btn-success m-2 w-100" data-toggle="modal" data-target="#changePass-modal">
                                     Change Password
                                 </button>
                             </div>
                             <div class="col-12 col-md-3">
-                                <button class="btn btn-primary w-100" data-toggle="modal" data-target="#upload-modal">
+                                <button class="btn btn-primary m-2 w-100" data-toggle="modal" data-target="#upload-modal">
                                     Change Avatar
                                 </button>
                             </div>

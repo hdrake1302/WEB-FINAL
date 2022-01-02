@@ -119,7 +119,7 @@ class LeaveController extends BaseController
         if ($result) {
             echo json_encode(array('code' => 0, 'message' => 'Tạo yêu cầu nghỉ phép thành công!'));
         } else {
-            die(json_encode(array('code' => 3, 'message' => 'Failed!')));
+            die(json_encode(array('code' => 3, 'message' => 'Tạo yêu cầu nghỉ phép thất bại!')));
         }
     }
 
