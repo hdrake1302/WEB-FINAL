@@ -38,9 +38,24 @@ class UserController extends BaseController
         /*
         Function that let the user change their passsword
         */
-        $_SESSION['activated'] = 0;
-        $user = User::updateActivated($_SESSION['id']);
-        header("Location: ./index.php?controller=login&action=viewChangePassword");
+        $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
+
+        if ($_SESSION['role'] >= 3) {
+            // Giám đốc có thể reset password của nhân viên
+            $result = User::updateActivated($id);
+            if ($result) {
+                echo json_encode(array('code' => 0, 'message' => 'Reset mật khẩu nhân viên thành công!'));
+            } else {
+                die(json_encode(array('code' => 3, 'message' => 'Mật khẩu nhân viên đã được reset trước đó!')));
+            }
+        } else {
+            if ($_SESSION['id'] != $id) {
+                header("Location: ./index.php");
+            }
+            $_SESSION['activated'] = 0;
+            User::updateActivated($_SESSION['id']);
+            header("Location: ./index.php?controller=login&action=viewChangePassword");
+        }
     }
 
     public function uploadAvatar()

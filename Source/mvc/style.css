@@ -249,6 +249,10 @@ body {
   color: #888;
 }
 
+.table-wrapper-scroll-y {
+  height: 50vh;
+  overflow: auto;
+}
 /* Smart Phone: < 576px */
 @media only screen and (max-width: 36em) {
   /* TEMPLATE */

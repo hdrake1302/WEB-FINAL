@@ -107,6 +107,30 @@ $(document).ready(() => {
     });
     // --------------- END OF TEMPLATE -------------------------
     
+
+    // --------------- START OF USER MANAGEMENT -------------------
+
+    $("#user-reset-password").click(function(){
+        console.log("HELLO");
+        let userID = $("#user-id").text();
+
+        $.ajax({
+            url: "?controller=user&action=confirmChange&id="+userID,
+            method: "POST",
+            success: function(result){
+                result = JSON.parse(result);
+
+                if(result.code === 0){
+                    success(result.message);
+                }else{
+                    showError(result.message);
+                }
+            }
+        });
+    });
+    // --------------- END OF VIEW PROFILE -------------------
+
+
     // --------------- START OF VIEW PROFILE -------------------
 
     // Add the following code if you want the name of the file appear on select

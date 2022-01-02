@@ -135,9 +135,6 @@ $s = $data['leave'];
                     <td><?= $s['date_created'] ?></td>
                     <td><?= $s['date_wanted'] ?></td>
                     <td class="leave-status"><?= $s['status'] ?></td>
-                    <td>
-                        <a class="btn btn-sm btn-primary" href="?controller=user&action=view&id=<?= $s['id'] ?>">View</a>
-                    </td>
                 </tr>
             <?php
             }

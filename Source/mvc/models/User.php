@@ -57,6 +57,31 @@ class User
         return null;
     }
 
+    public static function getUsername($id)
+    {
+        $sql = "select username from account where id = :id";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('id' => $id));
+
+        if ($item = $stm->fetch()) {
+            return $item['username'];
+        }
+        return null;
+    }
+
+    public static function getActivated($id)
+    {
+        $sql = "select activated from account where id = :id";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('id' => $id));
+
+        if ($item = $stm->fetch()) {
+            return $item['activated'];
+        }
+        return null;
+    }
 
     public static function getDepartmentName($id)
     {
@@ -71,44 +96,7 @@ class User
         return null;
     }
 
-    public static function createAccount($data)
-    {
-        /*
-        Function to create a new account for new employees
-        This funtion must be only accessed by admin
-        Input:
-            $data includes ($firstname, $lastname, $email, $phone, $username, $department)
-        Output:
-            True if create successfully else False
-        */
 
-        $sql1 = "INSERT INTO account (username, password, token) 
-                            VALUES (:username, :password, :token)";
-        // $sql2 = "INSERT INTO account_info (firstname, lastname, email, phone, department) 
-        //                     VALUES (:firstname, :lastname, :email, :phone, :department)";
-
-        $conn = DB::getConnection();
-        $stm1 = $conn->prepare($sql1);
-        // $stm2 = $conn->prepare($sql2);
-
-        $stm1 = $conn->execute(array(
-            'username' => $data['username'],
-            'password' => $data['username'],
-            'token' => generateToken()
-        ));
-
-        // $stm2 = $conn->execute(array(
-        //     'firstname' => $data['firstname'],
-        //     'lastname' => $data['lastname'],
-        //     'email' => $data['email'],
-        //     'phone' => $data['phone'],
-        //     'department' => $data['department']
-        // ));
-
-        print_r($stm1);
-        die();
-        return $stm1->rowCount() == 1;
-    }
 
     public static function getFullName($id)
     {
@@ -193,5 +181,44 @@ class User
         $stm->execute(array('id' => $id, 'img_path' => $img_path));
 
         return $stm->rowCount() == 1;
+    }
+
+    public static function createAccount($data)
+    {
+        /*
+        Function to create a new account for new employees
+        This funtion must be only accessed by admin
+        Input:
+            $data includes ($firstname, $lastname, $email, $phone, $username, $department)
+        Output:
+            True if create successfully else False
+        */
+
+        $sql1 = "INSERT INTO account (username, password, token) 
+                            VALUES (:username, :password, :token)";
+        // $sql2 = "INSERT INTO account_info (firstname, lastname, email, phone, department) 
+        //                     VALUES (:firstname, :lastname, :email, :phone, :department)";
+
+        $conn = DB::getConnection();
+        $stm1 = $conn->prepare($sql1);
+        // $stm2 = $conn->prepare($sql2);
+
+        $stm1 = $conn->execute(array(
+            'username' => $data['username'],
+            'password' => $data['username'],
+            'token' => generateToken()
+        ));
+
+        // $stm2 = $conn->execute(array(
+        //     'firstname' => $data['firstname'],
+        //     'lastname' => $data['lastname'],
+        //     'email' => $data['email'],
+        //     'phone' => $data['phone'],
+        //     'department' => $data['department']
+        // ));
+
+        print_r($stm1);
+        die();
+        return $stm1->rowCount() == 1;
     }
 }

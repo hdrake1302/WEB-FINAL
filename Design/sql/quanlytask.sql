@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 20, 2021 at 09:27 AM
+-- Generation Time: Jan 02, 2022 at 10:42 AM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.12
 
@@ -33,7 +33,7 @@ CREATE TABLE `account` (
   `password` varchar(100) NOT NULL,
   `role` int(6) UNSIGNED DEFAULT 1,
   `activated` tinyint(4) DEFAULT 0,
-  `token` varchar(30) DEFAULT NULL
+  `token` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -41,8 +41,9 @@ CREATE TABLE `account` (
 --
 
 INSERT INTO `account` (`id`, `username`, `password`, `role`, `activated`, `token`) VALUES
-(1, 'admin', '$2a$10$0quxCVd2qSCHfWyfxP8w2eQsf0AhLx8ORqAftvFXHLEL3PyiWdG1a', 3, 1, '1'),
-(2, 'nhanvien1', '123', 1, 0, 'token1');
+(1, '3', '$2a$10$0quxCVd2qSCHfWyfxP8w2eQsf0AhLx8ORqAftvFXHLEL3PyiWdG1a', 3, 1, 'e1468c44e22760aa283f55feb2685721'),
+(2, 'nhanvien1', '$2y$10$NFDRNhXZhJEaKcdvk3mkQur97NA74SBvJfAGywB1/HMecGDlULc5a', 1, 0, 'c46506f317fd685c0a0b1d82322465f0'),
+(3, 'tester', '$2y$10$8K66acEP3xZ5KFU4tjoSI.16V1A0AsPl3Dy/uhKEZbz.DVyDe7oYO', 4, 1, '59ad3b4e8db61ed68cec6ef24ae99a02');
 
 -- --------------------------------------------------------
 
@@ -56,7 +57,7 @@ CREATE TABLE `account_info` (
   `lastname` varchar(30) NOT NULL,
   `email` varchar(50) DEFAULT NULL,
   `phone` varchar(30) DEFAULT NULL,
-  `avatar` varchar(100) DEFAULT NULL,
+  `avatar` varchar(200) DEFAULT NULL,
   `department` int(6) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -65,8 +66,9 @@ CREATE TABLE `account_info` (
 --
 
 INSERT INTO `account_info` (`id`, `firstname`, `lastname`, `email`, `phone`, `avatar`, `department`) VALUES
-(1, 'Super', 'Admin', 'nguyenminhthien@gmail.com', '01122334455', 'asd', 1),
-(2, 'Super', 'Person', 'normie@gmail.com', '01122334455', 'asd', 1);
+(1, 'Phil', 'Jones', 'normie@gmail.com', '01122334455', NULL, 1),
+(2, 'Super', 'Normal', 'normie@gmail.com', '0329928498', 'http://localhost/WEB-FINAL/Source/mvc/assets/uploads/avatars/c46506f317fd685c0a0b1d82322465f0_MAS_6984.jpg', 1),
+(3, 'Alexander', 'Tester', 'tester@gmail.com', '0329928498', 'http://localhost/WEB-FINAL/Source/mvc/assets/uploads/avatars/59ad3b4e8db61ed68cec6ef24ae99a02_dwayne-the-rock-.jpg', 1);
 
 -- --------------------------------------------------------
 
@@ -84,7 +86,8 @@ CREATE TABLE `department` (
 --
 
 INSERT INTO `department` (`id`, `name`) VALUES
-(1, 'Phòng Công Nghệ thông tin');
+(1, 'Phòng Công Nghệ thông tin'),
+(2, 'Phòng Kế Toán');
 
 -- --------------------------------------------------------
 
@@ -104,7 +107,8 @@ CREATE TABLE `department_info` (
 --
 
 INSERT INTO `department_info` (`id`, `managerID`, `description`, `roomQuantity`) VALUES
-(1, 1, 'Phòng công nghệ thông tin của trường TDTU', 5);
+(1, 3, 'Phòng công nghệ thông tin của trường TDTU', 5),
+(2, 1, 'Phòng Kế Toán TDTU', 20);
 
 -- --------------------------------------------------------
 
@@ -113,12 +117,19 @@ INSERT INTO `department_info` (`id`, `managerID`, `description`, `roomQuantity`)
 --
 
 CREATE TABLE `leave_info` (
-  `id` int(6) UNSIGNED NOT NULL,
-  `personID` int(6) UNSIGNED NOT NULL,
+  `person_id` int(6) UNSIGNED NOT NULL,
   `role` int(6) UNSIGNED NOT NULL,
-  `used_leaves` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
-  `total_leaves` tinyint(3) UNSIGNED NOT NULL DEFAULT 12
+  `used_leaves` tinyint(3) UNSIGNED DEFAULT 0,
+  `total_leaves` tinyint(3) UNSIGNED DEFAULT 12
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `leave_info`
+--
+
+INSERT INTO `leave_info` (`person_id`, `role`, `used_leaves`, `total_leaves`) VALUES
+(2, 1, 5, 12),
+(3, 4, 0, 12);
 
 -- --------------------------------------------------------
 
@@ -129,11 +140,23 @@ CREATE TABLE `leave_info` (
 CREATE TABLE `leave_record` (
   `id` int(6) UNSIGNED NOT NULL,
   `leave_id` int(6) UNSIGNED NOT NULL,
-  `description` varchar(100) DEFAULT NULL,
-  `file` varchar(100) DEFAULT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `description` varchar(200) NOT NULL,
+  `file_name` varchar(200) DEFAULT NULL,
+  `file` varchar(200) DEFAULT NULL,
+  `days` tinyint(3) UNSIGNED NOT NULL,
+  `date_created` timestamp NOT NULL DEFAULT current_timestamp(),
+  `date_accepted` datetime DEFAULT NULL,
+  `date_wanted` date NOT NULL,
   `status` varchar(30) NOT NULL DEFAULT 'waiting'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `leave_record`
+--
+
+INSERT INTO `leave_record` (`id`, `leave_id`, `description`, `file_name`, `file`, `days`, `date_created`, `date_accepted`, `date_wanted`, `status`) VALUES
+(3, 2, 'I Don\'t care', 'avatar.jpg', 'http://localhost/WEB-FINAL/Source/mvc/assets/uploads/leaves/$2y$10$FJuWqJWueIlNUKPZb8qeuupxmVbwkurhFTEmxMJW4B6l8ekXUu4i.jpg', 5, '2022-01-01 09:07:22', '2022-01-01 16:24:07', '2022-01-04', 'refused'),
+(4, 3, 'Bored', 'baocao.pdf', 'http://localhost/WEB-FINAL/Source/mvc/assets/uploads/leaves/$2y$10$rrF3Z7gX0.nX9MDfK3FG7uLXcyXGbcM4FgQlZSQ2vywfT2ii8i86.pdf', 1, '2022-01-02 02:55:55', NULL, '2022-01-19', 'waiting');
 
 -- --------------------------------------------------------
 
@@ -153,7 +176,8 @@ CREATE TABLE `role` (
 INSERT INTO `role` (`id`, `description`) VALUES
 (1, 'Nhân Viên'),
 (2, 'Trưởng phòng'),
-(3, 'Giám Đốc');
+(3, 'Giám Đốc'),
+(4, 'Tester');
 
 -- --------------------------------------------------------
 
@@ -173,6 +197,13 @@ CREATE TABLE `task` (
   `deadline` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `task`
+--
+
+INSERT INTO `task` (`id`, `managerID`, `staffID`, `title`, `description`, `status`, `rating`, `date`, `deadline`) VALUES
+(1, 1, 2, 'Task1', 'asdasdasdsad', 'new', NULL, '2021-12-23 07:53:43', '2021-12-23 07:53:43');
+
 -- --------------------------------------------------------
 
 --
@@ -190,6 +221,24 @@ CREATE TABLE `task_record` (
   `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `test`
+--
+
+CREATE TABLE `test` (
+  `date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `test`
+--
+
+INSERT INTO `test` (`date`) VALUES
+('2022-01-01 09:20:58'),
+('2022-01-30 15:20:59');
+
 --
 -- Indexes for dumped tables
 --
@@ -199,6 +248,7 @@ CREATE TABLE `task_record` (
 --
 ALTER TABLE `account`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `token` (`token`),
   ADD KEY `role` (`role`);
 
 --
@@ -225,8 +275,7 @@ ALTER TABLE `department_info`
 -- Indexes for table `leave_info`
 --
 ALTER TABLE `leave_info`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `personID` (`personID`),
+  ADD PRIMARY KEY (`person_id`),
   ADD KEY `role` (`role`);
 
 --
@@ -267,37 +316,31 @@ ALTER TABLE `task_record`
 -- AUTO_INCREMENT for table `account`
 --
 ALTER TABLE `account`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `department`
 --
 ALTER TABLE `department`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `leave_info`
---
-ALTER TABLE `leave_info`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `leave_record`
 --
 ALTER TABLE `leave_record`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `task_record`
@@ -333,14 +376,14 @@ ALTER TABLE `department_info`
 -- Constraints for table `leave_info`
 --
 ALTER TABLE `leave_info`
-  ADD CONSTRAINT `leave_info_ibfk_1` FOREIGN KEY (`personID`) REFERENCES `account` (`id`),
+  ADD CONSTRAINT `leave_info_ibfk_1` FOREIGN KEY (`person_id`) REFERENCES `account` (`id`),
   ADD CONSTRAINT `leave_info_ibfk_2` FOREIGN KEY (`role`) REFERENCES `role` (`id`);
 
 --
 -- Constraints for table `leave_record`
 --
 ALTER TABLE `leave_record`
-  ADD CONSTRAINT `leave_record_ibfk_1` FOREIGN KEY (`leave_id`) REFERENCES `leave_info` (`id`);
+  ADD CONSTRAINT `leave_record_ibfk_1` FOREIGN KEY (`leave_id`) REFERENCES `leave_info` (`person_id`);
 
 --
 -- Constraints for table `task`
