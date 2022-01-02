@@ -120,6 +120,7 @@ $s = $data['leave'];
                 <th>Days</th>
                 <th>Date Created</th>
                 <th>Date Wanted</th>
+                <th>Date Response</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -134,6 +135,7 @@ $s = $data['leave'];
                     <td><?= $s['days'] ?></td>
                     <td><?= $s['date_created'] ?></td>
                     <td><?= $s['date_wanted'] ?></td>
+                    <td><?= $s['date_response'] ?></td>
                     <td class="leave-status"><?= $s['status'] ?></td>
                 </tr>
             <?php

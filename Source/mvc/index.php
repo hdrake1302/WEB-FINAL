@@ -29,7 +29,7 @@ $access_control = array(
             'login', 'logout',
             'view', 'viewChangePassword', 'changePassword'
         ),
-        'user' => array('viewProfile', 'confirmChange', 'uploadAvatar'),
+        'user' => array('index', 'view', 'viewProfile', 'confirmChange', 'uploadAvatar', 'createAccount'),
         'leave' => array('indexRequest', 'viewRequest', 'acceptRequest', 'rejectRequest')
     ),
     4 => array(
@@ -37,7 +37,7 @@ $access_control = array(
             'login', 'logout',
             'view', 'viewChangePassword', 'changePassword'
         ),
-        'user' => array('index', 'view', 'viewProfile', 'confirmChange', 'uploadAvatar'),
+        'user' => array('index', 'view', 'viewProfile', 'confirmChange', 'uploadAvatar', 'createAccount'),
         'leave' => array('index', 'view', 'indexRequest', 'viewRequest', 'createRequest', 'acceptRequest', 'rejectRequest'),
         'task' => array('index', 'view')
     )

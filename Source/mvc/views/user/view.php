@@ -66,7 +66,7 @@
                     </ul>
                     <div class="row">
                         <div class="col-12 col-md-3">
-                            <button class="btn btn-primary m-2 w-100" data-toggle="modal" data-target="#changePass-modal">
+                            <button class="btn btn-primary m-2 w-100" data-toggle="modal" data-target="#reset-password-modal">
                                 Reset Password
                             </button>
                         </div>
@@ -76,8 +76,9 @@
         </div>
     </div>
 </div>
-<!-- CHANGE PASSWORD MODAL -->
-<div class="modal" tabindex="-1" role="dialog" id="changePass-modal">
+
+<!-- RESET PASSWORD MODAL -->
+<div class="modal" tabindex="-1" role="dialog" id="reset-password-modal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -88,6 +89,14 @@
             </div>
             <div class="modal-body">
                 <p>Are you sure you want to reset <?= $user->firstname ?>'s password?</p>
+            </div>
+            <div class="form-group">
+                <div id="fail-alert" class="alert alert-danger mt-2" style="opacity: 0; display:none">
+                    This type of file is not allowed
+                </div>
+                <div id="success-alert" class="alert alert-success mt-2" style="opacity: 0; display:none;">
+                    This type of file is allowed
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="user-reset-password">

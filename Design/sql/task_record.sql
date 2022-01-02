@@ -5,7 +5,8 @@ CREATE TABLE task_record (
     role int(6) unsigned NOT NULL,
     status varchar(30) NOT NULL, -- "new, in progess, canceled, wating, rejected"
     note varchar(100), -- "note if rejected",
-    file varchar(100), -- "file path to the data"
+    file_name varchar(100),
+    file varchar(200), -- "file path to the data"
     
     date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY(task_id) REFERENCES task(id),

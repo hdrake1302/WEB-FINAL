@@ -16,13 +16,11 @@ class Leave
 
     public function __construct(
         $id,
-        $role,
         $used_leaves,
         $total_leaves,
 
     ) {
         $this->id = $id;
-        $this->role = $role;
         $this->used_leaves = $used_leaves;
         $this->total_leaves = $total_leaves;
     }
@@ -35,7 +33,7 @@ class Leave
         $stm->execute(array('id' => $id));
 
         if ($item = $stm->fetch()) {
-            return new Leave($item['person_id'], $item['role'], $item['used_leaves'], $item['total_leaves']);
+            return new Leave($item['person_id'], $item['used_leaves'], $item['total_leaves']);
         }
 
         return null;
@@ -68,7 +66,7 @@ class Leave
 
         return null;
     }
-    public static function getAllRequests($leave_id)
+    public static function getAllRequests($leave_id, $role)
     {
         // Lấy hết request từ nhân viên có cũng phòng ban với quản lý
         $sql = "SELECT * FROM leave_record WHERE leave_id in (SELECT id FROM account_info where department = :department and id <> :leave_id) AND status = 'waiting'";
@@ -76,10 +74,16 @@ class Leave
         $stm = $conn->prepare($sql);
         $stm->execute(array('leave_id' => $leave_id, 'department' => Department::findID($leave_id)));
 
+        if ($role == 3) {
+            $sql = "SELECT * FROM leave_record WHERE leave_id in (SELECT id FROM account where role = 2) AND status = 'waiting'";
+            $stm = $conn->prepare($sql);
+            $stm->execute();
+        }
+
         $data = array();
 
         foreach ($stm->fetchAll() as $item) {
-            $data[] =  array('id' => $item['id'], 'leave_id' => $item['leave_id'], 'description' => $item['description'], 'file_name' => $item['file_name'],  'file' => $item['file'], 'days' => $item['days'], 'date_created' => $item['date_created'], 'date_wanted' => $item['date_wanted'], 'status' => $item['status']);
+            $data[] =  array('id' => $item['id'], 'leave_id' => $item['leave_id'], 'description' => $item['description'], 'file_name' => $item['file_name'],  'file' => $item['file'], 'days' => $item['days'], 'date_created' => $item['date_created'], 'date_wanted' => $item['date_wanted'], 'date_response' => $item['date_response'], 'status' => $item['status']);
         }
 
         return $data;
@@ -94,7 +98,7 @@ class Leave
         $stm->execute(array('id' => $id, 'leave_id' => $leave_id, 'department' => Department::findID($leave_id)));
 
         if ($item = $stm->fetch()) {
-            return array('id' => $item['id'], 'leave_id' => $item['leave_id'], 'description' => $item['description'], 'file_name' => $item['file_name'],  'file' => $item['file'], 'days' => $item['days'], 'date_created' => $item['date_created'], 'date_wanted' => $item['date_wanted'], 'status' => $item['status']);
+            return array('id' => $item['id'], 'leave_id' => $item['leave_id'], 'description' => $item['description'], 'file_name' => $item['file_name'],  'file' => $item['file'], 'days' => $item['days'], 'date_created' => $item['date_created'], 'date_wanted' => $item['date_wanted'], 'date_response' => $item['date_response'], 'status' => $item['status']);
         }
 
         return null;
@@ -110,7 +114,7 @@ class Leave
         $data = array();
 
         foreach ($stm->fetchAll() as $item) {
-            $data[] = array('id' => $item['id'], 'leave_id' => $item['leave_id'], 'description' => $item['description'], 'file' => $item['file'], 'days' => $item['days'], 'date_created' => $item['date_created'], 'date_wanted' => $item['date_wanted'], 'status' => $item['status']);
+            $data[] = array('id' => $item['id'], 'leave_id' => $item['leave_id'], 'description' => $item['description'], 'file' => $item['file'], 'days' => $item['days'], 'date_created' => $item['date_created'], 'date_wanted' => $item['date_wanted'], 'date_response' => $item['date_response'], 'status' => $item['status']);
         }
 
         return $data;
@@ -125,7 +129,7 @@ class Leave
             FALSE IS THE OPPOSITE
         */
 
-        $sql = "SELECT date_accepted FROM leave_record WHERE leave_id = :leave_id AND status <> 'waiting' ORDER BY id DESC LIMIT 1";
+        $sql = "SELECT date_response FROM leave_record WHERE leave_id = :leave_id AND status <> 'waiting' ORDER BY id DESC LIMIT 1";
         $conn = DB::getConnection();
         $stm = $conn->prepare($sql);
         $stm->execute(array('leave_id' => $leave_id));
@@ -135,9 +139,9 @@ class Leave
             return TRUE;
         }
 
-        $dateAccepted = $stm->fetch()['date_accepted'];
+        $dateResponse = $stm->fetch()['date_response'];
 
-        $currentDate = new DateTime($dateAccepted, new DateTimeZone('Asia/Ho_Chi_Minh'));
+        $currentDate = new DateTime($dateResponse, new DateTimeZone('Asia/Ho_Chi_Minh'));
         $today = new DateTime('', new DateTimeZone('Asia/Ho_Chi_Minh'));
 
         $days_between = calculateDaysBetween($currentDate, $today);
@@ -178,15 +182,15 @@ class Leave
         $usedDays = Leave::getUsedDays($personID);
         $updateDays = $usedDays + $days;
         date_default_timezone_set('Asia/Ho_Chi_Minh');
-        $dateAccepted = new DateTime();
+        $dateResponse = new DateTime();
 
-        $dateAccepted = $dateAccepted->format('y-m-d H:i:s a');
+        $dateResponse = $dateResponse->format('y-m-d H:i:s a');
 
         // Set status to approved
         $sql1 = "UPDATE leave_record SET status='approved' WHERE id = :id";
         // Update days when approved
         $sql2 = "UPDATE leave_info SET used_leaves = :updateDays WHERE person_id = :personID";
-        $sql3 = "UPDATE leave_record SET date_accepted=:dateAccepted WHERE id = :id";
+        $sql3 = "UPDATE leave_record SET date_response=:dateResponse WHERE id = :id";
 
         $conn = DB::getConnection();
 
@@ -197,7 +201,7 @@ class Leave
         $stm2->execute(array('updateDays' => $updateDays, 'personID' => $personID));
 
         $stm3 = $conn->prepare($sql3);
-        $stm3->execute(array('dateAccepted' => $dateAccepted, 'id' => $id));
+        $stm3->execute(array('dateResponse' => $dateResponse, 'id' => $id));
 
         return ($stm1->rowCount() == 1) && ($stm2->rowCount() == 1) && ($stm3->rowCount() == 1);
     }
@@ -205,13 +209,13 @@ class Leave
     public static function rejectRequest($id)
     {
         date_default_timezone_set('Asia/Ho_Chi_Minh');
-        $dateAccepted = new DateTime();
+        $dateResponse = new DateTime();
 
-        $dateAccepted = $dateAccepted->format('y-m-d H:i:s a');
+        $dateResponse = $dateResponse->format('y-m-d H:i:s a');
 
         // Set status to refused
         $sql1 = "UPDATE leave_record SET status='refused' WHERE id = :id";
-        $sql2 = "UPDATE leave_record SET date_accepted=:dateAccepted WHERE id = :id";
+        $sql2 = "UPDATE leave_record SET date_response=:dateResponse WHERE id = :id";
 
         $conn = DB::getConnection();
 
@@ -219,7 +223,7 @@ class Leave
         $stm1->execute(array('id' => $id));
 
         $stm2 = $conn->prepare($sql2);
-        $stm2->execute(array('dateAccepted' => $dateAccepted, 'id' => $id));
+        $stm2->execute(array('dateResponse' => $dateResponse, 'id' => $id));
 
         return ($stm1->rowCount() == 1) && ($stm2->rowCount() == 1);
     }

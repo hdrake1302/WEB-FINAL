@@ -52,6 +52,11 @@ class User
         $stm->execute(array('id' => $id));
 
         if ($item = $stm->fetch()) {
+            if ($item['avatar'] === null) {
+                // Nếu chưa set avatar thì để avatar mặc định
+                $src = "https://www.nj.com/resizer/zovGSasCaR41h_yUGYHXbVTQW2A=/1280x0/smart/cloudfront-us-east-1.images.arcpublishing.com/advancelocal/SJGKVE5UNVESVCW7BBOHKQCZVE.jpg";
+                $item['avatar'] = $src;
+            }
             return new User($item['id'], $item['firstname'], $item['lastname'], $item['email'], $item['phone'], $item['avatar'], $item['department']);
         }
         return null;
@@ -163,6 +168,17 @@ class User
         return null;
     }
 
+    public static function getNextID()
+    {
+        $sql = "SELECT id FROM account ORDER BY id DESC LIMIT 1";
+        $conn = DB::getConnection();
+        $stm = $conn->query($sql);
+
+        if ($item = $stm->fetch()) {
+            return intval($item['id']) + 1;
+        }
+        return null;
+    }
     public static function updateActivated($id)
     {
         $sql = "update account set activated = 0 where id = :id";
@@ -183,6 +199,20 @@ class User
         return $stm->rowCount() == 1;
     }
 
+    public static function checkUsername($username)
+    {
+        $sql = "SELECT username FROM account";
+        $conn = DB::getConnection();
+        $stm = $conn->query($sql);
+
+        foreach ($stm->fetchAll() as $item) {
+            if ($username == $item['username']) {
+                return False;
+            }
+        }
+        return True;
+    }
+
     public static function createAccount($data)
     {
         /*
@@ -194,31 +224,38 @@ class User
             True if create successfully else False
         */
 
-        $sql1 = "INSERT INTO account (username, password, token) 
-                            VALUES (:username, :password, :token)";
-        // $sql2 = "INSERT INTO account_info (firstname, lastname, email, phone, department) 
-        //                     VALUES (:firstname, :lastname, :email, :phone, :department)";
+        $sql = "INSERT INTO account (id, username, password, token) 
+                            VALUES (:id, :username, :password, :token)";
 
         $conn = DB::getConnection();
-        $stm1 = $conn->prepare($sql1);
-        // $stm2 = $conn->prepare($sql2);
-
-        $stm1 = $conn->execute(array(
+        $stm1 = $conn->prepare($sql);
+        $stm1->execute(array(
+            'id' => $data['id'],
             'username' => $data['username'],
-            'password' => $data['username'],
+            'password' => password_hash($data['username'], PASSWORD_BCRYPT),
             'token' => generateToken()
         ));
 
-        // $stm2 = $conn->execute(array(
-        //     'firstname' => $data['firstname'],
-        //     'lastname' => $data['lastname'],
-        //     'email' => $data['email'],
-        //     'phone' => $data['phone'],
-        //     'department' => $data['department']
-        // ));
+        $sql = "INSERT INTO account_info (id, firstname, lastname, email, phone, department) VALUES (:id, :firstname, :lastname, :email, :phone, :department)";
+        $conn = DB::getConnection();
 
-        print_r($stm1);
-        die();
-        return $stm1->rowCount() == 1;
+        $stm2 = $conn->prepare($sql);
+        $stm2->execute(array(
+            'id' => $data['id'],
+            'firstname' => $data['firstname'],
+            'lastname' => $data['lastname'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
+            'department' => $data['department']
+        ));
+
+        $sql = "INSERT INTO leave_info (person_id) VALUES (:id)";
+        $conn = DB::getConnection();
+
+        $stm3 = $conn->prepare($sql);
+        $stm3->execute(array(
+            'id' => $data['id']
+        ));
+        return ($stm1->rowCount() == 1)  && ($stm2->rowCount() == 1) && ($stm3->rowCount() == 1);
     }
 }

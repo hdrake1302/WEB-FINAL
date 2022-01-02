@@ -1,5 +1,6 @@
 <?php
 require_once('models/User.php');
+require_once('models/Department.php');
 require_once('base_controller.php');
 require_once('function.php');
 
@@ -94,7 +95,7 @@ class UserController extends BaseController
         $file_name = $_FILES['file']['name'];
 
         // Đặt tên ảnh với token để tránh bị lấy dữ liệu
-        $file = USER::getToken($_SESSION['id']) . "_" . $file_name;
+        $file = User::getToken($_SESSION['id']) . "_" . $file_name;
 
 
         if (file_exists($upload_path . $file)) {
@@ -144,7 +145,25 @@ class UserController extends BaseController
             die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
         }
 
+        if (strlen($_POST['username']) < 6 || strlen($_POST['username']) > 30) {
+            die(json_encode(array('code' => 2, 'message' => 'Độ dài của username không được dưới 6 và không được quá 30 ký tự')));
+        }
+
+        if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+            die(json_encode(array('code' => 2, 'message' => 'Email không hợp lệ!')));
+        }
+
+        if (!User::checkUsername($_POST['username'])) {
+            die(json_encode(array('code' => 2, 'message' => 'Username đã tồn tại!')));
+        }
+
+        if (!Department::checkDepartment($_POST['department'])) {
+            die(json_encode(array('code' => 2, 'message' => 'Không tồn tại phòng ban này!')));
+        }
+
+        $_POST['id'] = User::getNextID();
         $result = User::createAccount($_POST);
+
         if ($result) {
             echo json_encode(array('code' => 0, 'message' => 'Tạo tài khoản thành công'));
         } else {

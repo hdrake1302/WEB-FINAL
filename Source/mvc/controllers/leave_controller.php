@@ -1,8 +1,4 @@
 <?php
-// Admin can't access task controller
-if ($_SESSION['role'] == 3) {
-    header("Location: ./index.php");
-}
 require_once('models/Leave.php');
 require_once('base_controller.php');
 require_once('function.php');
@@ -32,8 +28,9 @@ class LeaveController extends BaseController
     {
         // Giao diện quản lý yêu cầu nghỉ phép của Trưởng phòng và Giám đốc
         $id = $_SESSION['id'];
+        $role = $_SESSION['role'];
 
-        $leaveRequests = Leave::getAllRequests($id);
+        $leaveRequests = Leave::getAllRequests($id, $role);
         $data = array('leave_requests' => $leaveRequests);
         $this->render('indexRequest', $data);
     }

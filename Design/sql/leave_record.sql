@@ -6,7 +6,7 @@ CREATE TABLE leave_record (
     file varchar(200), -- "file path to the data"
     days tinyint unsigned NOT NULL, -- "Number of days requested"
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    date_accepted DATETIME DEFAULT NULL,
+    date_response DATETIME DEFAULT NULL,
     date_wanted DATE NOT NULL,
     status varchar(30) NOT NULL DEFAULT "waiting",  -- "waitting, approved, refused"
    

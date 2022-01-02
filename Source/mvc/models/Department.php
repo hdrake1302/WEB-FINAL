@@ -29,6 +29,19 @@ class Department
         return null;
     }
 
+    public static function getAll()
+    {
+        $sql = "select * from department";
+        $conn = DB::getConnection();
+        $stm = $conn->query($sql);
+
+        $data = array();
+        foreach ($stm->fetchAll() as $item) {
+            $data[] = new Department($item['id'], $item['name']);
+        }
+        return $data;
+    }
+
     public static function getName($id)
     {
         $sql = "select name from department where id = :id";
@@ -40,5 +53,18 @@ class Department
             return $item['name'];
         }
         return null;
+    }
+
+    public static function checkDepartment($id)
+    {
+        $sql = "select * from department where id = :id";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('id' => $id));
+
+        if ($item = $stm->fetch()) {
+            return True;
+        }
+        return False;
     }
 }

@@ -14,6 +14,11 @@ $(document).ready(() => {
         });
     }
 
+    function validateEmail(email){
+        return String(email).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+    }
+
+
     // --------------- START OF LOGIN -----------------
     $('#login-button').click((e) => {
         e.preventDefault();
@@ -109,10 +114,70 @@ $(document).ready(() => {
     
 
     // --------------- START OF USER MANAGEMENT -------------------
+    $("#user-addAccount-btn").click(function(){
+        // Lấy dữ liệu của các ô input
+        let username = $("#add-user-username").val();
+        let firstname = $("#add-user-firstname").val();
+        let lastname = $("#add-user-lastname").val();
+        let email = $("#add-user-email").val();
+        let phone = $("#add-user-phone").val();
+        let department = $("#add-user-department").val();
+
+        let data = {
+            'username': username,
+            'firstname': firstname,
+            'lastname': lastname,
+            'email': email,
+            'phone': phone,
+            'department': department
+        };
+
+        // Validate data
+        if(username.length === 0){
+            showError("Không được để trống thông tin");
+            $("#add-user-username").focus();
+        }else if(firstname.length === 0){
+            showError("Không được để trống thông tin");
+            $("#add-user-firstname").focus();
+        }else if(lastname.length === 0){
+            showError("Không được để trống thông tin");
+            $("#add-user-lastname").focus();
+        }else if(email.length === 0){
+            showError("Không được để trống thông tin");
+            $("#add-user-email").focus();
+        }else if(phone.length === 0){
+            showError("Không được để trống thông tin");
+            $("#add-user-phone").focus();
+        }else if(department.length === 0){
+            showError("Không được để trống thông tin");
+            $("#add-user-phone").focus();
+        }
+        else if(username.length < 6 || username.length > 30){
+            showError("Độ dài của username không được dưới 6 và không được quá 30 ký tự");
+        }else if(!validateEmail(email)){
+            showError("Email không hợp lệ!");
+        }
+
+        $.ajax({
+            url: "?controller=user&action=createAccount",
+            method: "POST",
+            data: data,
+            success: function(result){
+                result = JSON.parse(result);
+                if(result.code === 0){
+                    success(result.message);
+                    setTimeout(function(){
+                    $("#user-addAccount-modal").modal('hide');
+                }, 2000);
+                }else{
+                    showError(result.message)
+                }
+            }
+        })
+    });
 
     $("#user-reset-password").click(function(){
-        console.log("HELLO");
-        let userID = $("#user-id").text();
+        let userID = $("#add-user-id").text();
 
         $.ajax({
             url: "?controller=user&action=confirmChange&id="+userID,
