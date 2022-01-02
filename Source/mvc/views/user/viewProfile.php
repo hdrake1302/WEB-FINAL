@@ -16,6 +16,12 @@
                 <div class="info-body">
                     <ul class="info-list">
                         <li class="row">
+                            <div class="col-12 col-md-4 info-label">ID:</div>
+                            <div class="col-12 col-md-8 info-content">
+                                <?= $user->id ?>
+                            </div>
+                        </li>
+                        <li class="row">
                             <div class="col-12 col-md-4 info-label">First name:</div>
                             <div class="col-12 col-md-8 info-content">
                                 <?= $user->firstname ?>

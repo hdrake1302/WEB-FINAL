@@ -311,30 +311,35 @@ $(document).ready(() => {
         let description = $('#leave-description').val();
         let input = document.getElementById('leave-file');
 
-        if (!input.files[0]) {
-        showError("Please select a file before clicking upload");
-        throw new Error("Please select a file before clicking upload");
+        if (description.length === 0){
+            $('#leave-description').focus();
+            showError("Không được bỏ trống mục lý do");
+            throw new Error("Không được bỏ trống mục lý do");
         }
-        let file = input.files[0];
-        let extension = getExtension(file.name);
-        let size = file.size;
+        let data = new FormData();
 
-        if (size >= 500 * 1024 * 1024) {
-            showError("File size exceeds the maximum size");
-            throw new Error("File size exceeds the maximum size");
-        }
-        if (!suppported_extensions.includes(extension)) {
-            showError("File type is not supported!");
-            throw new Error("File type is not supported!");
+        if (input.files[0]) {
+            let file = input.files[0];
+            let extension = getExtension(file.name);
+            let size = file.size;
+
+            if (size >= 500 * 1024 * 1024) {
+                showError("File size exceeds the maximum size");
+                throw new Error("File size exceeds the maximum size");
+            }
+            if (!suppported_extensions.includes(extension)) {
+                showError("File type is not supported!");
+                throw new Error("File type is not supported!");
+            }
+            data.append("file_name", file.name);
+            data.append("file", file);
         }
         
-        let data = new FormData();
         data.append("leave_id", personID);
         data.append("days", days);
         data.append("date_wanted", dateWanted);
         data.append("description", description);
-        data.append("file_name", file.name);
-        data.append("file", file);
+        
         
         let xhr = new XMLHttpRequest();
 

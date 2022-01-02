@@ -74,7 +74,7 @@ class LeaveController extends BaseController
         }
 
         // HANDLE FILE IF THE USER ATTACH A FILE IN THE REQUEST
-        if (isset($_FILES)) {
+        if (isset($_FILES) && !empty($_FILES['file']) && !empty($_FILES['file'])) {
             $supported_extensions = array("jpg", "png", "docx", "pdf");
 
             $extension = pathinfo($_FILES['file']['name'])['extension'];
