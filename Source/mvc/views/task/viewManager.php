@@ -3,21 +3,22 @@ $s = $data['task'];
 
 $taskFile = Task::getFile($s->id);
 
-if ($taskFile == null || !empty($taskFile['file'])) {
-    $file = $taskFile['file'];
-    $file_name = $taskFile['file_name'];
+$href = "";
+$download = "";
+$title = "title='NO FILE!'";
+$disabled = "disabled";
 
-    $href = "href='$file'";
-    $download = "download='$file_name'";
-    $title = "title='$file_name'";
-    $disabled = "";
-} else {
-    $href = "";
-    $download = "";
-    $title = "title='NO FILE!'";
-    $disabled = "disabled";
+if ($taskFile == null) {
+    if (!empty($taskFile['file'])) {
+        $file = $taskFile['file'];
+        $file_name = $taskFile['file_name'];
+
+        $href = "href='$file'";
+        $download = "download='$file_name'";
+        $title = "title='$file_name'";
+        $disabled = "";
+    }
 }
-
 
 ?>
 <div class="container-fluid">

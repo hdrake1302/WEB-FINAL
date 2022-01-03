@@ -1,20 +1,6 @@
 $(document).ready(() => {
     const home_url = "http://localhost/WEB-FINAL/Source/mvc/";
     const MAX_FILE_SIZE = 500 * 1024 * 1024;
-    
-    function showError(text) {
-        $("#fail-alert").text(text);
-        $("#fail-alert").fadeTo(2000, 500).slideUp(500, function() {
-            $("#fail-alert").slideUp(500);
-        });
-    }
-
-    function success(text){
-        $("#success-alert").text(text);
-        $("#success-alert").fadeTo(2000, 500).slideUp(500, function() {
-            $("#success-alert").slideUp(500);
-        });
-    }
 
     function validateEmail(email){
         return String(email).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
@@ -529,6 +515,29 @@ $(document).ready(() => {
             });
         });
 
+        $("#task-cancel-confirm-btn").click(function(){
+            let id = parseInt($("#task-cancel-id").text());
+            data = {'id': id};
+            $.ajax({
+            url: "?controller=task&action=cancelTask",
+            method: "POST",
+            data: data,
+            success: function(result){
+                result = JSON.parse(result);
+                if(result.code === 0){
+                    $("#success-alert2").text(result.message);
+                    $("#success-alert2").fadeTo(2000, 500).slideUp(500, function() {
+                        $("#success-alert2").slideUp(500);
+                    });
+                }else{
+                    $("#fail-alert2").text(result.message);
+                    $("#fail-alert2").fadeTo(2000, 500).slideUp(500, function() {
+                        $("#fail-alert2").slideUp(500);
+                    });
+                    }
+                }
+            });
+        });
     // --------------- END OF TASK MANAGEMENT -------------------
 
     
@@ -599,7 +608,24 @@ $(document).ready(() => {
 });
 
 
+// Cancel Task
+function cancelTask(e){
+    let id = parseInt(e.getAttribute('data'));
+    $("#task-cancel-id").text(id);
+}
 
+function showError(text) {
+    $("#fail-alert").text(text);
+    $("#fail-alert").fadeTo(2000, 500).slideUp(500, function() {
+        $("#fail-alert").slideUp(500);
+    });
+}
 
+function success(text){
+    $("#success-alert").text(text);
+    $("#success-alert").fadeTo(2000, 500).slideUp(500, function() {
+        $("#success-alert").slideUp(500);
+    });
+}
 
 

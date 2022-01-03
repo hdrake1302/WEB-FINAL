@@ -31,7 +31,7 @@
                                         <td>
                                             <a class="btn btn-sm btn-primary" href="?controller=task&action=viewManager&id=<?= $s->id ?>">View</a>
                                             <a class="btn btn-sm btn-success" href="#">History</a>
-
+                                            <button onclick="cancelTask(this)" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#task-cancel-modal" data="<?= $s->id ?>">Cancel</button>
                                         </td>
                                     </tr>
                                 <?php
@@ -45,6 +45,7 @@
         </div>
     </div>
 </div>
+
 <!-- ADD TASK MODAL -->
 <div class="modal" id="task-createTask-modal">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -108,6 +109,43 @@
             </div>
             <div class="modal-footer">
                 <button type="submit" id="create-task-btn" name="submit" class="btn btn-sm btn-primary">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CANCEL CONFIRM MODAL -->
+<div class="modal" tabindex="-1" role="dialog" id="task-cancel-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to cancel task with id
+                    <span id="task-cancel-id">1</span>
+                </p>
+                <div class="form-group">
+                    <div id="fail-alert2" class="alert alert-danger mt-2" style="opacity: 0; display:none">
+                        This type of file is not allowed
+                    </div>
+                    <div id="success-alert2" class="alert alert-success mt-2" style="opacity: 0; display:none;">
+                        This type of file is allowed
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <a>
+                    <button type="button" class="btn btn-danger" id="task-cancel-confirm-btn">
+                        Confirm
+                    </button>
+                </a>
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

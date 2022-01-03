@@ -182,8 +182,6 @@ class Task
 
     public static function cancelTask($data)
     {
-        print_r($data);
-        die();
         $sql = "UPDATE task SET status = 'Canceled' WHERE id = :id";
         $conn = DB::getConnection();
 

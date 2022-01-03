@@ -164,8 +164,8 @@ class TaskController extends BaseController
             die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
         }
 
-        if (Task::isNewTask($_POST['id'])) {
-            die(json_encode(array('code' => 5, 'message' => 'Task đã được chấp nhận nên không thể hủy!')));
+        if (!Task::isNewTask($_POST['id'])) {
+            die(json_encode(array('code' => 5, 'message' => 'Task này không thể bị hủy!')));
         }
 
         $_POST['manager_id'] = $_SESSION['id'];
