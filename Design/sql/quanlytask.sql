@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 02, 2022 at 03:49 PM
+-- Generation Time: Jan 03, 2022 at 02:00 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.12
 
@@ -67,7 +67,7 @@ CREATE TABLE `account_info` (
 
 INSERT INTO `account_info` (`id`, `firstname`, `lastname`, `email`, `phone`, `avatar`, `department`) VALUES
 (1, 'Tester', 'Alexander', 'tester@gmail.com', '0329928498', 'http://localhost/WEB-FINAL/Source/mvc/assets/uploads/avatars/7f1f92e0bf0177173664a2cc2ea6d9ad_dwayne-the-rock-.jpg', 1),
-(2, 'Đào', 'Nguyễn Thị', 'nguyenthidao@gmail.com', '02333444521', NULL, 1),
+(2, 'Đào', 'Nguyễn Thị', 'nguyenthidao@gmail.com', '02333444521', 'http://localhost/WEB-FINAL/Source/mvc/assets/uploads/avatars/e8a27d9a877f789105422200e101467b_MAS_6984.jpg', 1),
 (3, 'Trúc', 'Nguyễn Kim', 'nguyenkimtruc@gmail.com', '0224551231', NULL, 1);
 
 -- --------------------------------------------------------
@@ -155,8 +155,9 @@ CREATE TABLE `leave_record` (
 --
 
 INSERT INTO `leave_record` (`id`, `leave_id`, `description`, `file_name`, `file`, `days`, `date_created`, `date_response`, `date_wanted`, `status`) VALUES
-(1, 2, 'Phải dự tiệc cưới', 'dssv_xetmoi_tcqp_122021_congbo-(20211215_054414_448).pdf', 'http://localhost/WEB-FINAL/Source/mvc/assets/uploads/leaves/$2y$10$opmhppMWnpXx4e7h7zQZh.P8I6JDP5eYi3e6KasPfJkdd1fBKHTYq.pdf', 1, '2022-01-02 14:44:40', '2021-12-26 21:45:29', '2022-01-04', 'refused'),
-(2, 2, 'Phải đi bệnh viện để chăm sóc cho vợ.', 'DoAnCuoiKi-HK1-2021-2022.pdf', 'http://localhost/WEB-FINAL/Source/mvc/assets/uploads/leaves/$2y$10$GVr6umKjOK.EDupSee4e.GNEAuvDlL0xqCTp5zIPSCtVb4q4WDPq.pdf', 2, '2022-01-02 14:47:37', '2022-01-02 21:48:34', '2022-01-05', 'approved');
+(1, 2, 'Phải dự tiệc cưới', 'dssv_xetmoi_tcqp_122021_congbo-(20211215_054414_448).pdf', 'http://localhost/WEB-FINAL/Source/mvc/assets/uploads/leaves/$2y$10$opmhppMWnpXx4e7h7zQZh.P8I6JDP5eYi3e6KasPfJkdd1fBKHTYq.pdf', 1, '2021-12-01 14:44:40', '2021-12-02 21:45:29', '2022-01-04', 'refused'),
+(2, 2, 'Phải đi bệnh viện để chăm sóc cho vợ.', 'DoAnCuoiKi-HK1-2021-2022.pdf', 'http://localhost/WEB-FINAL/Source/mvc/assets/uploads/leaves/$2y$10$GVr6umKjOK.EDupSee4e.GNEAuvDlL0xqCTp5zIPSCtVb4q4WDPq.pdf', 2, '2021-12-16 14:47:37', '2021-12-17 21:48:34', '2022-01-05', 'approved'),
+(8, 2, 'Mệt quá', 'sad.png', 'http://localhost/WEB-FINAL/Source/mvc/assets/uploads/leaves/$2y$10$kSsQz1qAMVGpYXrTXEAO3eW86OBQHpp1klodp2543q.qJ5TAVN1e.png', 1, '2022-01-03 10:56:24', NULL, '2022-01-05', 'waiting');
 
 -- --------------------------------------------------------
 
@@ -187,15 +188,22 @@ INSERT INTO `role` (`id`, `description`) VALUES
 
 CREATE TABLE `task` (
   `id` int(6) UNSIGNED NOT NULL,
-  `managerID` int(6) UNSIGNED NOT NULL,
-  `staffID` int(6) UNSIGNED NOT NULL,
-  `title` varchar(30) NOT NULL,
-  `description` varchar(100) DEFAULT NULL,
-  `status` varchar(30) DEFAULT 'new',
+  `manager_id` int(6) UNSIGNED NOT NULL,
+  `staff_id` int(6) UNSIGNED NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `description` varchar(200) DEFAULT NULL,
+  `status` varchar(30) DEFAULT 'New',
   `rating` varchar(10) DEFAULT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `deadline` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `date_created` timestamp NOT NULL DEFAULT current_timestamp(),
+  `deadline` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `task`
+--
+
+INSERT INTO `task` (`id`, `manager_id`, `staff_id`, `title`, `description`, `status`, `rating`, `date_created`, `deadline`) VALUES
+(1, 1, 2, 'asd', 'sad', 'In progress', NULL, '2022-01-03 11:13:14', '2022-01-04 18:11:07');
 
 -- --------------------------------------------------------
 
@@ -206,14 +214,21 @@ CREATE TABLE `task` (
 CREATE TABLE `task_record` (
   `id` int(6) UNSIGNED NOT NULL,
   `task_id` int(6) UNSIGNED NOT NULL,
-  `personID` int(6) UNSIGNED NOT NULL,
-  `role` int(6) UNSIGNED NOT NULL,
-  `status` varchar(30) NOT NULL,
-  `note` varchar(100) DEFAULT NULL,
+  `person_id` int(6) UNSIGNED NOT NULL,
+  `status` varchar(30) NOT NULL DEFAULT 'New',
+  `note` varchar(200) DEFAULT NULL,
   `file_name` varchar(100) DEFAULT NULL,
   `file` varchar(200) DEFAULT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `task_record`
+--
+
+INSERT INTO `task_record` (`id`, `task_id`, `person_id`, `status`, `note`, `file_name`, `file`, `date`) VALUES
+(1, 1, 1, 'new', NULL, 'MAS_6984.jpg', 'http://localhost/WEB-FINAL/Source/mvc/assets/uploads/tasks/$2y$10$ptqOZz1yev1A6V7SCcc7PO3eLkd3rHJVth9JXO.FXlUva1.uQLEC.jpg', '2022-01-03 11:13:32'),
+(10, 1, 2, 'In progress', NULL, NULL, NULL, '2022-01-03 12:30:16');
 
 --
 -- Indexes for dumped tables
@@ -272,8 +287,8 @@ ALTER TABLE `role`
 --
 ALTER TABLE `task`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `managerID` (`managerID`),
-  ADD KEY `staffID` (`staffID`);
+  ADD KEY `manager_id` (`manager_id`),
+  ADD KEY `staff_id` (`staff_id`);
 
 --
 -- Indexes for table `task_record`
@@ -281,8 +296,7 @@ ALTER TABLE `task`
 ALTER TABLE `task_record`
   ADD PRIMARY KEY (`id`),
   ADD KEY `task_id` (`task_id`),
-  ADD KEY `personID` (`personID`),
-  ADD KEY `role` (`role`);
+  ADD KEY `person_id` (`person_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -304,7 +318,7 @@ ALTER TABLE `department`
 -- AUTO_INCREMENT for table `leave_record`
 --
 ALTER TABLE `leave_record`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `role`
@@ -316,13 +330,13 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `task_record`
 --
 ALTER TABLE `task_record`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Constraints for dumped tables
@@ -364,16 +378,15 @@ ALTER TABLE `leave_record`
 -- Constraints for table `task`
 --
 ALTER TABLE `task`
-  ADD CONSTRAINT `task_ibfk_1` FOREIGN KEY (`managerID`) REFERENCES `account` (`id`),
-  ADD CONSTRAINT `task_ibfk_2` FOREIGN KEY (`staffID`) REFERENCES `account` (`id`);
+  ADD CONSTRAINT `task_ibfk_1` FOREIGN KEY (`manager_id`) REFERENCES `account` (`id`),
+  ADD CONSTRAINT `task_ibfk_2` FOREIGN KEY (`staff_id`) REFERENCES `account` (`id`);
 
 --
 -- Constraints for table `task_record`
 --
 ALTER TABLE `task_record`
   ADD CONSTRAINT `task_record_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `task` (`id`),
-  ADD CONSTRAINT `task_record_ibfk_2` FOREIGN KEY (`personID`) REFERENCES `account` (`id`),
-  ADD CONSTRAINT `task_record_ibfk_3` FOREIGN KEY (`role`) REFERENCES `role` (`id`);
+  ADD CONSTRAINT `task_record_ibfk_2` FOREIGN KEY (`person_id`) REFERENCES `account` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
