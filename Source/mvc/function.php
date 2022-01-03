@@ -15,6 +15,17 @@ function isDate($date)
     return $dt !== false && !array_sum($dt::getLastErrors());
 }
 
+function isDateTime($date)
+{
+    /* 
+        Function to check if a string follows date format
+        Input: a string
+        Output: True if it follows date format else False
+    */
+    $dt = DateTime::createFromFormat("Y-m-d H:i:s", $date);
+    return $dt !== false && !array_sum($dt::getLastErrors());
+}
+
 function calculateDaysBetween($currentDate, $laterDate)
 {
     /* 

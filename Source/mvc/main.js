@@ -1,5 +1,7 @@
 $(document).ready(() => {
-    let home_url = "http://localhost/WEB-FINAL/Source/mvc/";
+    const home_url = "http://localhost/WEB-FINAL/Source/mvc/";
+    const MAX_FILE_SIZE = 500 * 1024 * 1024;
+    
     function showError(text) {
         $("#fail-alert").text(text);
         $("#fail-alert").fadeTo(2000, 500).slideUp(500, function() {
@@ -18,6 +20,28 @@ $(document).ready(() => {
         return String(email).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
     }
 
+    function convertTime12to24(time12h){
+        let [time, modifier] = time12h.split(" ");
+        
+        let [hours, minutes, seconds] = time.split(":");
+        
+        if (hours === "12") {
+            hours = "00";
+        }
+        
+        if (modifier === "PM") {
+            hours = parseInt(hours, 10) + 12;
+        }
+        
+        return `${hours}:${minutes}:${seconds}`;
+    }
+
+    function formatDate(dateTime){
+        let [date, time] = dateTime.split("T");
+        let formatTime = convertTime12to24(time);
+
+        return `${date} ${formatTime}`;
+    }
 
     // --------------- START OF LOGIN -----------------
     $('#login-button').click((e) => {
@@ -193,8 +217,7 @@ $(document).ready(() => {
             }
         });
     });
-    // --------------- END OF VIEW PROFILE -------------------
-
+    // --------------- END OF USER MANAGEMENT -------------------
 
     // --------------- START OF VIEW PROFILE -------------------
 
@@ -223,7 +246,7 @@ $(document).ready(() => {
         let extension = getExtension(file.name);
         let size = file.size;
 
-        if (size >= 500 * 1024 * 1024) {
+        if (size >= MAX_FILE_SIZE) {
             showError("File size exceeds the maximum size");
             throw new Error("File size exceeds the maximum size");
         }
@@ -250,7 +273,7 @@ $(document).ready(() => {
         xhr.onload = function() {
             if (xhr.readyState === xhr.DONE) {
                 if (xhr.status === 200) {
-                    response = JSON.parse(xhr.responseText);
+                    let response = JSON.parse(xhr.responseText);
                     if (response.code === 0) {
                         // SUCCESS
                         success("Uploaded Successfully!")
@@ -305,6 +328,7 @@ $(document).ready(() => {
         "pdf"
         ];
 
+        
         let personID = parseInt($('#personID').text());
         let days = $('#leave-days').val();
         let dateWanted = $('#leave-date').val();
@@ -323,7 +347,7 @@ $(document).ready(() => {
             let extension = getExtension(file.name);
             let size = file.size;
 
-            if (size >= 500 * 1024 * 1024) {
+            if (size >= MAX_FILE_SIZE) {
                 showError("File size exceeds the maximum size");
                 throw new Error("File size exceeds the maximum size");
             }
@@ -354,7 +378,7 @@ $(document).ready(() => {
         xhr.onload = function() {
             if (xhr.readyState === xhr.DONE) {
                 if (xhr.status === 200) {
-                    response = JSON.parse(xhr.responseText);
+                    let response = JSON.parse(xhr.responseText);
                     if (response.code === 0) {
                         // SUCCESS
                         success(response.message);
@@ -375,7 +399,139 @@ $(document).ready(() => {
         xhr.send(data);
     });
     // --------------------- END OF LEAVES MANAGEMENT ---------------------
+    function getTime(dayAdded=0){
+        /*
+        Function that return date time at the moment
+        */
+        let taskDate = new Date();
+        taskDate.setDate(taskDate.getDate() + dayAdded);
+        today = taskDate.toISOString().slice(0, 10);
 
+        let hours = taskDate.getHours()
+        let taskHours = hours - 10 < 0 ? '0'+ hours.toString(): hours.toString();
+        
+        let minutes = taskDate.getMinutes();
+        let taskMinutes = minutes - 10 < 0 ? '0'+ minutes.toString(): minutes.toString();
+        
+        let seconds = taskDate.getSeconds();
+        let taskSeconds = seconds - 10 < 0 ? '0'+ seconds.toString(): seconds.toString();
+
+        let taskTime = taskHours + ':' + taskMinutes + ':' + taskSeconds;
+
+        return today + 'T' + taskTime;
+    }
+
+     // --------------- START OF TASK MANAGEMENT -------------------
+
+        // indexManager.php
+        // LIMIT DEADLINE DATE
+        todayTime = getTime(1);
+        $('#task-create-deadline').attr('min', todayTime);
+        $('#task-create-deadline').val(todayTime);
+
+        $("#create-task-btn").click(function(){
+            let staffID = $("#task-create-employee").val();
+            let deadline = formatDate($("#task-create-deadline").val());
+            let title = $("#task-create-title").val();
+            let description = $("#task-create-description").val();
+            let input = document.getElementById('task-create-file');
+
+            const suppported_extensions = [
+            "jpg",
+            "png",
+            "docx",
+            "pdf"
+            ];
+        
+        let data = new FormData();
+
+        if (input.files[0]) {
+            let file = input.files[0];
+            let extension = getExtension(file.name);
+            let size = file.size;
+
+            if (size >= MAX_FILE_SIZE) {
+                showError("File size exceeds the maximum size");
+                throw new Error("File size exceeds the maximum size");
+            }
+            if (!suppported_extensions.includes(extension)) {
+                showError("File type is not supported!");
+                throw new Error("File type is not supported!");
+            }
+            data.append("file_name", file.name);
+            data.append("file", file);
+        }
+
+        data.append("staff_id", staffID);
+        data.append("deadline", deadline);
+        data.append("title", title);
+        data.append("description", description);
+
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.upload.addEventListener("progress", function(e) {
+            let loaded = e.loaded;
+            let total = e.total;
+            let progress = (loaded * 100) / total;
+
+            $(".progress-bar").attr("style", "width: " + progress + "%;");
+        });
+
+        xhr.onload = function() {
+            if (xhr.readyState === xhr.DONE) {
+                if (xhr.status === 200) {
+                    let response = JSON.parse(xhr.responseText);
+                    if (response.code === 0) {
+                        // SUCCESS
+                        success(response.message);
+                    }else{
+                        // FAIL
+                        showError(response.message);
+                    }
+                    // RESET PROGRESS BAR
+                    setTimeout(function(){
+                        $(".progress-bar").attr("style", "width: 0");
+                        // $('#leave-request-modal').modal('hide');
+                    }, 2000);
+                }
+            }
+        };
+
+        xhr.open("POST", "?controller=task&action=createTask", true);
+        xhr.send(data);
+        });
+
+        let taskStatus = $('#task-viewStaff-status').text().trim();
+        if(taskStatus == "New"){
+            $("#task-submit-modal-btn").attr("disabled", true);
+        }
+
+        // start task viewStaff.php
+        $("#task-start-btn").click(function(){
+            let id = parseInt($("#task-id").text());
+            data = {'id': id};
+            $.ajax({
+            url: "?controller=task&action=startTask",
+            method: "POST",
+            data: data,
+            success: function(result){
+                result = JSON.parse(result);
+
+                if(result.code === 0){
+                    success(result.message);
+                    $("#task-viewStaff-status").text("In progress");
+                    $("#task-submit-modal-btn").attr("disabled", false);
+                }else{
+                    showError(result.message);
+                    }
+                }
+            });
+        });
+
+    // --------------- END OF TASK MANAGEMENT -------------------
+
+    
     // --------------------- START OF VIEW REQUEST ---------------------
 
     // ACCEPT REQUEST

@@ -88,6 +88,19 @@ class User
         return null;
     }
 
+    public static function getDepartmentID($personID)
+    {
+        $sql = "select department from account_info where id = :personID";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('personID' => $personID));
+
+        if ($item = $stm->fetch()) {
+            return $item['department'];
+        }
+        return null;
+    }
+
     public static function getDepartmentName($id)
     {
         $sql = "select name from department where id = :id";
@@ -101,7 +114,18 @@ class User
         return null;
     }
 
+    public static function getAllByDepartment($departmentID)
+    {
+        $sql = "select * from account_info where department = :departmentID";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('departmentID' => $departmentID));
 
+        foreach ($stm->fetchAll() as $item) {
+            $data[] = new User($item['id'], $item['firstname'], $item['lastname'], $item['email'], $item['phone'], $item['avatar'], $item['department']);
+        }
+        return $data;
+    }
 
     public static function getFullName($id)
     {
@@ -177,8 +201,9 @@ class User
         if ($item = $stm->fetch()) {
             return intval($item['id']) + 1;
         }
-        return null;
+        return 1;
     }
+
     public static function updateActivated($id)
     {
         $sql = "update account set activated = 0 where id = :id";

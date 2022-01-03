@@ -59,7 +59,7 @@ $s = $data['leave'];
                 <div class="modal-body">
                     <form method="" action="POST" enctype="multipart/form-data">
                         <div class="form-group">
-                            <label for="days">Choose the number of days off:</label>
+                            <label for="leave-days">Choose the number of days off:</label>
                             <select class="form-control" number="leave-days" id="leave-days">
                                 <?php
                                 $unused_leaves = $s->total_leaves - $s->used_leaves;
@@ -73,7 +73,7 @@ $s = $data['leave'];
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="date">Choose the date:</label>
+                            <label for="leave-date">Choose the date:</label>
                             <input class="form-control" id="leave-date" name="date_created" type="date">
                         </div>
                         <div class="form-group">
@@ -81,7 +81,7 @@ $s = $data['leave'];
                             <textarea class="form-control" name="leave-description" rows="3" id="leave-description"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="file">Evidence:</label>
+                            <label for="leave-file">Evidence:</label>
                             <input type="file" class="form-control-file border" name="leave-file" id="leave-file">
                         </div>
 

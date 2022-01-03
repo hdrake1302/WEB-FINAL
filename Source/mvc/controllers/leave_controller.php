@@ -73,6 +73,9 @@ class LeaveController extends BaseController
             die(json_encode(array('code' => 5, 'message' => 'Chưa đủ số ngày đợi để có thể tạo yêu cầu mới')));
         }
 
+        $_POST['file'] = null;
+        $_POST['file_name'] = null;
+
         // HANDLE FILE IF THE USER ATTACH A FILE IN THE REQUEST
         if (isset($_FILES) && !empty($_FILES['file']) && !empty($_FILES['file'])) {
             $supported_extensions = array("jpg", "png", "docx", "pdf");

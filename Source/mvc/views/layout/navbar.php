@@ -1,5 +1,6 @@
 <?php
 $role = $_SESSION['role'];
+$taskAction = $role == 1 ? 'indexStaff' : 'indexManager';
 ?>
 
 <ul class="nav-list">
@@ -35,7 +36,7 @@ $role = $_SESSION['role'];
     ob_start();
     ?>
     <li>
-        <a href="?controller=task&action=index" data-toggle="tooltip" data-placement="right" title="Task Management">
+        <a href="?controller=task&action=<?= $taskAction ?>" data-toggle="tooltip" data-placement="right" title="Task Management">
             <i class="bx bx-task"></i>
             <span class="links-name">Tasks</span>
         </a>

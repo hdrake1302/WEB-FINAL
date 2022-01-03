@@ -13,7 +13,7 @@ $access_control = array(
         ),
         'user' => array('viewProfile', 'confirmChange', 'uploadAvatar'),
         'leave' => array('index', 'createRequest'),
-        'task' => array('index')
+        'task' => array('indexStaff', 'viewStaff', 'startTask', 'submitTask')
     ),
     2 => array(
         'login' => array(
@@ -22,7 +22,7 @@ $access_control = array(
         ),
         'user' => array('viewProfile', 'confirmChange', 'uploadAvatar'),
         'leave' => array('index', 'indexRequest', 'viewRequest', 'createRequest', 'acceptRequest', 'rejectRequest'),
-        'task' => array('index')
+        'task' => array('indexManager', 'viewManager', 'createTask', 'cancelTask')
     ),
     3 => array(
         'login' => array(
@@ -39,7 +39,7 @@ $access_control = array(
         ),
         'user' => array('index', 'view', 'viewProfile', 'confirmChange', 'uploadAvatar', 'createAccount'),
         'leave' => array('index', 'view', 'indexRequest', 'viewRequest', 'createRequest', 'acceptRequest', 'rejectRequest'),
-        'task' => array('index', 'view')
+        'task' => array('indexStaff', 'viewStaff', 'indexManager', 'viewManager', 'createTask', 'startTask', 'submitTask', 'cancelTask')
     )
 );
 
@@ -58,10 +58,15 @@ if (!isset($_SESSION['id'])) {
 
     $role = $_SESSION['role'];
 
-    if ($role == 1 || $role == 2) {
+    if ($role == 1) {
         // Set default homepage
         $defaultController = 'task';
-        $defaultAction = 'index';
+        $defaultAction = 'indexStaff';
+    }
+    if ($role == 2) {
+        // Set default homepage
+        $defaultController = 'task';
+        $defaultAction = 'indexManager';
     }
 
     if (isset($_GET['controller'])) {
