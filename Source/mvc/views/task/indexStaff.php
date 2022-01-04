@@ -27,7 +27,7 @@
                                         <td><?= $s->deadline ?></td>
                                         <td>
                                             <a class="btn btn-sm btn-primary" href="?controller=task&action=viewStaff&id=<?= $s->id ?>">View</a>
-                                            <a class="btn btn-sm btn-success" href="#">History</a>
+                                            <a class="btn btn-sm btn-success" href="?controller=task&action=indexHistory&id=<?= $s->id ?>">History</a>
                                         </td>
                                     </tr>
                                 <?php

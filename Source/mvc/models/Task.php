@@ -64,6 +64,20 @@ class TaskRecord
         return null;
     }
 
+    public static function getLatestRejected($taskID)
+    {
+        // Lấy task user submit mới nhất
+        $sql = "SELECT * FROM task_record WHERE task_id = :taskID AND status = 'Rejected' ORDER BY id DESC LIMIT 1";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('taskID' => $taskID));
+
+        if ($item = $stm->fetch()) {
+            return new TaskRecord($item['id'], $item['task_id'], $item['person_id'], $item['status'], $item['note'], $item['file_name'], $item['file'], $item['date']);
+        }
+        return null;
+    }
+
     public static function isLate($deadline, $staffID, $taskID)
     {
         // Lấy hết tất cả các task đã được assign cho NV
@@ -309,7 +323,7 @@ class Task
 
     public static function isAbleToSubmit($taskID)
     {
-        $sql = "SELECT status FROM task WHERE id = :task_id AND status = 'In Progress'";
+        $sql = "SELECT status FROM task WHERE id = :task_id AND status = 'In Progress' OR status = 'Rejected'";
         $conn = DB::getConnection();
 
         $stm = $conn->prepare($sql);
@@ -388,5 +402,10 @@ class Task
     public static function getSubmit($taskID)
     {
         return TaskRecord::getLatestSubmit($taskID);
+    }
+
+    public static function getRejectedDetail($taskID)
+    {
+        return TaskRecord::getLatestRejected($taskID);
     }
 }

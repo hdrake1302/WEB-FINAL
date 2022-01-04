@@ -17,6 +17,19 @@ if ($taskFile == null || !empty($taskFile['file'])) {
     $title = "title='NO FILE!'";
     $disabled = "disabled";
 }
+
+
+$rejectedData = null;
+$rejectedHref = "";
+$rejectedDownload = "";
+
+if ($s->status == 'Rejected') {
+    $rejectedData = Task::getRejectedDetail($s->id);
+    if ($rejectedData->file) {
+        $rejectedHref = "href='$rejectedData->file'";
+        $rejectedDownload = "download='$rejectedData->file_name'";
+    }
+}
 ?>
 <div class="container-fluid">
     <div class="row">
@@ -27,9 +40,23 @@ if ($taskFile == null || !empty($taskFile['file'])) {
                     <ul class="info-list">
                         <li class="row">
                             <div class="col-12 col-md-6 info-label">Status:</div>
-                            <div class="col-12 col-md-6 info-content text-success font-weight-bold" id="task-viewManager-status">
+                            <div class="col-6 col-md-3 info-content text-success font-weight-bold" id="task-viewStaff-status">
                                 <?= $s->status ?>
                             </div>
+                            <?php
+                            ob_start();
+                            ?>
+                            <div class="col-6 col-md-3 info-content text-success font-weight-bold">
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#task-rejected-detail-modal" id="task-rejected-detail-btn">
+                                    <i class='bx bx-conversation'></i> Detail</button>
+                            </div>
+
+                            <?php
+                            $html = ob_get_clean();
+                            if ($rejectedData) {
+                                echo $html;
+                            }
+                            ?>
                         </li>
                         <?php
                         ob_start();
@@ -113,33 +140,38 @@ if ($taskFile == null || !empty($taskFile['file'])) {
     </div>
 </div>
 
-<!-- REVIEW USER SUBMIT MODAL -->
-<div class="modal" tabindex="-1" role="dialog" id="task-start-modal">
+<!-- REJECT DETAIL MODAL -->
+<div class="modal" tabindex="-1" role="dialog" id="task-rejected-detail-modal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">User Submit's Review</h5>
+                <h5 class="modal-title">Reject's Detail</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-
-            </div>
-            <div class="form-group">
-                <div id="fail-alert" class="alert alert-danger mt-2" style="opacity: 0; display:none">
-                    Success
-                </div>
-                <div id="success-alert" class="alert alert-success mt-2" style="opacity: 0; display:none;">
-                    Failure
-                </div>
+                <form method="POST" enctype=" multipart/form-data">
+                    <div class="form-group">
+                        <label for="task-reject-detail-date">Date:</label>
+                        <input class="form-control" id="task-reject-detail-date" type="type" value="<?php if ($rejectedData) echo $rejectedData->date ?>" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-review-description">Description:</label>
+                        <textarea class="form-control" name="task-reject-detail-description" rows="3" id="task-review-description" disabled><?php if ($rejectedData) echo $rejectedData->note ?></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-reject-detail-file">Attachment:</label>
+                        <a <?= $rejectedHref ?> <?= $rejectedDownload ?>>
+                            <button type="button" class="btn btn-primary mt-2">
+                                <i class='bx bxs-download'></i> Click To Download
+                            </button>
+                        </a>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="task-start-btn">
-                    Confirm
-                </button>
-
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" id="task-reject-modal-btn" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -194,8 +226,10 @@ if ($taskFile == null || !empty($taskFile['file'])) {
                         <textarea class="form-control" name="task-submit-description" rows="3" id="task-submit-description"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="task-submit-file">Attachment:</label>
-                        <input type="file" class="form-control-file border" name="task-submit-file" id="task-submit-file">
+                        <div class="custom-file">
+                            <input type="file" name="task-submit-file" class="custom-file-input" id="task-submit-file" />
+                            <label class="custom-file-label" for="task-submit-file">Choose file</label>
+                        </div>
                     </div>
 
                     <div class="progress">

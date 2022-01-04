@@ -613,6 +613,7 @@ $(document).ready(() => {
                             // SUCCESS
                             success2("#success-alert-reject", response.message);
                             $('#task-review-modal-btn').attr("disabled", true);
+                            $('#task-viewManager-status').text("Rejected");
                         }else{
                             // FAIL
                             showError2("#fail-alert-reject", response.message);
@@ -633,7 +634,8 @@ $(document).ready(() => {
     
         // start task viewStaff.php
         let taskStatus = $('#task-viewStaff-status').text().trim();
-        if(taskStatus != "In Progress"){
+        console.log(taskStatus);
+        if(taskStatus != "In progress" && taskStatus != "Rejected"){
             $("#task-submit-modal-btn").attr("disabled", true);
         }
         if(taskStatus != "New"){
@@ -725,6 +727,8 @@ $(document).ready(() => {
                             success2("#success-alert2", response.message);
                             $("#task-viewStaff-status").text("Waiting");
                             $("#task-submit-modal-btn").attr("disabled", true);
+                            $("#task-rejected-detail-btn").attr("disabled", true);
+                            $("#task-rejected-detail-modal").modal("hide");
                         }else{
                             // FAIL
                             showError2("#fail-alert2", response.message);
@@ -732,7 +736,8 @@ $(document).ready(() => {
                         // RESET PROGRESS BAR
                         setTimeout(function(){
                             $(".progress-bar").attr("style", "width: 0");
-                            // $('#leave-request-modal').modal('hide');
+                            $("#task-submit-modal").modal("hide");
+
                         }, 2000);
                     }
                 }

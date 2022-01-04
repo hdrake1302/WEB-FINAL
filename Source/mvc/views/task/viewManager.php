@@ -24,6 +24,7 @@ if ($taskFile) {
 $submitData = null;
 if ($s->status == 'Waiting') {
     $submitData = Task::getSubmit($s->id);
+
     $isLate = False;
     if (Task::isLate($submitData->person_id, $s->id)) {
         $isLate = True;
