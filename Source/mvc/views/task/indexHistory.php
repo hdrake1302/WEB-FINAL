@@ -2,36 +2,31 @@
     <div class="row">
         <div class="col-12 col-md-10 offset-md-1">
             <div class="profile-info">
-                <div class="info-header mb-3">Tasks Management</div>
+                <div class="info-header mb-3">Tasks' History</div>
                 <div class="info-body">
-                    <button class="btn btn-outline-primary" type="button" data-toggle="modal" data-target="#task-createTask-modal">
-                        <i class='bx bxs-add-to-queue'></i> Tạo Task
-                    </button>
                     <div class="table-wrapper-scroll-y">
                         <table class="table table-bordered table-hover mt-4 table-responsive-md">
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Title</th>
+                                    <th>Person</th>
                                     <th>Status</th>
-                                    <th>Deadline</th>
+                                    <th>Date</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <!-- CONTENT -->
                             <tbody id="table-body">
                                 <?php
-                                foreach ($data['tasks'] as $s) {
+                                foreach ($data['history'] as $s) {
                                 ?>
                                     <tr>
                                         <td><?= $s->id ?></td>
-                                        <td><?= $s->title ?></td>
+                                        <td><?= User::getFullName($s->person_id) ?></td>
                                         <td class="text-success font-weight-bold"><?= $s->status ?></td>
-                                        <td><?= $s->deadline ?></td>
+                                        <td><?= $s->date ?></td>
                                         <td>
-                                            <a class="btn btn-sm btn-primary" href="?controller=task&action=viewManager&id=<?= $s->id ?>">View</a>
-                                            <a class="btn btn-sm btn-success" href="?controller=task&action=indexHistory&id=<?= $s->id ?>">History</a>
-                                            <button onclick="cancelTask(this)" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#task-cancel-modal" data="<?= $s->id ?>">Cancel</button>
+                                            <a class="btn btn-sm btn-primary" href="?controller=task&action=viewHistory&id=<?= $s->id ?>">View</a>
                                         </td>
                                     </tr>
                                 <?php
@@ -51,7 +46,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Create New Task</h3>
+                <h3 class="modal-title">Leave Application</h3>
                 <button type="button" class="close" data-dismiss="modal">
                     &times;
                 </button>
@@ -109,43 +104,6 @@
             </div>
             <div class="modal-footer">
                 <button type="submit" id="create-task-btn" name="submit" class="btn btn-sm btn-primary">Create</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- CANCEL CONFIRM MODAL -->
-<div class="modal" tabindex="-1" role="dialog" id="task-cancel-modal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Confirmation</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to cancel task with id
-                    <span id="task-cancel-id">1</span>
-                </p>
-                <div class="form-group">
-                    <div id="fail-alert2" class="alert alert-danger mt-2" style="opacity: 0; display:none">
-                        This type of file is not allowed
-                    </div>
-                    <div id="success-alert2" class="alert alert-success mt-2" style="opacity: 0; display:none;">
-                        This type of file is allowed
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <a>
-                    <button type="button" class="btn btn-danger" id="task-cancel-confirm-btn">
-                        Confirm
-                    </button>
-                </a>
-
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

@@ -428,91 +428,63 @@ $(document).ready(() => {
             "docx",
             "pdf"
             ];
-        
-        let data = new FormData();
+            
+            let data = new FormData();
 
-        if (input.files[0]) {
-            let file = input.files[0];
-            let extension = getExtension(file.name);
-            let size = file.size;
+            if (input.files[0]) {
+                let file = input.files[0];
+                let extension = getExtension(file.name);
+                let size = file.size;
 
-            if (size >= MAX_FILE_SIZE) {
-                showError("File size exceeds the maximum size");
-                throw new Error("File size exceeds the maximum size");
-            }
-            if (!suppported_extensions.includes(extension)) {
-                showError("File type is not supported!");
-                throw new Error("File type is not supported!");
-            }
-            data.append("file_name", file.name);
-            data.append("file", file);
-        }
-
-        data.append("staff_id", staffID);
-        data.append("deadline", deadline);
-        data.append("title", title);
-        data.append("description", description);
-
-
-        let xhr = new XMLHttpRequest();
-
-        xhr.upload.addEventListener("progress", function(e) {
-            let loaded = e.loaded;
-            let total = e.total;
-            let progress = (loaded * 100) / total;
-
-            $(".progress-bar").attr("style", "width: " + progress + "%;");
-        });
-
-        xhr.onload = function() {
-            if (xhr.readyState === xhr.DONE) {
-                if (xhr.status === 200) {
-                    let response = JSON.parse(xhr.responseText);
-                    if (response.code === 0) {
-                        // SUCCESS
-                        success(response.message);
-                    }else{
-                        // FAIL
-                        showError(response.message);
-                    }
-                    // RESET PROGRESS BAR
-                    setTimeout(function(){
-                        $(".progress-bar").attr("style", "width: 0");
-                        // $('#leave-request-modal').modal('hide');
-                    }, 2000);
+                if (size >= MAX_FILE_SIZE) {
+                    showError("File size exceeds the maximum size");
+                    throw new Error("File size exceeds the maximum size");
                 }
+                if (!suppported_extensions.includes(extension)) {
+                    showError("File type is not supported!");
+                    throw new Error("File type is not supported!");
+                }
+                data.append("file_name", file.name);
+                data.append("file", file);
             }
+
+            data.append("staff_id", staffID);
+            data.append("deadline", deadline);
+            data.append("title", title);
+            data.append("description", description);
+
+
+            let xhr = new XMLHttpRequest();
+
+            xhr.upload.addEventListener("progress", function(e) {
+                let loaded = e.loaded;
+                let total = e.total;
+                let progress = (loaded * 100) / total;
+
+                $(".progress-bar").attr("style", "width: " + progress + "%;");
+            });
+
+            xhr.onload = function() {
+                if (xhr.readyState === xhr.DONE) {
+                    if (xhr.status === 200) {
+                        let response = JSON.parse(xhr.responseText);
+                        if (response.code === 0) {
+                            // SUCCESS
+                            success(response.message);
+                        }else{
+                            // FAIL
+                            showError(response.message);
+                        }
+                        // RESET PROGRESS BAR
+                        setTimeout(function(){
+                            $(".progress-bar").attr("style", "width: 0");
+                        }, 2000);
+                    }
+                }
         };
 
         xhr.open("POST", "?controller=task&action=createTask", true);
         xhr.send(data);
-        });
-
-        let taskStatus = $('#task-viewStaff-status').text().trim();
-        if(taskStatus == "New"){
-            $("#task-submit-modal-btn").attr("disabled", true);
-        }
-
-        // start task viewStaff.php
-        $("#task-start-btn").click(function(){
-            let id = parseInt($("#task-id").text());
-            data = {'id': id};
-            $.ajax({
-            url: "?controller=task&action=startTask",
-            method: "POST",
-            data: data,
-            success: function(result){
-                result = JSON.parse(result);
-
-                if(result.code === 0){
-                    success(result.message);
-                    $("#task-viewStaff-status").text("In progress");
-                    $("#task-submit-modal-btn").attr("disabled", false);
-                }else{
-                    showError(result.message);
-                    }
-                }
-            });
         });
 
         $("#task-cancel-confirm-btn").click(function(){
@@ -538,6 +510,238 @@ $(document).ready(() => {
                 }
             });
         });
+
+        // viewManager.php
+        let taskStatusManager = $('#task-viewManager-status').text().trim();
+        if(taskStatusManager != "Waiting"){
+            $("#task-review-modal-btn").attr("disabled", true);
+        }
+
+        $("#task-accept-btn").click(function(){
+            let rating = $("#task-review-rating").val();
+            let taskID = parseInt($("#task-id").text());
+
+            let data = {'id': taskID, 'rating': rating};
+
+            if(!rating){
+                $("#task-review-rating").focus();
+                showError2("#fail-alert-accept", "Vui lòng chọn mức độ đánh giá!");
+                throw new Error("Vui lòng chọn mức độ đánh giá!");
+            }
+
+            $.ajax({
+            url: "?controller=task&action=approveTask",
+            method: "POST",
+            data: data,
+            success: function(result){
+                result = JSON.parse(result);
+
+                if(result.code === 0){
+                    success2("#success-alert-accept", result.message);
+                    $("#task-viewManager-status").text("Completed");
+                    $("#task-review-modal-btn").attr("disabled", true);
+                    
+                    setTimeout(function(){
+                            $("#task-review-modal").modal("hide");
+                            $("#task-accept-modal").modal("hide");
+                    }, 2000);
+                }else{
+                     showError2("#fail-alert-accept", result.message);
+                    }
+                }
+            });
+            
+        }); 
+
+        $("#task-reject-btn").click(function(){
+            let note = $("#task-reject-description").val();
+            let taskID = parseInt($("#task-id").text());
+            
+            console.log(note)
+            if(!note){
+                $("#task-reject-description").focus();
+                showError2("#fail-alert-reject", "Vui lòng thêm mô tả!");
+                throw new Error("Vui lòng thêm mô tả!");
+            }
+
+            let input = document.getElementById('task-reject-file');
+
+            const suppported_extensions = [
+            "jpg",
+            "png",
+            "docx",
+            "pdf"
+            ];
+            
+            let data = new FormData();
+
+            if (input.files[0]) {
+                let file = input.files[0];
+                let extension = getExtension(file.name);
+                let size = file.size;
+
+                if (size >= MAX_FILE_SIZE) {
+                    showError2("#fail-alert-reject", "File size exceeds the maximum size");
+                    throw new Error("File size exceeds the maximum size");
+                }
+                if (!suppported_extensions.includes(extension)) {
+                    showError2("#fail-alert-reject", "File type is not supported!");
+                    throw new Error("File type is not supported!");
+                }
+                data.append("file_name", file.name);
+                data.append("file", file);
+            }
+
+            data.append("id", taskID);
+            data.append("note", note);
+
+            let xhr = new XMLHttpRequest();
+
+            xhr.upload.addEventListener("progress", function(e) {
+                let loaded = e.loaded;
+                let total = e.total;
+                let progress = (loaded * 100) / total;
+
+                $(".progress-bar").attr("style", "width: " + progress + "%;");
+            });
+
+            xhr.onload = function() {
+                if (xhr.readyState === xhr.DONE) {
+                    if (xhr.status === 200) {
+                        let response = JSON.parse(xhr.responseText);
+                        if (response.code === 0) {
+                            // SUCCESS
+                            success2("#success-alert-reject", response.message);
+                            $('#task-review-modal-btn').attr("disabled", true);
+                        }else{
+                            // FAIL
+                            showError2("#fail-alert-reject", response.message);
+                        }
+                        // RESET PROGRESS BAR
+                        setTimeout(function(){
+                            $(".progress-bar").attr("style", "width: 0");
+                            $('#task-review-modal').modal('hide');
+                            $('#task-reject-modal').modal('hide');
+                        }, 2000);
+                    }
+                }
+            }
+
+            xhr.open("POST", "?controller=task&action=rejectTask", true);
+            xhr.send(data); 
+        }); 
+    
+        // start task viewStaff.php
+        let taskStatus = $('#task-viewStaff-status').text().trim();
+        if(taskStatus != "In Progress"){
+            $("#task-submit-modal-btn").attr("disabled", true);
+        }
+        if(taskStatus != "New"){
+            $("#task-start-modal-btn").attr("disabled", true);
+        }
+
+        $("#task-start-btn").click(function(){
+            let id = parseInt($("#task-id").text());
+            data = {'id': id};
+            $.ajax({
+            url: "?controller=task&action=startTask",
+            method: "POST",
+            data: data,
+            success: function(result){
+                result = JSON.parse(result);
+
+                if(result.code === 0){
+                    success(result.message);
+                    $("#task-viewStaff-status").text("In progress");
+                    $("#task-submit-modal-btn").attr("disabled", false);
+                    $("#task-start-modal-btn").attr("disabled", true);
+                }else{
+                    showError(result.message);
+                    }
+                }
+            });
+        });
+
+        $("#task-submit-btn").click(function(){
+            let taskID = parseInt($("#task-id").text());
+            let description = $("#task-submit-description").val();
+            let input = document.getElementById('task-submit-file');
+
+            if (description.length === 0){
+                $('#task-submit-description').focus();
+                showError2("#fail-alert2", "Không được bỏ trống mục lý do");
+                throw new Error("Không được bỏ trống mục lý do");
+            }
+
+            if (!input.files[0]){
+                showError2("#fail-alert2", "Phải có file đính kèm!");
+                throw new Error("Phải có file đính kèm!");
+            }
+
+            const suppported_extensions = [
+            "jpg",
+            "png",
+            "docx",
+            "pdf"
+            ];
+        
+            let data = new FormData();
+            let file = input.files[0];
+            let extension = getExtension(file.name);
+            let size = file.size;
+
+            if (size >= MAX_FILE_SIZE) {
+                showError("File size exceeds the maximum size");
+                throw new Error("File size exceeds the maximum size");
+            }
+
+            if (!suppported_extensions.includes(extension)) {
+                showError("File type is not supported!");
+                throw new Error("File type is not supported!");
+            }
+
+            data.append("file_name", file.name);
+            data.append("file", file);
+
+            data.append("task_id", taskID);
+            data.append("note", description);
+
+            let xhr = new XMLHttpRequest();
+
+            xhr.upload.addEventListener("progress", function(e) {
+                let loaded = e.loaded;
+                let total = e.total;
+                let progress = (loaded * 100) / total;
+
+                $(".progress-bar").attr("style", "width: " + progress + "%;");
+            });
+
+            xhr.onload = function() {
+                if (xhr.readyState === xhr.DONE) {
+                    if (xhr.status === 200) {
+                        let response = JSON.parse(xhr.responseText);
+                        if (response.code === 0) {
+                            // SUCCESS
+                            success2("#success-alert2", response.message);
+                            $("#task-viewStaff-status").text("Waiting");
+                            $("#task-submit-modal-btn").attr("disabled", true);
+                        }else{
+                            // FAIL
+                            showError2("#fail-alert2", response.message);
+                        }
+                        // RESET PROGRESS BAR
+                        setTimeout(function(){
+                            $(".progress-bar").attr("style", "width: 0");
+                            // $('#leave-request-modal').modal('hide');
+                        }, 2000);
+                    }
+                }
+            };
+
+            xhr.open("POST", "?controller=task&action=submitTask", true);
+            xhr.send(data);
+        });
+        
     // --------------- END OF TASK MANAGEMENT -------------------
 
     
@@ -628,4 +832,17 @@ function success(text){
     });
 }
 
+function showError2(id, text) {
+    $(id).text(text);
+    $(id).fadeTo(2000, 500).slideUp(500, function() {
+        $(id).slideUp(500);
+    });
+}
+
+function success2(id, text){
+    $(id).text(text);
+    $(id).fadeTo(2000, 500).slideUp(500, function() {
+        $(id).slideUp(500);
+    });
+}
 

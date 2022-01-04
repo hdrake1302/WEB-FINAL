@@ -13,7 +13,7 @@ $access_control = array(
         ),
         'user' => array('viewProfile', 'confirmChange', 'uploadAvatar'),
         'leave' => array('index', 'createRequest'),
-        'task' => array('indexStaff', 'viewStaff', 'startTask', 'submitTask')
+        'task' => array('indexStaff', 'viewStaff', 'startTask', 'submitTask', 'indexHistory')
     ),
     2 => array(
         'login' => array(
@@ -22,7 +22,7 @@ $access_control = array(
         ),
         'user' => array('viewProfile', 'confirmChange', 'uploadAvatar'),
         'leave' => array('index', 'indexRequest', 'viewRequest', 'createRequest', 'acceptRequest', 'rejectRequest'),
-        'task' => array('indexManager', 'viewManager', 'createTask', 'cancelTask')
+        'task' => array('indexManager', 'viewManager', 'createTask', 'cancelTask', 'indexHistory', 'approveTask', 'rejectTask')
     ),
     3 => array(
         'login' => array(
@@ -39,7 +39,7 @@ $access_control = array(
         ),
         'user' => array('index', 'view', 'viewProfile', 'confirmChange', 'uploadAvatar', 'createAccount'),
         'leave' => array('index', 'view', 'indexRequest', 'viewRequest', 'createRequest', 'acceptRequest', 'rejectRequest'),
-        'task' => array('indexStaff', 'viewStaff', 'indexManager', 'viewManager', 'createTask', 'startTask', 'submitTask', 'cancelTask')
+        'task' => array('indexStaff', 'viewStaff', 'indexManager', 'viewManager', 'createTask', 'startTask', 'submitTask', 'cancelTask', 'indexHistory', 'approveTask', 'rejectTask')
     )
 );
 

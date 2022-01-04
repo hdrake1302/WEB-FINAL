@@ -34,8 +34,11 @@ class TaskController extends BaseController
     public function viewStaff()
     {
         $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
-        $task = Task::getAssignedTask($id, $_SESSION['id']);
-        $this->render('viewStaff', array('task' => $task));
+        if ($task = Task::getAssignedTask($id, $_SESSION['id'])) {
+            $this->render('viewStaff', array('task' => $task));
+        } else {
+            header("Location: ./index.php");
+        }
     }
 
     public function viewManager()
@@ -68,8 +71,8 @@ class TaskController extends BaseController
         $_POST['file'] = null;
         $_POST['file_name'] = null;
 
-        // HANDLE FILE IF THE USER ATTACH A FILE IN THE REQUEST
-        if (isset($_FILES) && !empty($_FILES['file']) && !empty($_FILES['file'])) {
+        // HANDLE FILE IF THE MANGAER ATTACH A FILE IN THE TASK
+        if (isset($_FILES) && !empty($_FILES['file'])) {
             $supported_extensions = array("jpg", "png", "docx", "pdf");
 
             $extension = pathinfo($_FILES['file']['name'])['extension'];
@@ -118,7 +121,37 @@ class TaskController extends BaseController
         }
     }
 
-    public static function startTask()
+    public function approveTask()
+    {
+        // Function cho nhân viên start Task
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            http_response_code(405);
+            die(json_encode(array('code' => 4, 'message' => 'API này chỉ hỗ trợ POST')));
+        }
+
+        if (!isset($_POST['id']) || !isset($_POST['rating'])) {
+            die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
+        }
+
+        if (empty($_POST['id']) || empty($_POST['rating'])) {
+            die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
+        }
+
+        if (!Task::isAbleToApprove($_POST['id'])) {
+            die(json_encode(array('code' => 5, 'message' => 'Task chỉ có thể approve khi đang trong trạng thái Waiting!')));
+        }
+
+        $_POST['manager_id'] = $_SESSION['id'];
+
+        $result = Task::approveTask($_POST);
+        if ($result) {
+            echo json_encode(array('code' => 0, 'message' => 'Approve task successfully!'));
+        } else {
+            die(json_encode(array('code' => 3, 'message' => 'Approve task unsuccessfully!')));
+        }
+    }
+
+    public function startTask()
     {
         // Function cho nhân viên start Task
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
@@ -144,11 +177,151 @@ class TaskController extends BaseController
         if ($result) {
             echo json_encode(array('code' => 0, 'message' => 'Chấp nhận task thành công!'));
         } else {
-            die(json_encode(array('code' => 3, 'message' => 'TChấp nhận task thất bại!')));
+            die(json_encode(array('code' => 3, 'message' => 'Chấp nhận task thất bại!')));
         }
     }
 
-    public static function cancelTask()
+    public function rejectTask()
+    {
+        // Function cho nhân viên start Task
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            http_response_code(405);
+            die(json_encode(array('code' => 4, 'message' => 'API này chỉ hỗ trợ POST')));
+        }
+
+        if (!isset($_POST['id']) || !isset($_POST['note'])) {
+            die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
+        }
+
+        if (empty($_POST['id']) || empty($_POST['note'])) {
+            die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
+        }
+
+        if (!Task::isAbleToReject($_POST['id'])) {
+            die(json_encode(array('code' => 5, 'message' => 'Task chỉ có thể reject khi đang trong trạng thái Waiting!')));
+        }
+
+        $_POST['manager_id'] = $_SESSION['id'];
+
+        $_POST['file'] = null;
+        $_POST['file_name'] = null;
+
+        // HANDLE FILE IF THE USER ATTACH A FILE IN THE REQUEST
+        if (isset($_FILES) && !empty($_FILES['file'])) {
+            $extension = pathinfo($_FILES['file']['name'])['extension'];
+
+            if (!in_array($extension, SUPPORTED_EXTENSIONS)) {
+                die(json_encode(array('code' => 2, 'message' => "The file type is not allowed")));
+            }
+
+            $file_size = $_FILES['file']['size'];
+
+            if ($file_size >= 500 * 1024 * 1024) {
+                die(json_encode(array('code' => 3, 'message' => "file exceeds the maximum allowed size")));
+            }
+
+            $path = dirname(dirname(__FILE__));
+
+            $upload_path = "$path\\assets\\uploads\\tasks\\";
+            $file_tmp = $_FILES['file']['tmp_name'];
+            $file_name = $_FILES['file']['name'];
+
+            if (file_exists($upload_path . $file_name)) {
+                die(json_encode(array('code' => 4, 'message' => "File already exists!")));
+            }
+
+            // Name of the file will be hashed before saved
+            $file = fileNameHash($file_name) . '.' . $extension;
+
+            $result = move_uploaded_file($file_tmp, $upload_path . $file);
+            if ($result) {
+                $file_path = URL . "assets/uploads/tasks/" . $file;
+                $_POST['file'] = $file_path;
+                $_POST['file_name'] = $file_name;
+            } else {
+                die(json_encode(array('code' => 1, 'message' => "FAILED")));
+            }
+        }
+
+        $result = Task::rejectTask($_POST);
+        if ($result) {
+            echo json_encode(array('code' => 0, 'message' => 'Reject task successfully!'));
+        } else {
+            die(json_encode(array('code' => 3, 'message' => 'Reject task unsuccessfully!')));
+        }
+    }
+    public function submitTask()
+    {
+        // Function cho nhân viên SUBMIT Task
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            http_response_code(405);
+            die(json_encode(array('code' => 4, 'message' => 'API này chỉ hỗ trợ POST')));
+        }
+
+        if (!isset($_POST['task_id']) || !isset($_POST['note']) || !isset($_FILES['file'])) {
+            die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
+        }
+
+        if (empty($_POST['task_id']) || empty($_POST['note']) || empty($_FILES['file'])) {
+            die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
+        }
+
+        if (!Task::isAbleToSubmit($_POST['task_id'])) {
+            die(json_encode(array('code' => 5, 'message' => 'Không thể submit vì task không đang trong trạng thái In Progress')));
+        }
+
+        // HANDLE FILE IF THE MANGAER ATTACH A FILE IN THE TASK
+        $extension = pathinfo($_FILES['file']['name'])['extension'];
+
+        if (!in_array($extension, SUPPORTED_EXTENSIONS)) {
+            die(json_encode(array('code' => 2, 'message' => "The file type is not allowed")));
+        }
+
+        $file_size = $_FILES['file']['size'];
+
+        if ($file_size >= 500 * 1024 * 1024) {
+            die(json_encode(array('code' => 3, 'message' => "file exceeds the maximum allowed size")));
+        }
+
+        $path = dirname(dirname(__FILE__));
+
+        $upload_path = "$path\\assets\\uploads\\tasks\\";
+        $file_tmp = $_FILES['file']['tmp_name'];
+        $file_name = $_FILES['file']['name'];
+
+        if (file_exists($upload_path . $file_name)) {
+            die(json_encode(array('code' => 4, 'message' => "File already exists!")));
+        }
+
+        // Name of the file will be hashed before saved
+        $file = fileNameHash($file_name) . '.' . $extension;
+
+        $result = move_uploaded_file($file_tmp, $upload_path . $file);
+        if ($result) {
+            $file_path = URL . "assets/uploads/tasks/" . $file;
+            $_POST['file'] = $file_path;
+            $_POST['file_name'] = $file_name;
+        } else {
+            die(json_encode(array('code' => 1, 'message' => "File upload failed!")));
+        }
+
+        $_POST['staff_id'] = $_SESSION['id'];
+        $result = Task::submitTask($_POST);
+        if ($result) {
+            echo json_encode(array('code' => 0, 'message' => 'Submit task thành công!'));
+        } else {
+            die(json_encode(array('code' => 3, 'message' => 'Submit task thất bại!')));
+        }
+    }
+
+    public function indexHistory()
+    {
+        $taskID = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
+        $history = Task::getHistory($taskID);
+        $this->render('indexHistory', array('history' => $history));
+    }
+
+    public function cancelTask()
     {
         // Function cho nhân viên start Task
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {

@@ -39,6 +39,11 @@ function calculateDaysBetween($currentDate, $laterDate)
     return $currentDate->diff($laterDate)->format("%r%a"); //3
 }
 
+function calculateSecondsBetween($currentDate, $laterDate)
+{
+    return $laterDate->getTimestamp() - $currentDate->getTimestamp();
+}
+
 function fileNameHash($file_name)
 {
     /* 

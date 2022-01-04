@@ -26,6 +26,27 @@ if ($taskFile == null || !empty($taskFile['file'])) {
                 <div class="info-body">
                     <ul class="info-list">
                         <li class="row">
+                            <div class="col-12 col-md-6 info-label">Status:</div>
+                            <div class="col-12 col-md-6 info-content text-success font-weight-bold" id="task-viewManager-status">
+                                <?= $s->status ?>
+                            </div>
+                        </li>
+                        <?php
+                        ob_start();
+                        ?>
+                        <li class="row">
+                            <div class="col-12 col-md-6 info-label">Rating:</div>
+                            <div class="col-12 col-md-6 info-content text-success font-weight-bold" id="task-viewManager-status">
+                                <?= $s->rating ?>
+                            </div>
+                        </li>
+                        <?php
+                        $html = ob_get_clean();
+                        if ($s->rating) {
+                            echo $html;
+                        }
+                        ?>
+                        <li class="row">
                             <div class="col-12 col-md-6 info-label">
                                 ID:
                             </div>
@@ -52,12 +73,6 @@ if ($taskFile == null || !empty($taskFile['file'])) {
 
                         </li>
                         <li class="row">
-                            <div class="col-12 col-md-6 info-label">Status:</div>
-                            <div class="col-12 col-md-6 info-content text-success font-weight-bold" id="task-viewStaff-status">
-                                <?= $s->status ?>
-                            </div>
-                        </li>
-                        <li class="row">
                             <div class="col-12 col-md-6 info-label">Attachment:</div>
                             <div class="col-12 col-md-6 info-content">
                                 <a <?= $href ?> <?= $download ?> <?= $title ?>>
@@ -81,7 +96,7 @@ if ($taskFile == null || !empty($taskFile['file'])) {
                         </li>
                         <div class="row">
                             <div class="col-12 col-md-6">
-                                <button class="btn btn-primary m-2 w-100" data-toggle="modal" data-target="#task-start-modal">
+                                <button class="btn btn-primary m-2 w-100" data-toggle="modal" data-target="#task-start-modal" id="task-start-modal-btn">
                                     Start
                                 </button>
                             </div>
@@ -93,6 +108,38 @@ if ($taskFile == null || !empty($taskFile['file'])) {
                         </div>
                     </ul>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- REVIEW USER SUBMIT MODAL -->
+<div class="modal" tabindex="-1" role="dialog" id="task-start-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">User Submit's Review</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="form-group">
+                <div id="fail-alert" class="alert alert-danger mt-2" style="opacity: 0; display:none">
+                    Success
+                </div>
+                <div id="success-alert" class="alert alert-success mt-2" style="opacity: 0; display:none;">
+                    Failure
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="task-start-btn">
+                    Confirm
+                </button>
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -130,18 +177,40 @@ if ($taskFile == null || !empty($taskFile['file'])) {
     </div>
 </div>
 
-<!-- REJECT REQUEST MODAL -->
+<!-- TASK SUBMIT MODAL -->
 <div class="modal" tabindex="-1" role="dialog" id="task-submit-modal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Confirmation</h5>
+                <h5 class="modal-title">Submit task</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to REJECT the request?</p>
+                <form method="" action="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="task-submit-description">Description:</label>
+                        <textarea class="form-control" name="task-submit-description" rows="3" id="task-submit-description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-submit-file">Attachment:</label>
+                        <input type="file" class="form-control-file border" name="task-submit-file" id="task-submit-file">
+                    </div>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div id="fail-alert2" class="alert alert-danger mt-2" style="opacity: 0; display:none">
+                            This type of file is not allowed
+                        </div>
+                        <div id="success-alert2" class="alert alert-success mt-2" style="opacity: 0; display:none;">
+                            This type of file is allowed
+                        </div>
+                    </div>
+                </form>
             </div>
             <div id="fail-alert2" class="alert alert-danger mt-2" style="opacity: 0; display:none">
                 Success

@@ -13,7 +13,6 @@ if (empty($file) || $file === null) {
     $title = "title='NO FILE!'";
     $disabled = "disabled";
 }
-
 ?>
 <div class="container-fluid">
     <div class="row">
