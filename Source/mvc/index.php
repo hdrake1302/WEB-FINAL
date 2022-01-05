@@ -42,16 +42,6 @@ $access_control = array(
         'user' => array('index', 'view', 'viewProfile', 'confirmChange', 'uploadAvatar', 'createAccount'),
         'leave' => array('indexRequest', 'viewRequest', 'acceptRequest', 'rejectRequest'),
         'department' => array('index', 'view', 'createDepartment', 'editDepartment', 'appointManager')
-    ),
-    4 => array(
-        'login' => array(
-            'login', 'logout',
-            'view', 'viewChangePassword', 'changePassword'
-        ),
-        'user' => array('index', 'view', 'viewProfile', 'confirmChange', 'uploadAvatar', 'createAccount'),
-        'leave' => array('index', 'view', 'indexRequest', 'viewRequest', 'createRequest', 'acceptRequest', 'rejectRequest'),
-        'task' => array('indexStaff', 'viewStaff', 'indexManager', 'viewManager', 'createTask', 'startTask', 'submitTask', 'cancelTask', 'indexHistory', 'viewHistory', 'approveTask', 'rejectTask'),
-        'department' => array('index', 'view', 'createDepartment', 'editDepartment', 'appointManager')
     )
 );
 

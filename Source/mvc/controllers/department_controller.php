@@ -4,7 +4,7 @@ if (!isset($_SESSION['id'])) {
     header("Location: ./index.php");
 }
 
-if (!$_SESSION['role'] >= 3) {
+if (!$_SESSION['role'] == 3) {
     header("Location: ./index.php");
 }
 
