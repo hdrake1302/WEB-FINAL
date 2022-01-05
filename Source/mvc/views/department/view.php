@@ -71,6 +71,9 @@ $s = $data['department'];
                                 $users = User::getAllByDepartment($s->id);
                                 if ($users) {
                                     foreach ($users as $user) {
+                                        if ($user->id == $_SESSION['id']) {
+                                            continue;
+                                        }
                                 ?>
                                         <tr>
                                             <td class="department-id"><?= $user->id ?></td>

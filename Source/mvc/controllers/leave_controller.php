@@ -40,7 +40,7 @@ class LeaveController extends BaseController
         // Giao diện xem chi tiết một yêu cầu
         $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
 
-        $leaveRequest = Leave::getRequest($id, $_SESSION['id']);
+        $leaveRequest = Leave::getRequest($id, $_SESSION['id'], $_SESSION['role']);
         $data = array('leave_request' => $leaveRequest);
 
         if ($leaveRequest) {
@@ -76,6 +76,10 @@ class LeaveController extends BaseController
 
         if (!Leave::checkDate($_POST['leave_id'])) {
             die(json_encode(array('code' => 5, 'message' => 'Chưa đủ số ngày đợi để có thể tạo yêu cầu mới')));
+        }
+
+        if (!Leave::isAvailable($_POST['leave_id'], $_POST['days'])) {
+            die(json_encode(array('code' => 5, 'message' => 'Không còn ngày nghỉ')));
         }
 
         $_POST['file'] = null;

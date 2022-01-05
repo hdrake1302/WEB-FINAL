@@ -116,19 +116,16 @@ class User
 
     public static function getAllByDepartment($departmentID)
     {
-        $sql = "select * from account_info where department = :departmentID";
+        $sql = "SELECT * FROM account_info WHERE department = :departmentID AND id <> (SELECT id FROM account WHERE role = 3)";
         $conn = DB::getConnection();
         $stm = $conn->prepare($sql);
         $stm->execute(array('departmentID' => $departmentID));
 
+        $data = [];
         foreach ($stm->fetchAll() as $item) {
             $data[] = new User($item['id'], $item['firstname'], $item['lastname'], $item['email'], $item['phone'], $item['avatar'], $item['department']);
         }
-        if ($data) {
-            return $data;
-        } else {
-            return null;
-        }
+        return $data;
     }
 
     public static function getFullName($id)

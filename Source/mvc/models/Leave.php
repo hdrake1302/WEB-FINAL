@@ -89,13 +89,19 @@ class Leave
         return $data;
     }
 
-    public static function getRequest($id, $leave_id)
+    public static function getRequest($id, $leave_id, $role)
     {
         // Lấy hết request từ nhân viên có cùng phòng ban với quản lý
         $sql = "SELECT * FROM leave_record WHERE leave_id in (SELECT id FROM account_info where department = :department and id <> :leave_id) AND status = 'waiting' AND id = :id";
         $conn = DB::getConnection();
         $stm = $conn->prepare($sql);
         $stm->execute(array('id' => $id, 'leave_id' => $leave_id, 'department' => Department::findID($leave_id)));
+
+        if ($role == 3) {
+            $sql = "SELECT * FROM leave_record WHERE leave_id in (SELECT id FROM account where role = 2) AND status = 'waiting' AND id = :id";
+            $stm = $conn->prepare($sql);
+            $stm->execute(array('id' => $id));
+        }
 
         if ($item = $stm->fetch()) {
             return array('id' => $item['id'], 'leave_id' => $item['leave_id'], 'description' => $item['description'], 'file_name' => $item['file_name'],  'file' => $item['file'], 'days' => $item['days'], 'date_created' => $item['date_created'], 'date_wanted' => $item['date_wanted'], 'date_response' => $item['date_response'], 'status' => $item['status']);
@@ -150,6 +156,25 @@ class Leave
             return FALSE;
         }
         return TRUE;
+    }
+
+
+    public static function isAvailable($leave_id, $days)
+    {
+        $sql = "SELECT used_leaves, total_leaves FROM leave_info WHERE person_id = :leave_id";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('leave_id' => $leave_id));
+
+        if ($item = $stm->fetch()) {
+            $total_leaves = intval($item['total_leaves']);
+            $used_leaves = intval($item['used_leaves']);
+
+            if ((intval($days) + $used_leaves) > $total_leaves) {
+                return False;
+            }
+            return True;
+        }
     }
 
     public static function checkWaiting($leave_id)

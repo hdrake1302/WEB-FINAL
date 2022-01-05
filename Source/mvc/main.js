@@ -170,7 +170,7 @@ $(document).ready(() => {
     });
 
     $("#user-reset-password").click(function(){
-        let userID = $("#add-user-id").text();
+        let userID = parseInt($("#user-id").text());
 
         $.ajax({
             url: "?controller=user&action=confirmChange&id="+userID,

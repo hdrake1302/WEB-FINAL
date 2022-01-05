@@ -68,6 +68,10 @@ class TaskController extends BaseController
             die(json_encode(array('code' => 2, 'message' => 'Invalid format of deadline')));
         }
 
+        if (intval(User::getRole($_POST['staff_id'])) !== 1) {
+            die(json_encode(array('code' => 5, 'message' => 'Chỉ có thể giao task cho nhân viên!')));
+        }
+
         $_POST['file'] = null;
         $_POST['file_name'] = null;
 
@@ -109,6 +113,7 @@ class TaskController extends BaseController
                 die(json_encode(array('code' => 1, 'message' => "File upload failed!")));
             }
         }
+
 
         $_POST['id'] = Task::getNextID();
         $_POST['manager_id'] = $_SESSION['id'];
