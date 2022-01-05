@@ -41,6 +41,13 @@ function calculateDaysBetween($currentDate, $laterDate)
 
 function calculateSecondsBetween($currentDate, $laterDate)
 {
+    /* 
+        Function to check calculate number of days between two days
+        Input: 
+            - $currentDate(DateTime)
+            - $laterDate(DateTime)
+        Output: number of seconds between
+    */
     return $laterDate->getTimestamp() - $currentDate->getTimestamp();
 }
 

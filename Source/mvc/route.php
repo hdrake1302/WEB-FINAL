@@ -3,7 +3,7 @@ $supported_controllers = array(
     'user' => array('index', 'view', 'viewProfile', 'confirmChange', 'uploadAvatar', 'createAccount'),
     'task' => array('indexStaff', 'viewStaff', 'indexManager', 'viewManager', 'indexHistory', 'viewHistory', 'createTask', 'startTask', 'submitTask', 'cancelTask', 'approveTask', 'rejectTask'),
     'leave' => array('index', 'view', 'indexRequest', 'viewRequest', 'createRequest', 'acceptRequest', 'rejectRequest'),
-    'department' => array('index', 'view'),
+    'department' => array('index', 'view', 'createDepartment', 'editDepartment', 'appointManager'),
     'login' => array(
         'login', 'logout',
         'view', 'viewChangePassword', 'changePassword'

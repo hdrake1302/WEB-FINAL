@@ -4,6 +4,16 @@ require_once('config.php');
 require_once('function.php');
 
 session_start();
+
+// if (!isset($_SESSION['last_access'])) {
+//     $_SESSION['last_access'] = time();
+// }
+
+// if ((time() - $_SESSION['last_access']) > 10) {
+//     unset($_SESSION);
+//     session_destroy();
+// }
+
 // Phần quyền
 $access_control = array(
     1 => array(
@@ -31,7 +41,7 @@ $access_control = array(
         ),
         'user' => array('index', 'view', 'viewProfile', 'confirmChange', 'uploadAvatar', 'createAccount'),
         'leave' => array('indexRequest', 'viewRequest', 'acceptRequest', 'rejectRequest'),
-        'department' => array('index', 'view')
+        'department' => array('index', 'view', 'createDepartment', 'editDepartment', 'appointManager')
     ),
     4 => array(
         'login' => array(
@@ -41,7 +51,7 @@ $access_control = array(
         'user' => array('index', 'view', 'viewProfile', 'confirmChange', 'uploadAvatar', 'createAccount'),
         'leave' => array('index', 'view', 'indexRequest', 'viewRequest', 'createRequest', 'acceptRequest', 'rejectRequest'),
         'task' => array('indexStaff', 'viewStaff', 'indexManager', 'viewManager', 'createTask', 'startTask', 'submitTask', 'cancelTask', 'indexHistory', 'viewHistory', 'approveTask', 'rejectTask'),
-        'department' => array('index', 'view')
+        'department' => array('index', 'view', 'createDepartment', 'editDepartment', 'appointManager')
     )
 );
 

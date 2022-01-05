@@ -56,6 +56,76 @@ class DepartmentController extends BaseController
             die(json_encode(array('code' => 2, 'message' => 'Số phòng không được bé hơn 1!')));
         }
 
-        // $result = Department::createDepartment($_POST);
+        $_POST['id'] = Department::getNextID();
+        $result = Department::createDepartment($_POST);
+
+        if ($result) {
+            echo json_encode(array('code' => 0, 'message' => 'Tạo phòng ban thành công!'));
+        } else {
+            die(json_encode(array('code' => 3, 'message' => 'Tạo phòng ban thất bại!')));
+        }
+    }
+
+    public function editDepartment()
+    {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            http_response_code(405);
+            die(json_encode(array('code' => 4, 'message' => 'API này chỉ hỗ trợ POST')));
+        }
+
+        if (!isset($_POST['id']) || !isset($_POST['name']) || !isset($_POST['description']) || !isset($_POST['roomQuantity'])) {
+            die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
+        }
+
+        if (empty($_POST['id']) || empty($_POST['name']) || empty($_POST['description']) || empty($_POST['roomQuantity'])) {
+            die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
+        }
+
+        if (intval($_POST['roomQuantity']) < 1) {
+            die(json_encode(array('code' => 2, 'message' => 'Số phòng không được bé hơn 1!')));
+        }
+
+        $result = Department::editDepartment($_POST);
+
+        if ($result) {
+            echo json_encode(array('code' => 0, 'message' => 'Sửa phòng ban thành công!'));
+        } else {
+            die(json_encode(array('code' => 3, 'message' => 'Sửa phòng ban thất bại!')));
+        }
+    }
+
+    public function appointManager()
+    {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            http_response_code(405);
+            die(json_encode(array('code' => 4, 'message' => 'API này chỉ hỗ trợ POST')));
+        }
+
+        if (!isset($_POST['user_id']) || !isset($_POST['department_id'])) {
+            die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
+        }
+
+        if (empty($_POST['user_id']) || empty($_POST['department_id'])) {
+            die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
+        }
+
+        if (User::isManager($_POST['user_id'])) {
+            die(json_encode(array('code' => 5, 'message' => 'Không thể bổ nhiệm vì user hiện tại đang là trưởng phòng')));
+        }
+
+        if (Department::existManager($_POST['user_id'])) {
+            // Nếu đã có trưởng phòng thì set role lại bằng 1
+            User::setRole(Department::getManagerID($_POST['department_id']), 1);
+        }
+
+
+        User::setRole($_POST['user_id'], 2);
+        $result = Department::appointManager($_POST['department_id'], $_POST['user_id']);
+
+        if ($result && $result) {
+            echo json_encode(array('code' => 0, 'message' => 'Bổ nhiệm trưởng phòng thành công!'));
+        } else {
+            die(json_encode(array('code' => 3, 'message' => 'Bổ nhiệm trưởng phòng thất bại!')));
+        }
     }
 }

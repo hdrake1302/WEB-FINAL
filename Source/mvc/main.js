@@ -237,8 +237,6 @@ $(document).ready(() => {
             $(".progress-bar").attr("style", "width: " + progress + "%;");
         });
 
-        let path = "http://localhost/WEB-FINAL/Source/mvc/assets/"
-
         xhr.onload = function() {
             if (xhr.readyState === xhr.DONE) {
                 if (xhr.status === 200) {
@@ -828,6 +826,96 @@ $(document).ready(() => {
             showError("Số phòng không được bé hơn 1");
             throw new Error("Số phòng không được bé hơn 1");
         }
+
+        $.ajax({
+            url: "?controller=department&action=createDepartment",
+            method: "POST",
+            data: data,
+            success: function(result){
+                result = JSON.parse(result);
+                if(result.code === 0){
+                    success(result.message);
+                    setTimeout(function(){
+                    $("#user-addAccount-modal").modal('hide');
+                }, 2000);
+                }else{
+                    showError(result.message)
+                }
+            }
+        })
+    });
+
+    $("#department-edit-btn").click(function(){
+        let id = parseInt($("#department-id").text());
+        let name = $("#department-add-name").val();
+        let description = $("#department-add-description").val();
+        let roomQuantity = $("#department-add-quantity").val();
+
+        let data ={
+            'id': id,
+            'name': name,
+            'description': description,
+            'roomQuantity': roomQuantity
+        };
+
+        console.log(data);
+        if(name.length === 0){
+            $("#department-add-name").focus();
+            showError("Vui lòng nhập đầy đủ các thông tin");
+            throw new Error("Vui lòng nhập đầy đủ các thông tin");
+        } else if(description.length === 0){
+            $("#department-add-description").focus();
+            showError("Vui lòng nhập đầy đủ các thông tin");
+            throw new Error("Vui lòng nhập đầy đủ các thông tin");
+        } else if(roomQuantity.length === 0){
+            $("#department-add-quantity").focus();
+            showError("Vui lòng nhập đầy đủ các thông tin");
+            throw new Error("Vui lòng nhập đầy đủ các thông tin");
+        } else if(roomQuantity < 1){
+            $("#department-add-quantity").focus();
+            showError("Số phòng không được bé hơn 1");
+            throw new Error("Số phòng không được bé hơn 1");
+        }
+
+        $.ajax({
+            url: "?controller=department&action=editDepartment",
+            method: "POST",
+            data: data,
+            success: function(result){
+                result = JSON.parse(result);
+                if(result.code === 0){
+                    success(result.message);
+                    setTimeout(function(){
+                    $("#user-addAccount-modal").modal('hide');
+                }, 2000);
+                }else{
+                    showError(result.message)
+                }
+            }
+        })
+    });
+
+    $("#department-appoint-btn").click(function(){
+        let userID = parseInt($("#department-appoint-name").attr("data-id"));
+        let departmentID = parseInt($("#department-id").text());
+
+        let data = {'user_id': userID, 'department_id': departmentID};
+
+        $.ajax({
+            url: "?controller=department&action=appointManager",
+            method: "POST",
+            data: data,
+            success: function(result){
+                result = JSON.parse(result);
+                if(result.code === 0){
+                    success2("#success-alert2" ,result.message);
+                    setTimeout(function(){
+                }, 2000);
+                }else{
+                    showError2("#fail-alert2" ,result.message)
+                }
+            }
+        })
     });
     // --------------------- END OF DEPARTMENT MANAGEMENT ---------------------
 });
@@ -837,6 +925,15 @@ $(document).ready(() => {
 function cancelTask(e){
     let id = parseInt(e.getAttribute('data'));
     $("#task-cancel-id").text(id);
+}
+
+function appointManager(e){
+    tr = e.parentNode.parentNode;
+    let id = parseInt(tr.getElementsByClassName('department-id')[0].innerText);
+    let name = tr.getElementsByClassName('department-name')[0].innerText;
+
+    $("#department-appoint-name").text(`${id}` + " - " + name);
+    $("#department-appoint-name").attr("data-id", id);
 }
 
 function showError(text) {

@@ -4,34 +4,6 @@ $taskAction = $role == 1 ? 'indexStaff' : 'indexManager';
 ?>
 
 <ul class="nav-list">
-    <li>
-        <a href="?controller=login&action=view" data-toggle="tooltip" data-placement="right" title="Home">
-            <i class='bx bx-home-alt'></i>
-            <span class="links-name">Home</span>
-        </a>
-    </li>
-    <li>
-        <a href="?controller=user&action=viewProfile" data-toggle="tooltip" data-placement="right" title="Profile">
-            <i class="bx bxs-user-circle"></i>
-            <span class="links-name">Profile</span>
-        </a>
-    </li>
-    <?php
-    ob_start();
-    ?>
-    <li>
-        <a href="?controller=leave&action=indexRequest" data-toggle="tooltip" data-placement="right" title="Requests Management">
-            <i class='bx bxs-user-voice'></i>
-            <span class="links-name">Requests</span>
-        </a>
-    </li>
-
-    <?php
-    $html = ob_get_clean();
-    if ($role != 1) {
-        echo $html;
-    }
-    ?>
     <?php
     ob_start();
     ?>
@@ -75,6 +47,28 @@ $taskAction = $role == 1 ? 'indexStaff' : 'indexManager';
         echo $html;
     }
     ?>
+    <?php
+    ob_start();
+    ?>
+    <li>
+        <a href="?controller=leave&action=indexRequest" data-toggle="tooltip" data-placement="right" title="Requests Management">
+            <i class='bx bxs-user-voice'></i>
+            <span class="links-name">Requests</span>
+        </a>
+    </li>
+
+    <?php
+    $html = ob_get_clean();
+    if ($role != 1) {
+        echo $html;
+    }
+    ?>
+    <li>
+        <a href="?controller=user&action=viewProfile" data-toggle="tooltip" data-placement="right" title="Profile">
+            <i class="bx bxs-user-circle"></i>
+            <span class="links-name">Profile</span>
+        </a>
+    </li>
     <li id="res-log-out" class="d-block d-sm-none">
         <a href="#" data-toggle="tooltip" data-placement="right" title="">
             <span class="links-name"><a href="?controller=login&action=logout"><i class="bx bx-log-out"></i> Log out</a></span>

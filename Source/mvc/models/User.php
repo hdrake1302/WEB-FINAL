@@ -124,7 +124,11 @@ class User
         foreach ($stm->fetchAll() as $item) {
             $data[] = new User($item['id'], $item['firstname'], $item['lastname'], $item['email'], $item['phone'], $item['avatar'], $item['department']);
         }
-        return $data;
+        if ($data) {
+            return $data;
+        } else {
+            return null;
+        }
     }
 
     public static function getFullName($id)
@@ -236,6 +240,32 @@ class User
             }
         }
         return True;
+    }
+
+    public static function isManager($id)
+    {
+        $sql = "SELECT * FROM account WHERE id = :id AND role=2";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('id' => $id));
+
+        if ($stm->fetch()) {
+            return True;
+        }
+        return False;
+    }
+
+    public static function setRole($id, $role)
+    {
+        $sql = "UPDATE account SET role = :role WHERE id = :id";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('id' => $id, 'role' => $role));
+
+        if ($stm->fetch()) {
+            return True;
+        }
+        return False;
     }
 
     public static function createAccount($data)
