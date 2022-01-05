@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 05, 2022 at 01:25 PM
+-- Generation Time: Jan 05, 2022 at 01:37 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.11
 
@@ -67,7 +67,7 @@ CREATE TABLE `account_info` (
 
 INSERT INTO `account_info` (`id`, `firstname`, `lastname`, `email`, `phone`, `avatar`, `department`) VALUES
 (1, 'Khiêm', 'Trần Vĩnh', 'tranvinhkhiem@gmail.com', '02221115487', NULL, 1),
-(2, 'Đào', 'Trần Thị', 'tranthidao@gmail.com', '0335548891', 'http://localhost/WEB-FINAL/Source/mvc/assets/uploads/avatars/7174b03f45f185b6cc4fa63a7bdbb4e4_beautiful-woman-with-natural-make-up-897056188-5c2d3aff4cedfd000165bdef-1400x787.jpg', 1),
+(2, 'Đào', 'Trần Thị', 'tranthidao@gmail.com', '0335548891', 'http://localhost/assets/uploads/avatars/7174b03f45f185b6cc4fa63a7bdbb4e4_beautiful-woman-with-natural-make-up-897056188-5c2d3aff4cedfd000165bdef-1400x787.jpg', 1),
 (3, 'Trúc', 'Nguyễn Thị', 'nguyenthitruc@gmail.com', '0335848795', NULL, 1);
 
 -- --------------------------------------------------------
@@ -152,7 +152,7 @@ CREATE TABLE `leave_record` (
 --
 
 INSERT INTO `leave_record` (`id`, `leave_id`, `description`, `file_name`, `file`, `days`, `date_created`, `date_response`, `date_wanted`, `status`) VALUES
-(1, 2, 'Em đang bị bệnh nặng, anh cho em nghỉ có được không ạ ?', '908884674-should-your-child-stay.jpg', 'http://localhost/WEB-FINAL/Source/mvc/assets/uploads/leaves/$2y$10$X6nsBSmjcGDqsLX8DA7vouryVoMZRyWAKuDif9x16cy65BW.ULtfm.jpg', 2, '2022-01-05 11:53:56', '2022-01-05 19:01:49', '2022-01-06', 'approved');
+(2, 2, 'Em muốn xin nghỉ ngày mai', '908884674-should-your-child-stay.jpg', 'http://localhost/assets/uploads/leaves/$2y$10$OjseiLoO7lh80bfWC1k4EuaENhmoNC2rNSotrnzC4RbhqzCebq7O.jpg', 1, '2022-01-05 12:34:54', '2022-01-05 19:35:26', '2022-01-06', 'refused');
 
 -- --------------------------------------------------------
 
@@ -197,7 +197,7 @@ CREATE TABLE `task` (
 --
 
 INSERT INTO `task` (`id`, `manager_id`, `staff_id`, `title`, `description`, `status`, `rating`, `date_created`, `deadline`) VALUES
-(1, 2, 3, 'Để tài nghiên cứu về Web Security', 'Đây là một đề tài khá dễ để bắt đầu, hi vọng em hoàn thành nó sớm trước deadline. Chị có đính kèm file để hỗ trợ em trong việc nghiên cứu.', 'New', NULL, '2022-01-05 12:20:55', '2022-01-08 19:18:41');
+(1, 2, 3, 'Để tài nghiên cứu về Web Security', 'Đây là một đề tài khá dễ để bắt đầu, hi vọng em hoàn thành nó sớm trước deadline. Chị có đính kèm file để hỗ trợ em trong việc nghiên cứu.', 'In progress', NULL, '2022-01-05 12:20:55', '2022-01-08 19:18:41');
 
 -- --------------------------------------------------------
 
@@ -221,7 +221,8 @@ CREATE TABLE `task_record` (
 --
 
 INSERT INTO `task_record` (`id`, `task_id`, `person_id`, `status`, `note`, `file_name`, `file`, `date`) VALUES
-(1, 1, 2, 'New', NULL, 'webSecurity.docx', 'http://localhost/WEB-FINAL/Source/mvc/assets/uploads/tasks/$2y$10$rd1PuZJx5W6NzEP2HcRS.vfDTRGttGPVktKtAw1aMg5.MKm.rdg2.docx', '2022-01-05 12:20:55');
+(1, 1, 2, 'New', NULL, 'webSecurity.docx', 'http://localhost/assets/uploads/tasks/$2y$10$rd1PuZJx5W6NzEP2HcRS.vfDTRGttGPVktKtAw1aMg5.MKm.rdg2.docx', '2022-01-05 12:36:04'),
+(2, 1, 3, 'In progress', NULL, NULL, NULL, '2022-01-05 12:36:56');
 
 --
 -- Indexes for dumped tables
@@ -311,7 +312,7 @@ ALTER TABLE `department`
 -- AUTO_INCREMENT for table `leave_record`
 --
 ALTER TABLE `leave_record`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `role`
@@ -329,7 +330,7 @@ ALTER TABLE `task`
 -- AUTO_INCREMENT for table `task_record`
 --
 ALTER TABLE `task_record`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
