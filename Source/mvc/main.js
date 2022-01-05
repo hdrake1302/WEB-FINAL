@@ -2,39 +2,11 @@ $(document).ready(() => {
     const home_url = "http://localhost/WEB-FINAL/Source/mvc/";
     const MAX_FILE_SIZE = 500 * 1024 * 1024;
 
-    function validateEmail(email){
-        return String(email).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-    }
-
-    function convertTime12to24(time12h){
-        let [time, modifier] = time12h.split(" ");
-        
-        let [hours, minutes, seconds] = time.split(":");
-        
-        if (hours === "12") {
-            hours = "00";
-        }
-        
-        if (modifier === "PM") {
-            hours = parseInt(hours, 10) + 12;
-        }
-        
-        return `${hours}:${minutes}:${seconds}`;
-    }
-
-    function formatDate(dateTime){
-        let [date, time] = dateTime.split("T");
-        let formatTime = convertTime12to24(time);
-
-        return `${date} ${formatTime}`;
-    }
-
     // --------------- START OF LOGIN -----------------
     $('#login-button').click((e) => {
         e.preventDefault();
         let userName = $("#username").val();
         let pwd = $("#password").val();
-        let r = /(?=.*[A-Z])/
 
         if(userName.length === 0 || pwd.length === 0) {
             let focus_target = "";
@@ -45,12 +17,11 @@ $(document).ready(() => {
             }
             $(focus_target).focus();
             showError("Vui lòng nhập đầy đủ các thông tin");
+            throw new Error("Vui lòng nhập đầy đủ các thông tin");
         }  else if (pwd.length < 6) {
             showError("Độ dài mật khẩu không phù hợp! (Ít nhất 6 kí tự)");
+            throw new Error("Độ dài mật khẩu không phù hợp! (Ít nhất 6 kí tự)");
         } 
-        // else if (!r.test(pwd)) {
-        //     showError("Mật khẩu phải có ít nhất 1 kí tự viết hoa");
-        // } 
         else {
             $(this).unbind('click');
             $.post("?controller=login&action=login", {username: userName, password: pwd, submit: true}, function(data){
@@ -88,13 +59,17 @@ $(document).ready(() => {
             }
             $(focus_target).focus();
             showError("Vui lòng nhập đầy đủ các thông tin");
+            throw new Error("Vui lòng nhập đầy đủ các thông tin");
 
         } else if(currentPassword.length < 6 || newPassword.length < 6 || confirmPassword.length < 6) {
             showError("Độ dài mật khẩu không phù hợp! (Ít nhất 6 kí tự)");
+            throw new Error("Độ dài mật khẩu không phù hợp! (Ít nhất 6 kí tự)");
         } else if (newPassword != confirmPassword) {
             showError("Mật khẩu không khớp với nhau!");
+            throw new Error("Mật khẩu không khớp với nhau!");
         }else if (currentPassword === newPassword) {
             showError("Mật khẩu mới không được trùng với mật khẩu cũ!");
+            throw new Error("Mật khẩu mới không được trùng với mật khẩu cũ!");
         } else {
             $(this).unbind('click');
             $.post("?controller=login&action=changePassword", {currentPwd: currentPassword, newPwd: newPassword, confirmPwd: confirmPassword, submit: true}, function(data){
@@ -146,26 +121,34 @@ $(document).ready(() => {
         if(username.length === 0){
             showError("Không được để trống thông tin");
             $("#add-user-username").focus();
+            throw new Error("Không được để trống thông tin");
         }else if(firstname.length === 0){
             showError("Không được để trống thông tin");
             $("#add-user-firstname").focus();
+            throw new Error("Không được để trống thông tin");
         }else if(lastname.length === 0){
             showError("Không được để trống thông tin");
             $("#add-user-lastname").focus();
+            throw new Error("Không được để trống thông tin");
         }else if(email.length === 0){
             showError("Không được để trống thông tin");
             $("#add-user-email").focus();
+            throw new Error("Không được để trống thông tin");
         }else if(phone.length === 0){
             showError("Không được để trống thông tin");
             $("#add-user-phone").focus();
+            throw new Error("Không được để trống thông tin");
         }else if(department.length === 0){
             showError("Không được để trống thông tin");
             $("#add-user-phone").focus();
+            throw new Error("Không được để trống thông tin");
         }
         else if(username.length < 6 || username.length > 30){
             showError("Độ dài của username không được dưới 6 và không được quá 30 ký tự");
+            throw new Error("Độ dài của username không được dưới 6 và không được quá 30 ký tự");
         }else if(!validateEmail(email)){
             showError("Email không hợp lệ!");
+            throw new Error("Email không hợp lệ!");
         }
 
         $.ajax({
@@ -634,7 +617,6 @@ $(document).ready(() => {
     
         // start task viewStaff.php
         let taskStatus = $('#task-viewStaff-status').text().trim();
-        console.log(taskStatus);
         if(taskStatus != "In progress" && taskStatus != "Rejected"){
             $("#task-submit-modal-btn").attr("disabled", true);
         }
@@ -736,7 +718,7 @@ $(document).ready(() => {
                         // RESET PROGRESS BAR
                         setTimeout(function(){
                             $(".progress-bar").attr("style", "width: 0");
-                            $("#task-submit-modal").modal("hide");
+                            $("#task-start-modal").modal("hide");
 
                         }, 2000);
                     }
@@ -814,6 +796,40 @@ $(document).ready(() => {
     });
 
     // --------------------- END OF VIEW REQUEST ---------------------
+
+    // --------------------- START OF DEPARTMENT MANAGEMENT ---------------------
+
+
+    $("#department-add-btn").click(function(){
+        let name = $("#department-add-name").val();
+        let description = $("#department-add-description").val();
+        let roomQuantity = $("#department-add-quantity").val();
+
+        let data ={
+            'name': name,
+            'description': description,
+            'roomQuantity': roomQuantity
+        };
+
+        if(name.length === 0){
+            $("#department-add-name").focus();
+            showError("Vui lòng nhập đầy đủ các thông tin");
+            throw new Error("Vui lòng nhập đầy đủ các thông tin");
+        } else if(description.length === 0){
+            $("#department-add-description").focus();
+            showError("Vui lòng nhập đầy đủ các thông tin");
+            throw new Error("Vui lòng nhập đầy đủ các thông tin");
+        } else if(roomQuantity.length === 0){
+            $("#department-add-quantity").focus();
+            showError("Vui lòng nhập đầy đủ các thông tin");
+            throw new Error("Vui lòng nhập đầy đủ các thông tin");
+        } else if(roomQuantity < 1){
+            $("#department-add-quantity").focus();
+            showError("Số phòng không được bé hơn 1");
+            throw new Error("Số phòng không được bé hơn 1");
+        }
+    });
+    // --------------------- END OF DEPARTMENT MANAGEMENT ---------------------
 });
 
 
@@ -851,3 +867,29 @@ function success2(id, text){
     });
 }
 
+function validateEmail(email){
+        return String(email).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+    }
+
+function convertTime12to24(time12h){
+    let [time, modifier] = time12h.split(" ");
+    
+    let [hours, minutes, seconds] = time.split(":");
+    
+    if (hours === "12") {
+        hours = "00";
+    }
+    
+    if (modifier === "PM") {
+        hours = parseInt(hours, 10) + 12;
+    }
+    
+    return `${hours}:${minutes}:${seconds}`;
+}
+
+function formatDate(dateTime){
+    let [date, time] = dateTime.split("T");
+    let formatTime = convertTime12to24(time);
+
+    return `${date} ${formatTime}`;
+}

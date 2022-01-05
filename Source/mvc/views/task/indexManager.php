@@ -89,8 +89,12 @@
                         <textarea class="form-control" name="task-create-description" rows="3" id="task-create-description"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="task-create-file">Attachment:</label>
-                        <input type="file" class="form-control-file border" name="task-create-file" id="task-create-file">
+                        <div class="form-group">
+                            <div class="custom-file">
+                                <input type="file" name="task-create-file" class="custom-file-input" id="task-create-file" />
+                                <label class="custom-file-label" for="task-create-file">Choose file</label>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="progress">

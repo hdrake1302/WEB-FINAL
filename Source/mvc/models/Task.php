@@ -50,6 +50,20 @@ class TaskRecord
         return $data;
     }
 
+    public static function get($id)
+    {
+        // Lấy hết tất cả các task đã được tạo bởi Trưởng phòng
+        $sql = "SELECT * FROM task_record WHERE id = :id";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('id' => $id));
+
+        if ($item = $stm->fetch()) {
+            return new TaskRecord($item['id'], $item['task_id'], $item['person_id'], $item['status'], $item['note'], $item['file_name'], $item['file'], $item['date']);
+        }
+        return null;
+    }
+
     public static function getLatestSubmit($taskID)
     {
         // Lấy task user submit mới nhất
@@ -204,6 +218,19 @@ class Task
         return 1;
     }
 
+    public static function getStaffID($taskID)
+    {
+        $sql = "SELECT staff_id FROM task WHERE id = :task_id";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('task_id' => $taskID));
+
+        if ($item = $stm->fetch()) {
+            return $item['staff_id'];
+        }
+        return null;
+    }
+
     public static function getFile($taskID)
     {
         $sql = "SELECT file_name, file FROM task_record WHERE task_id = :taskID AND status='new'";
@@ -213,6 +240,19 @@ class Task
 
         if ($item = $stm->fetch()) {
             return $item;
+        }
+        return null;
+    }
+
+    public static function getRating($taskID)
+    {
+        $sql = "SELECT rating FROM task WHERE id = :taskID AND status='Completed'";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('taskID' => $taskID));
+
+        if ($item = $stm->fetch()) {
+            return $item['rating'];
         }
         return null;
     }
@@ -394,9 +434,14 @@ class Task
         return $stm1->rowCount() == 1 & $stm2->rowCount() == 1;
     }
 
-    public static function getHistory($taskID)
+    public static function getAllHistory($taskID)
     {
         return TaskRecord::getAll($taskID);
+    }
+
+    public static function getHistory($taskID)
+    {
+        return TaskRecord::get($taskID);
     }
 
     public static function getSubmit($taskID)

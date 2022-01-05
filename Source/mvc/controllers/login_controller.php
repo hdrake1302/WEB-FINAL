@@ -5,8 +5,6 @@ require_once('function.php');
 
 class LoginController
 {
-    protected $name;
-
     function __construct()
     {
         $this->name = 'login';

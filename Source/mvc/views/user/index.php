@@ -62,27 +62,27 @@
              <div class="modal-body">
                  <form method="" action="POST">
                      <div class="form-group">
-                         <label for="days">Username:</label>
+                         <label for="add-user-username">Username:</label>
                          <input class="form-control" id="add-user-username" type="text">
                      </div>
                      <div class="form-group">
-                         <label for="date">Firstname:</label>
+                         <label for="add-user-firstname">Firstname:</label>
                          <input class="form-control" id="add-user-firstname" type="text">
                      </div>
                      <div class="form-group">
-                         <label for="date">Lastname:</label>
+                         <label for="add-user-lastname">Lastname:</label>
                          <input class="form-control" id="add-user-lastname" type="text">
                      </div>
                      <div class="form-group">
-                         <label for="date">Email:</label>
+                         <label for="add-user-email">Email:</label>
                          <input class="form-control" id="add-user-email" type="email">
                      </div>
                      <div class="form-group">
-                         <label for="date">Phone Number:</label>
+                         <label for="add-user-phone">Phone Number:</label>
                          <input class="form-control" id="add-user-phone" type="text">
                      </div>
                      <div class="form-group">
-                         <label for="date">Department:</label>
+                         <label for="add-user-department">Department:</label>
                          <select class="form-control" name="add-user-department" id="add-user-department">
                              <?php
                                 $department = Department::getAll();

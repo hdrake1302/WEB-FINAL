@@ -1,0 +1,5 @@
+Bổ sung quyền hạn truy cập vào history của task => sửa lại getHistory in task_controller
+Bổ sung quyền hạn truy cập vào thông tin chi tiết của task => ?
+Thêm ViewHistory => Xem chi tiết một history
+Chỉnh sửa lại History leaves request (optional)
+Code Department Management

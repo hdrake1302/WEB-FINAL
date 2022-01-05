@@ -137,8 +137,19 @@ class TaskController extends BaseController
             die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
         }
 
+        $supported_ratings = array("Bad", "OK", "Good");
+
+        if (!in_array($_POST['rating'], $supported_ratings)) {
+            die(json_encode(array('code' => 2, 'message' => 'Rating phải là một trong các giá trị "Bad", "OK", "Good"')));
+        }
+
+
         if (!Task::isAbleToApprove($_POST['id'])) {
             die(json_encode(array('code' => 5, 'message' => 'Task chỉ có thể approve khi đang trong trạng thái Waiting!')));
+        }
+
+        if (Task::isLate(Task::getStaffID($_POST['id']), $_POST['id']) && $_POST['rating'] == "Good") {
+            die(json_encode(array('code' => 5, 'message' => 'Task đã trễ deadline nên không thể đánh giá mức độ Good!')));
         }
 
         $_POST['manager_id'] = $_SESSION['id'];
@@ -317,8 +328,15 @@ class TaskController extends BaseController
     public function indexHistory()
     {
         $taskID = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
-        $history = Task::getHistory($taskID);
+        $history = Task::getAllHistory($taskID);
         $this->render('indexHistory', array('history' => $history));
+    }
+
+    public function viewHistory()
+    {
+        $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
+        $history = Task::getHistory($id);
+        $this->render('viewHistory', array('history' => $history));
     }
 
     public function cancelTask()

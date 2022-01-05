@@ -42,7 +42,12 @@ class LeaveController extends BaseController
 
         $leaveRequest = Leave::getRequest($id, $_SESSION['id']);
         $data = array('leave_request' => $leaveRequest);
-        $this->render('viewRequest', $data);
+
+        if ($leaveRequest) {
+            $this->render('viewRequest', $data);
+        } else {
+            header("Location: ./index.php?controller=leave&action=indexRequest");
+        }
     }
 
     public function createRequest()

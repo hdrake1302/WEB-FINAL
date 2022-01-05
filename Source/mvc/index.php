@@ -13,7 +13,7 @@ $access_control = array(
         ),
         'user' => array('viewProfile', 'confirmChange', 'uploadAvatar'),
         'leave' => array('index', 'createRequest'),
-        'task' => array('indexStaff', 'viewStaff', 'startTask', 'submitTask', 'indexHistory')
+        'task' => array('indexStaff', 'viewStaff', 'startTask', 'submitTask', 'indexHistory', 'viewHistory')
     ),
     2 => array(
         'login' => array(
@@ -22,7 +22,7 @@ $access_control = array(
         ),
         'user' => array('viewProfile', 'confirmChange', 'uploadAvatar'),
         'leave' => array('index', 'indexRequest', 'viewRequest', 'createRequest', 'acceptRequest', 'rejectRequest'),
-        'task' => array('indexManager', 'viewManager', 'createTask', 'cancelTask', 'indexHistory', 'approveTask', 'rejectTask')
+        'task' => array('indexManager', 'viewManager', 'createTask', 'cancelTask', 'indexHistory', 'viewHistory', 'approveTask', 'rejectTask')
     ),
     3 => array(
         'login' => array(
@@ -30,7 +30,8 @@ $access_control = array(
             'view', 'viewChangePassword', 'changePassword'
         ),
         'user' => array('index', 'view', 'viewProfile', 'confirmChange', 'uploadAvatar', 'createAccount'),
-        'leave' => array('indexRequest', 'viewRequest', 'acceptRequest', 'rejectRequest')
+        'leave' => array('indexRequest', 'viewRequest', 'acceptRequest', 'rejectRequest'),
+        'department' => array('index', 'view')
     ),
     4 => array(
         'login' => array(
@@ -39,7 +40,8 @@ $access_control = array(
         ),
         'user' => array('index', 'view', 'viewProfile', 'confirmChange', 'uploadAvatar', 'createAccount'),
         'leave' => array('index', 'view', 'indexRequest', 'viewRequest', 'createRequest', 'acceptRequest', 'rejectRequest'),
-        'task' => array('indexStaff', 'viewStaff', 'indexManager', 'viewManager', 'createTask', 'startTask', 'submitTask', 'cancelTask', 'indexHistory', 'approveTask', 'rejectTask')
+        'task' => array('indexStaff', 'viewStaff', 'indexManager', 'viewManager', 'createTask', 'startTask', 'submitTask', 'cancelTask', 'indexHistory', 'viewHistory', 'approveTask', 'rejectTask'),
+        'department' => array('index', 'view')
     )
 );
 
