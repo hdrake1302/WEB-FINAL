@@ -113,7 +113,7 @@ class DepartmentController extends BaseController
             die(json_encode(array('code' => 5, 'message' => 'Không thể bổ nhiệm vì user hiện tại đang là trưởng phòng')));
         }
 
-        if (Department::existManager($_POST['user_id'])) {
+        if (Department::existManager($_POST['department_id'])) {
             // Nếu đã có trưởng phòng thì set role lại bằng 1
             User::setRole(Department::getManagerID($_POST['department_id']), 1);
         }

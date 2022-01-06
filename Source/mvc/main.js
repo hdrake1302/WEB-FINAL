@@ -159,6 +159,7 @@ $(document).ready(() => {
                 result = JSON.parse(result);
                 if(result.code === 0){
                     success(result.message);
+                    appendUserToTable(data);
                     setTimeout(function(){
                     $("#user-addAccount-modal").modal('hide');
                 }, 2000);
@@ -402,6 +403,15 @@ $(document).ready(() => {
             let title = $("#task-create-title").val();
             let description = $("#task-create-description").val();
             let input = document.getElementById('task-create-file');
+            
+            let data_json = {
+                'staffID': staffID,
+                'deadline': deadline,
+                'title': title,
+                'description': description,
+                'input': input,
+                'status': 'New'
+            };
 
             const suppported_extensions = [
             "jpg",
@@ -452,6 +462,7 @@ $(document).ready(() => {
                         if (response.code === 0) {
                             // SUCCESS
                             success(response.message);
+                            appendTaskToTable(data_json);
                         }else{
                             // FAIL
                             showError(response.message);
@@ -459,6 +470,7 @@ $(document).ready(() => {
                         // RESET PROGRESS BAR
                         setTimeout(function(){
                             $(".progress-bar").attr("style", "width: 0");
+                            $("#task-createTask-modal").modal('hide');
                         }, 2000);
                     }
                 }
@@ -835,9 +847,10 @@ $(document).ready(() => {
                 result = JSON.parse(result);
                 if(result.code === 0){
                     success(result.message);
+                    appendDepartmentToTable(data);
                     setTimeout(function(){
-                    $("#user-addAccount-modal").modal('hide');
-                }, 2000);
+                    $("#department-add-modal").modal('hide');
+                    }, 2000);
                 }else{
                     showError(result.message)
                 }
@@ -885,8 +898,9 @@ $(document).ready(() => {
                 result = JSON.parse(result);
                 if(result.code === 0){
                     success(result.message);
+                    updateDepartmentDetail(data);
                     setTimeout(function(){
-                    $("#user-addAccount-modal").modal('hide');
+                    $("#department-edit-modal").modal('hide');
                 }, 2000);
                 }else{
                     showError(result.message)
@@ -909,6 +923,8 @@ $(document).ready(() => {
                 result = JSON.parse(result);
                 if(result.code === 0){
                     success2("#success-alert2" ,result.message);
+
+                    $("#department-manager").text($("#department-appoint-name").text());
                     setTimeout(function(){
                 }, 2000);
                 }else{
@@ -920,6 +936,80 @@ $(document).ready(() => {
     // --------------------- END OF DEPARTMENT MANAGEMENT ---------------------
 });
 
+function getNextUserID(){
+    /*
+    Function to get next user id in the table
+    */
+    let usersID = $(".user-id").text();
+    return parseInt(usersID.charAt(usersID.length-1)) + 1
+}
+
+function getNextDepartmentID(){
+    /*
+    Function to get next department id in the table
+    */
+    let departmentID = $(".department-id").text();
+    return parseInt(departmentID.charAt(departmentID.length-1)) + 1
+}
+
+function getNextTaskID(){
+    /*
+    Function to get next task id in the table
+    */
+    let taskID = $(".task-id").text();
+    return parseInt(taskID.charAt(taskID.length-1)) + 1
+}
+
+function updateDepartmentDetail(data){
+    $("#department-description").val(data.description);
+    $("#department-quantity").text(data.roomQuantity);
+}
+
+// USER MANAGEMENT
+function appendUserToTable(data){
+    let userID = getNextUserID();
+    let tableCell = $("<tr> \
+                        <td>"+`${userID}`+"</td> \
+                        <td>"+`${data.username}`+"</td> \
+                        <td>"+`${data.firstname}`+"</td> \
+                        <td>"+`${data.email}`+"</td> \
+                        <td>"+`${data.phone}`+"</td> \
+                        <td> \
+                            <a class='btn btn-sm btn-primary' href='?controller=user&action=view&id="+`${userID}`+"'>View</a>\
+                        </td> \
+                    </tr>")
+    $("#table-body").append(tableCell)
+}
+
+// DEPARTMENT MANAGEMENT
+function appendDepartmentToTable(data){
+    let departmentID = getNextDepartmentID();
+    let tableCell = $("<tr> \
+                        <td>"+`${departmentID}`+"</td> \
+                        <td>"+`${data.name}`+"</td> \
+                        <td> \
+                            <a class='btn btn-sm btn-primary' href='?controller=department&action=view&id="+`${departmentID}`+"'>View</a>\
+                        </td> \
+                    </tr>")
+    $("#table-body").append(tableCell)
+}
+
+// USER MANAGEMENT
+function appendTaskToTable(data){
+    let taskID = getNextTaskID();
+    let tableCell = $("<tr> \
+                        <td>"+`${taskID}`+"</td> \
+                        <td>"+`${data.title}`+"</td> \
+                        <td>"+`${data.status}`+"</td> \
+                        <td>"+`${data.deadline}`+"</td> \
+                        <td> \
+                            <a class='btn btn-sm btn-primary' href='?controller=task&action=viewManager&id="+`${taskID}`+"'>View</a>\
+                            <a class='btn btn-sm btn-success' href='?controller=task&action=indexHistory&id="+`${taskID}`+"'>History</a>\
+                            <a class='btn btn-sm btn-danger' data-toggle='modal' data-target='#task-cancel-modal' data="+`${taskID}`+">Cancel</a>\
+                        </td> \
+                    </tr>")
+    $("#table-body").append(tableCell)
+}
 
 // Cancel Task
 function cancelTask(e){

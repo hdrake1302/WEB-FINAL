@@ -22,7 +22,7 @@
                                     foreach ($data['departments'] as $s) {
                                     ?>
                                      <tr>
-                                         <td><?= $s->id ?></td>
+                                         <td class="department-id"><?= $s->id ?></td>
                                          <td><?= $s->name ?></td>
                                          <td>
                                              <a class="btn btn-sm btn-primary" href="?controller=department&action=view&id=<?= $s->id ?>">View</a>

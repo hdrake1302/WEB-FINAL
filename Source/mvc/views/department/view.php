@@ -7,47 +7,51 @@ $s = $data['department'];
             <div class="profile-info">
                 <div class="info-header">Department's Detail</div>
                 <div class="info-body">
-                    <ul class="info-list">
-                        <li class="row">
-                            <div class="col-12 col-md-6 info-label">
-                                ID:
-                            </div>
-                            <div class="col-12 col-md-6 info-content" id="department-id">
-                                <?= $s->id ?>
-                            </div>
-                        </li>
-                        <li class="row">
-                            <div class="col-12 col-md-6 info-label">Manager:</div>
-                            <div class="col-12 col-md-6 info-content">
-                                <?= $s->managerID ?> - <?= User::getFullName($s->managerID) ?>
-                            </div>
-                        </li>
-                        <li class="row">
-                            <div class="col-12 col-md-6 info-label">Description:</div>
-                            <div class="col-12 col-md-6 info-content">
-                                <?= $s->description ?>
-                            </div>
-                        </li>
-                        <li class="row">
-                            <div class="col-12 col-md-6 info-label">Room Quantity:</div>
-                            <div class="col-12 col-md-6 info-content">
-                                <?= $s->roomQuantity ?>
-                            </div>
-                        </li>
-                        <div class="row">
-                            <div class="col-12 col-md-3">
-                                <button class="btn btn-primary m-2 w-100" data-toggle="modal" data-target="#department-edit-modal">
-                                    Edit
-                                </button>
-                            </div>
+                    <div class="container-fluid">
+                        <ul class="info-list">
+                            <li class="row">
+                                <div class="col-12 col-md-6 info-label">
+                                    ID:
+                                </div>
+                                <div class="col-12 col-md-6 info-content" id="department-id">
+                                    <?= $s->id ?>
+                                </div>
+                            </li>
+                            <li class="row">
+                                <div class="col-12 col-md-6 info-label">Manager:</div>
+                                <div class="col-12 col-md-6 info-content" id="department-manager">
+                                    <?= $s->managerID ?> - <?= User::getFullName($s->managerID) ?>
+                                </div>
+                            </li>
+                            <li class="row">
+                                <div class="col-12 col-md-6 info-label">Description:</div>
+                                <div class="col-12 col-md-6 info-content">
+                                    <textarea class="info-content w-100" id="department-description" style="resize: none" rows="3" disabled><?= $s->description ?></textarea>
 
-                        </div>
-                    </ul>
+                                </div>
+                            </li>
+                            <li class="row">
+                                <div class="col-12 col-md-6 info-label">Room Quantity:</div>
+                                <div class="col-12 col-md-6 info-content" id="department-quantity">
+                                    <?= $s->roomQuantity ?>
+                                </div>
+                            </li>
+                            <div class="row">
+                                <div class="col-12 col-md-3">
+                                    <button class="btn btn-primary m-2 w-100" data-toggle="modal" data-target="#department-edit-modal">
+                                        Edit
+                                    </button>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
+<div class="container-fluid" style="margin-top: 25vh;">
     <div class="row mt-5">
         <div class="col-12 col-md-10 offset-md-1">
             <div class="profile-info">
@@ -97,7 +101,6 @@ $s = $data['department'];
         </div>
     </div>
 </div>
-
 <!-- ACCEPT REQUEST MODAL -->
 <div class="modal" tabindex="-1" role="dialog" id="department-edit-modal">
     <div class="modal-dialog" role="document">

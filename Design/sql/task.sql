@@ -3,7 +3,7 @@ CREATE TABLE task (
     manager_id int(6) unsigned NOT NULL,
     staff_id int(6) unsigned NOT NULL,
     title varchar(100) NOT NULL,
-    description varchar(200),
+    description varchar(1000),
     status varchar(30) DEFAULT 'New', -- "new, in progess, canceled, wating, rejected"
     rating varchar(10), -- "bad, ok, good"
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

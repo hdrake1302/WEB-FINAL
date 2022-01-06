@@ -50,6 +50,18 @@ class TaskRecord
         return $data;
     }
 
+    public static function getNextID()
+    {
+        $sql = "SELECT id FROM task_record ORDER BY id DESC LIMIT 1";
+        $conn = DB::getConnection();
+        $stm = $conn->query($sql);
+
+        if ($item = $stm->fetch()) {
+            return intval($item['id']) + 1;
+        }
+        return 1;
+    }
+
     public static function get($id)
     {
         // Lấy hết tất cả các task đã được tạo bởi Trưởng phòng
@@ -109,6 +121,17 @@ class TaskRecord
             return True;
         }
         return False;
+    }
+
+    public static function createTaskRecord($data)
+    {
+        $sql = "INSERT INTO task_record(id, task_id, person_id, file_name, file) VALUES (:id, :task_id, :manager_id, :file_name, :file)";
+
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('id' => TaskRecord::getNextID(), 'task_id' => $data['id'], 'manager_id' => $data['manager_id'], 'file_name' => $data['file_name'], 'file' => $data['file']));
+
+        return $stm->rowCount() == 1;
     }
 }
 
@@ -262,15 +285,11 @@ class Task
         $sql = "INSERT INTO task(id, manager_id, description, staff_id, title, deadline) VALUES (:id, :manager_id, :description, :staff_id, :title, :deadline)";
         $conn = DB::getConnection();
 
-        $stm1 = $conn->prepare($sql);
-        $stm1->execute(array('id' => $data['id'], 'manager_id' => $data['manager_id'], 'description' => $data['description'], 'staff_id' => $data['staff_id'], 'title' => $data['title'], 'deadline' => $data['deadline']));
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('id' => $data['id'], 'manager_id' => $data['manager_id'], 'description' => $data['description'], 'staff_id' => $data['staff_id'], 'title' => $data['title'], 'deadline' => $data['deadline']));
 
-        $sql = "INSERT INTO task_record(task_id, person_id, file_name, file) VALUES (:id, :manager_id, :file_name, :file)";
-
-        $stm2 = $conn->prepare($sql);
-        $stm2->execute(array('id' => $data['id'], 'manager_id' => $data['manager_id'], 'file_name' => $data['file_name'], 'file' => $data['file']));
-
-        return $stm1->rowCount() == 1 & $stm2->rowCount() == 1;
+        $result = TaskRecord::createTaskRecord($data);
+        return $stm->rowCount() == 1 & $result;
     }
 
     public static function approveTask($data)
@@ -399,6 +418,29 @@ class Task
         if ($item = $stm->fetch()) {
             return True;
         }
+        return False;
+    }
+
+    public static function isAbleToGetHistory($userID, $taskID)
+    {
+        $conn = DB::getConnection();
+
+        $sql = "SELECT * FROM task WHERE :userID in (SELECT manager_id FROM task WHERE id = :task_id)";
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('userID' => $userID, 'task_id' => $taskID));
+
+        if ($stm->fetch()) {
+            return True;
+        }
+
+        $sql = "SELECT * FROM task WHERE :userID in (SELECT staff_id FROM task WHERE id = :task_id)";
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('userID' => $userID, 'task_id' => $taskID));
+
+        if ($stm->fetch()) {
+            return True;
+        }
+
         return False;
     }
 

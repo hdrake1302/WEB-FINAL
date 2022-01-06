@@ -24,7 +24,7 @@
                                 foreach ($data['tasks'] as $s) {
                                 ?>
                                     <tr>
-                                        <td><?= $s->id ?></td>
+                                        <td class="task-id"><?= $s->id ?></td>
                                         <td><?= $s->title ?></td>
                                         <td class="text-success font-weight-bold"><?= $s->status ?></td>
                                         <td><?= $s->deadline ?></td>

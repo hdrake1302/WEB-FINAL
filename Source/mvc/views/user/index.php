@@ -28,7 +28,7 @@
                                         }
                                     ?>
                                      <tr>
-                                         <td><?= $s->id ?></td>
+                                         <td class="user-id"><?= $s->id ?></td>
                                          <td><?= User::getUsername($s->id) ?></td>
                                          <td><?= $s->firstname ?></td>
                                          <td><?= $s->email ?></td>

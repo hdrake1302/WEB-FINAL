@@ -333,8 +333,13 @@ class TaskController extends BaseController
     public function indexHistory()
     {
         $taskID = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
-        $history = Task::getAllHistory($taskID);
-        $this->render('indexHistory', array('history' => $history));
+
+        if (Task::isAbleToGetHistory($_SESSION['id'], $taskID)) {
+            $history = Task::getAllHistory($taskID);
+            $this->render('indexHistory', array('history' => $history));
+        } else {
+            header("Location: ./index.php");
+        }
     }
 
     public function viewHistory()
