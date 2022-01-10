@@ -161,8 +161,8 @@ $(document).ready(() => {
                     success(result.message);
                     appendUserToTable(data);
                     setTimeout(function(){
-                    $("#user-addAccount-modal").modal('hide');
-                }, 2000);
+                        $("#user-addAccount-modal").modal('hide');
+                    }, 2000);
                 }else{
                     showError(result.message)
                 }
@@ -183,7 +183,11 @@ $(document).ready(() => {
                     success(result.message);
                 }else{
                     showError(result.message);
+                    
                 }
+                setTimeout(function(){
+                    $("#reset-password-modal").modal('hide');
+                }, 2000);
             }
         });
     });
@@ -404,6 +408,16 @@ $(document).ready(() => {
             let description = $("#task-create-description").val();
             let input = document.getElementById('task-create-file');
             
+            if(title.length === 0){
+                $("#task-create-title").focus();
+                showError("Không được để trống tiêu đề");
+                throw new Error("File size exceeds the maximum size");
+            } else if(description.length === 0){
+                $("#task-create-title").focus();
+                showError("Không được để trống mô tả");
+                throw new Error("File size exceeds the maximum size");
+            }
+
             let data_json = {
                 'staffID': staffID,
                 'deadline': deadline,
@@ -494,6 +508,10 @@ $(document).ready(() => {
                     $("#success-alert2").fadeTo(2000, 500).slideUp(500, function() {
                         $("#success-alert2").slideUp(500);
                     });
+                    setNextTaskStatus("Canceled");
+                    setTimeout(function(){
+                        $("#task-cancel-modal").modal("hide");
+                    }, 2000);
                 }else{
                     $("#fail-alert2").text(result.message);
                     $("#fail-alert2").fadeTo(2000, 500).slideUp(500, function() {
@@ -651,7 +669,11 @@ $(document).ready(() => {
                     $("#task-start-modal-btn").attr("disabled", true);
                 }else{
                     showError(result.message);
-                    }
+                }
+                setTimeout(function(){
+                    $(".progress-bar").attr("style", "width: 0");
+                    $('#task-start-modal').modal('hide');
+                }, 2000);
                 }
             });
         });
@@ -728,8 +750,8 @@ $(document).ready(() => {
                         // RESET PROGRESS BAR
                         setTimeout(function(){
                             $(".progress-bar").attr("style", "width: 0");
-                            $("#task-start-modal").modal("hide");
-
+                            $("#task-submit-modal").modal("hide");
+                            
                         }, 2000);
                     }
                 }
@@ -961,6 +983,11 @@ function getNextTaskID(){
     return parseInt(taskID.charAt(taskID.length-1)) + 1
 }
 
+function setNextTaskStatus($status){
+    let taskStatus = $(".task-status");
+    taskStatus[taskStatus.length - 1].innerText = $status;
+}
+
 function updateDepartmentDetail(data){
     $("#department-description").val(data.description);
     $("#department-quantity").text(data.roomQuantity);
@@ -995,21 +1022,23 @@ function appendDepartmentToTable(data){
     $("#table-body").append(tableCell)
 }
 
-// USER MANAGEMENT
+// TASK MANAGEMENT
 function appendTaskToTable(data){
-    let taskID = getNextTaskID();
-    let tableCell = $("<tr> \
-                        <td>"+`${taskID}`+"</td> \
-                        <td>"+`${data.title}`+"</td> \
-                        <td>"+`${data.status}`+"</td> \
-                        <td>"+`${data.deadline}`+"</td> \
-                        <td> \
-                            <a class='btn btn-sm btn-primary' href='?controller=task&action=viewManager&id="+`${taskID}`+"'>View</a>\
-                            <a class='btn btn-sm btn-success' href='?controller=task&action=indexHistory&id="+`${taskID}`+"'>History</a>\
-                            <a class='btn btn-sm btn-danger' data-toggle='modal' data-target='#task-cancel-modal' data="+`${taskID}`+">Cancel</a>\
-                        </td> \
-                    </tr>")
-    $("#table-body").append(tableCell)
+    $.get("?controller=task&action=getLastID", function(taskID){
+        taskID = taskID;
+        let tableCell = $("<tr> \
+                    <td class='task-id'>"+`${taskID}`+"</td> \
+                    <td>"+`${data.title}`+"</td> \
+                    <td class='task-status text-success font-weight-bold'>"+`${data.status}`+"</td> \
+                    <td>"+`${data.deadline}`+"</td> \
+                    <td> \
+                        <a class='btn btn-sm btn-primary' href='?controller=task&action=viewManager&id="+`${taskID}`+"'>View</a>\
+                        <a class='btn btn-sm btn-success' href='?controller=task&action=indexHistory&id="+`${taskID}`+"'>History</a>\
+                        <a onclick='cancelTask(this)' class='btn btn-sm btn-danger' data-toggle='modal' data-target='#task-cancel-modal' data="+`${taskID}`+">Cancel</a>\
+                    </td> \
+                </tr>")
+        $("#table-body").append(tableCell)
+    });
 }
 
 // Cancel Task

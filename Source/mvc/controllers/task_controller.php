@@ -45,7 +45,12 @@ class TaskController extends BaseController
     {
         $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
         $task = Task::get($id, $_SESSION['id']);
-        $this->render('viewManager', array('task' => $task));
+
+        if ($task) {
+            $this->render('viewManager', array('task' => $task));
+        } else {
+            header("Location: ./index.php");
+        }
     }
 
 
@@ -345,8 +350,12 @@ class TaskController extends BaseController
     public function viewHistory()
     {
         $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
-        $history = Task::getHistory($id);
-        $this->render('viewHistory', array('history' => $history));
+        if (Task::isAbleToViewHistory($_SESSION['id'], $id)) {
+            $history = Task::getHistory($id);
+            $this->render('viewHistory', array('history' => $history));
+        } else {
+            header("Location: ./index.php");
+        }
     }
 
     public function cancelTask()
@@ -377,5 +386,10 @@ class TaskController extends BaseController
         } else {
             die(json_encode(array('code' => 3, 'message' => 'Hủy task thất bại!')));
         }
+    }
+
+    public function getLastID()
+    {
+        echo Task::getLastID();
     }
 }

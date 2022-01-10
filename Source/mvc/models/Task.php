@@ -123,6 +123,19 @@ class TaskRecord
         return False;
     }
 
+    public static function getTaskID($id)
+    {
+        $sql = "SELECT task_id FROM task_record WHERE id = :id";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('id' => $id));
+
+        if ($item = $stm->fetch()) {
+            return intval($item['task_id']);
+        }
+        return null;
+    }
+
     public static function createTaskRecord($data)
     {
         $sql = "INSERT INTO task_record(id, task_id, person_id, file_name, file) VALUES (:id, :task_id, :manager_id, :file_name, :file)";
@@ -240,6 +253,19 @@ class Task
         }
         return 1;
     }
+
+    public static function getLastID()
+    {
+        $sql = "SELECT id FROM task ORDER BY id DESC LIMIT 1";
+        $conn = DB::getConnection();
+        $stm = $conn->query($sql);
+
+        if ($item = $stm->fetch()) {
+            return intval($item['id']);
+        }
+        return 1;
+    }
+
 
     public static function getStaffID($taskID)
     {
@@ -442,6 +468,12 @@ class Task
         }
 
         return False;
+    }
+
+    public static function isAbleToViewHistory($userID, $id)
+    {
+        $taskID = TaskRecord::getTaskID($id);
+        return Task::isAbleToGetHistory($userID, $taskID);
     }
 
     public static function submitTask($data)

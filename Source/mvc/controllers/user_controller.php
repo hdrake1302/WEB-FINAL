@@ -24,7 +24,13 @@ class UserController extends BaseController
     {
         $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
         $user = User::get($id);
-        $this->render('view', array('user' => $user));
+
+        if ($user) {
+            $this->render('view', array('user' => $user));
+        } else {
+            // Nếu không có thì trở về trang chủ
+            header("Location: ./index.php");
+        }
     }
 
     // ---------------- USER PROFILE --------------------
@@ -41,10 +47,11 @@ class UserController extends BaseController
         */
         $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
 
-        if ($_SESSION['role'] >= 3) {
+        if ($_SESSION['role'] == 3) {
             // Giám đốc có thể reset password của nhân viên
-            $result = User::updateActivated($id);
-            if ($result) {
+            $isActivated = User::isActivated($id);
+            if ($isActivated) {
+                User::resetPassword($id);
                 echo json_encode(array('code' => 0, 'message' => 'Reset mật khẩu nhân viên thành công!'));
             } else {
                 die(json_encode(array('code' => 3, 'message' => 'Mật khẩu nhân viên đã được reset trước đó!')));

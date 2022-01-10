@@ -18,7 +18,10 @@
                                 <!-- CONTENT -->
                                 <tbody id="table-body">
                                     <?php
-                                    foreach ($data['leave_requests'] as $s) {
+                                    $d = $data['leave_requests'];
+                                    for ($i = count($d) - 1; $i >= 0; $i--) {
+                                        // In ngược để yêu cầu mới nhất xuất hiện  
+                                        $s = $d[$i];
                                     ?>
                                         <tr>
                                             <td><?= $s['id'] ?></td>

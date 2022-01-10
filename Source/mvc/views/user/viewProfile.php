@@ -51,12 +51,22 @@
                                 <?= USER::getRoleName(USER::getRole($user->id)) ?>
                             </div>
                         </li>
+                        <?php
+                        ob_start();
+                        ?>
                         <li class="row">
                             <div class="col-12 col-md-4 info-label">Department:</div>
                             <div class="col-12 col-md-8 info-content">
                                 <?= USER::getDepartmentName($user->department) ?>
                             </div>
                         </li>
+
+                        <?php
+                        $html = ob_get_clean();
+                        if (User::getRole($user->id) != 3) {
+                            echo $html;
+                        }
+                        ?>
                         <div class="row">
                             <div class="col-12 col-md-3">
                                 <button class="btn btn-success m-2 w-100" data-toggle="modal" data-target="#changePass-modal">

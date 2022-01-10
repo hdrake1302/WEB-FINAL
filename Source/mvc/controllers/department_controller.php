@@ -34,8 +34,13 @@ class DepartmentController extends BaseController
         // If user already login then head back to index
         $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
         $department = Department::getDetail($id);
-        $data = array('department' => $department);
-        $this->render('view', $data);
+
+        if ($department) {
+            $data = array('department' => $department);
+            $this->render('view', $data);
+        } else {
+            header("Location: ./index.php?controller=department&action=index");
+        }
     }
 
     public function createDepartment()

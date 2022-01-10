@@ -32,7 +32,7 @@ $access_control = array(
         ),
         'user' => array('viewProfile', 'confirmChange', 'uploadAvatar'),
         'leave' => array('index', 'indexRequest', 'viewRequest', 'createRequest', 'acceptRequest', 'rejectRequest'),
-        'task' => array('indexManager', 'viewManager', 'createTask', 'cancelTask', 'indexHistory', 'viewHistory', 'approveTask', 'rejectTask')
+        'task' => array('indexManager', 'viewManager', 'createTask', 'cancelTask', 'indexHistory', 'viewHistory', 'approveTask', 'rejectTask', 'getLastID')
     ),
     3 => array(
         'login' => array(

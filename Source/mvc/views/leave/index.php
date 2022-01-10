@@ -140,7 +140,7 @@ $s = $data['leave'];
                                         <td><?= $s['date_created'] ?></td>
                                         <td><?= $s['date_wanted'] ?></td>
                                         <td><?= $s['date_response'] ?></td>
-                                        <td class="leave-status"><?= $s['status'] ?></td>
+                                        <td class="leave-status text-success font-weight-bold"><?= $s['status'] ?></td>
                                     </tr>
                                 <?php
                                 }

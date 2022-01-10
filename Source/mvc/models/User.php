@@ -205,6 +205,18 @@ class User
         return 1;
     }
 
+    public static function getLastID()
+    {
+        $sql = "SELECT id FROM account ORDER BY id DESC LIMIT 1";
+        $conn = DB::getConnection();
+        $stm = $conn->query($sql);
+
+        if ($item = $stm->fetch()) {
+            return intval($item['id']);
+        }
+        return 1;
+    }
+
     public static function updateActivated($id)
     {
         $sql = "update account set activated = 0 where id = :id";
@@ -223,6 +235,21 @@ class User
         $stm->execute(array('id' => $id, 'img_path' => $img_path));
 
         return $stm->rowCount() == 1;
+    }
+
+    public static function resetPassword($id)
+    {
+        // Reset mật khẩu NV về giá trị mặc định là username
+        $sql = "update account set password = :password where id = :id";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+
+        $username = User::getUsername($id);
+        $password = password_hash($username, PASSWORD_BCRYPT);
+
+        $result = User::updateActivated($id);
+        $stm->execute(array('id' => $id, 'password' => $password));
+        return $stm->rowCount() == 1 && $result;
     }
 
     public static function checkUsername($username)
@@ -248,6 +275,21 @@ class User
 
         if ($stm->fetch()) {
             return True;
+        }
+        return False;
+    }
+
+    public static function isActivated($id)
+    {
+        $sql = "SELECT activated FROM account WHERE id = :id";
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('id' => $id));
+
+        if ($item = $stm->fetch()) {
+            if ($item['activated'] == 1) {
+                return True;
+            }
         }
         return False;
     }

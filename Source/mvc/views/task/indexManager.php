@@ -26,7 +26,7 @@
                                     <tr>
                                         <td class="task-id"><?= $s->id ?></td>
                                         <td><?= $s->title ?></td>
-                                        <td class="text-success font-weight-bold"><?= $s->status ?></td>
+                                        <td class="task-status text-success font-weight-bold"><?= $s->status ?></td>
                                         <td><?= $s->deadline ?></td>
                                         <td>
                                             <a class="btn btn-sm btn-primary" href="?controller=task&action=viewManager&id=<?= $s->id ?>">View</a>
