@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 05, 2022 at 01:37 PM
+-- Generation Time: Jan 10, 2022 at 04:38 AM
 -- Server version: 10.4.21-MariaDB
--- PHP Version: 8.0.11
+-- PHP Version: 8.0.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -42,8 +42,12 @@ CREATE TABLE `account` (
 
 INSERT INTO `account` (`id`, `username`, `password`, `role`, `activated`, `token`) VALUES
 (1, 'admin113', '$2a$10$tlNs1xVG0m59JvzVGMmdbeCOOw4uZgoCd308e0RYYg7op/LfaqbqK', 3, 1, '7f1f92e0bf0177173664a2cc2ea6d9ad'),
-(2, 'tranthidao1', '$2y$10$gHLd7e9hgw0T3GhDF6DOcOQDU2GYdjyBx2hqh5dz9.q3QFJH/vn9m', 2, 1, '7174b03f45f185b6cc4fa63a7bdbb4e4'),
-(3, 'nguyenthitruc1', '$2y$10$uPWdle4DG/LRgI7Mq3oP8eOCgWQKaHbGStmCKTSeqqKt7OafBIlz.', 1, 1, '3917fcd4f93681107cae549ff50f8b07');
+(2, 'tranthidao1', '$2y$10$gHLd7e9hgw0T3GhDF6DOcOQDU2GYdjyBx2hqh5dz9.q3QFJH/vn9m', 1, 1, '7174b03f45f185b6cc4fa63a7bdbb4e4'),
+(3, 'nguyenthitruc1', '$2y$10$uPWdle4DG/LRgI7Mq3oP8eOCgWQKaHbGStmCKTSeqqKt7OafBIlz.', 2, 1, '3917fcd4f93681107cae549ff50f8b07'),
+(4, 'nguyenthikimtien1', '$2y$10$njQ7j/1SCWMFwBXfCq8/.e/04yy190M2UueylD3dsj7gqenwobV5q', 1, 0, 'fc03335e22d5ef7100e6c67c95c57b12'),
+(5, 'truonghuukhang1', '$2y$10$K2pZbK5TLdn8IglHgC0h3u1ffza96J1JFNd1qxbsbPsFcnxEfA.Ge', 1, 0, '71bce63718312d0ce02cbad22a237c97'),
+(6, 'bachquoctuan1', '$2y$10$8yEYMVq5xUFAyiurT0sMceoTGuMSRu8.O81cyU/4qGNGQ2pgzd4L2', 1, 0, '7f53ec30f116019f0c30a659b318ba85'),
+(7, 'truongthikimloan1', '$2y$10$m/Rkbk53kPWuWYEiiX0fduVlnZ7geHXURlwGG9y2L9PEdopWQSBju', 1, 0, '267c9d7323480a19ef35fe0a3761b10f');
 
 -- --------------------------------------------------------
 
@@ -68,7 +72,11 @@ CREATE TABLE `account_info` (
 INSERT INTO `account_info` (`id`, `firstname`, `lastname`, `email`, `phone`, `avatar`, `department`) VALUES
 (1, 'Khiêm', 'Trần Vĩnh', 'tranvinhkhiem@gmail.com', '02221115487', NULL, 1),
 (2, 'Đào', 'Trần Thị', 'tranthidao@gmail.com', '0335548891', 'http://localhost/assets/uploads/avatars/7174b03f45f185b6cc4fa63a7bdbb4e4_beautiful-woman-with-natural-make-up-897056188-5c2d3aff4cedfd000165bdef-1400x787.jpg', 1),
-(3, 'Trúc', 'Nguyễn Thị', 'nguyenthitruc@gmail.com', '0335848795', NULL, 1);
+(3, 'Trúc', 'Nguyễn Thị', 'nguyenthitruc@gmail.com', '0335848795', NULL, 1),
+(4, 'Tiên', 'Nguyễn Thị Kim', 'nguyenthikiemtien0312@gmail.com', '0935554483', NULL, 1),
+(5, 'Khang', 'Trương Hữu', 'truonghuukhang2305@gmail.com', '0992284453', NULL, 2),
+(6, 'Tuấn', 'Bạch Quốc', 'bachquoctuan251@gmail.com', '0327788845', NULL, 2),
+(7, 'Loan', 'Trương Thị Kim', 'truongthikimloan2105@gmail.com', '0909224425', NULL, 2);
 
 -- --------------------------------------------------------
 
@@ -86,7 +94,8 @@ CREATE TABLE `department` (
 --
 
 INSERT INTO `department` (`id`, `name`) VALUES
-(1, 'Phòng Công Nghệ Thông Tin');
+(1, 'Phòng Công Nghệ Thông Tin'),
+(2, 'Phòng Kế Toán');
 
 -- --------------------------------------------------------
 
@@ -97,7 +106,7 @@ INSERT INTO `department` (`id`, `name`) VALUES
 CREATE TABLE `department_info` (
   `id` int(6) UNSIGNED NOT NULL,
   `managerID` int(6) UNSIGNED DEFAULT NULL,
-  `description` varchar(100) NOT NULL,
+  `description` varchar(1000) NOT NULL,
   `roomQuantity` tinyint(3) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -106,7 +115,8 @@ CREATE TABLE `department_info` (
 --
 
 INSERT INTO `department_info` (`id`, `managerID`, `description`, `roomQuantity`) VALUES
-(1, 2, 'Phòng Công Nghệ Thông Tin của TDTU', 50);
+(1, 3, 'Tham mưu và tổ chức, triển khai thực hiện quản lý toàn bộ hệ thống công nghệ thông tin (CNTT) thuộc Trường; bao gồm: Quản lý hệ thống mạng, hệ thống ứng dụng CNTT phục vụ hoạt động nghiên cứu, đào tạo và quản trị Trường.', 20),
+(2, NULL, 'Bộ phận này có trách nhiệm đảm bảo cho công ty các chế độ như lương, thưởng, thu, chi,…', 10);
 
 -- --------------------------------------------------------
 
@@ -126,7 +136,11 @@ CREATE TABLE `leave_info` (
 
 INSERT INTO `leave_info` (`person_id`, `used_leaves`, `total_leaves`) VALUES
 (2, 2, 12),
-(3, 0, 12);
+(3, 0, 15),
+(4, 0, 12),
+(5, 0, 12),
+(6, 0, 12),
+(7, 0, 12);
 
 -- --------------------------------------------------------
 
@@ -137,7 +151,7 @@ INSERT INTO `leave_info` (`person_id`, `used_leaves`, `total_leaves`) VALUES
 CREATE TABLE `leave_record` (
   `id` int(6) UNSIGNED NOT NULL,
   `leave_id` int(6) UNSIGNED NOT NULL,
-  `description` varchar(200) NOT NULL,
+  `description` varchar(1000) NOT NULL,
   `file_name` varchar(200) DEFAULT NULL,
   `file` varchar(200) DEFAULT NULL,
   `days` tinyint(3) UNSIGNED NOT NULL,
@@ -185,7 +199,7 @@ CREATE TABLE `task` (
   `manager_id` int(6) UNSIGNED NOT NULL,
   `staff_id` int(6) UNSIGNED NOT NULL,
   `title` varchar(100) NOT NULL,
-  `description` varchar(200) DEFAULT NULL,
+  `description` varchar(1000) DEFAULT NULL,
   `status` varchar(30) DEFAULT 'New',
   `rating` varchar(10) DEFAULT NULL,
   `date_created` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -300,13 +314,13 @@ ALTER TABLE `task_record`
 -- AUTO_INCREMENT for table `account`
 --
 ALTER TABLE `account`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `department`
 --
 ALTER TABLE `department`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `leave_record`
@@ -324,13 +338,13 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `task_record`
 --
 ALTER TABLE `task_record`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables

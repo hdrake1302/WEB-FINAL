@@ -9,6 +9,7 @@ if (!$_SESSION['role'] == 3) {
 }
 
 require_once('models/Department.php');
+require_once('models/Leave.php');
 require_once('models/User.php');
 require_once('base_controller.php');
 require_once('function.php');
@@ -114,12 +115,16 @@ class DepartmentController extends BaseController
         }
 
         if (Department::existManager($_POST['department_id'])) {
-            // Nếu đã có trưởng phòng thì set role lại bằng 1
+            // Nếu đã có trưởng phòng thì set role lại bằng 1, total_leaves = 12
             User::setRole(Department::getManagerID($_POST['department_id']), 1);
+            Leave::setTotalLeaves(Department::getManagerID($_POST['department_id']), 12);
         }
 
 
+        // Bổ nhiệm trưởng phòng
         User::setRole($_POST['user_id'], 2);
+        Leave::setTotalLeaves($_POST['user_id'], 15);
+
         $result = Department::appointManager($_POST['department_id'], $_POST['user_id']);
 
         if ($result && $result) {

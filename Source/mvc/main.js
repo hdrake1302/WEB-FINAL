@@ -926,7 +926,8 @@ $(document).ready(() => {
 
                     $("#department-manager").text($("#department-appoint-name").text());
                     setTimeout(function(){
-                }, 2000);
+                        $("#department-appoint-modal").modal('hide');
+                    }, 2000);
                 }else{
                     showError2("#fail-alert2" ,result.message)
                 }

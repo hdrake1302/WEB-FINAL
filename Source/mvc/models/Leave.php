@@ -126,6 +126,15 @@ class Leave
         return $data;
     }
 
+    public static function setTotalLeaves($personID, $totalLeaves)
+    {
+        $sql = "UPDATE leave_info SET total_leaves = :totalLeaves WHERE person_id = :personID";
+
+        $conn = DB::getConnection();
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('personID' => $personID, 'totalLeaves' => $totalLeaves));
+        return $stm->rowCount() == 1;
+    }
 
     public static function checkDate($leave_id)
     {
