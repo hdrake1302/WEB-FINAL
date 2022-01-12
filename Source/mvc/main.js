@@ -411,11 +411,11 @@ $(document).ready(() => {
             if(title.length === 0){
                 $("#task-create-title").focus();
                 showError("Không được để trống tiêu đề");
-                throw new Error("File size exceeds the maximum size");
+                throw new Error("Không được để trống tiêu đề");
             } else if(description.length === 0){
-                $("#task-create-title").focus();
+                $("#task-create-description").focus();
                 showError("Không được để trống mô tả");
-                throw new Error("File size exceeds the maximum size");
+                throw new Error("Không được để trống mô tả");
             }
 
             let data_json = {
@@ -494,7 +494,7 @@ $(document).ready(() => {
         xhr.send(data);
         });
 
-        $("#task-cancel-confirm-btn").click(function(){
+        $("#task-cancel-confirm-btn").click(function(e){
             let id = parseInt($("#task-cancel-id").text());
             data = {'id': id};
             $.ajax({
@@ -508,7 +508,6 @@ $(document).ready(() => {
                     $("#success-alert2").fadeTo(2000, 500).slideUp(500, function() {
                         $("#success-alert2").slideUp(500);
                     });
-                    setNextTaskStatus("Canceled");
                     setTimeout(function(){
                         $("#task-cancel-modal").modal("hide");
                     }, 2000);
@@ -981,11 +980,6 @@ function getNextTaskID(){
     */
     let taskID = $(".task-id").text();
     return parseInt(taskID.charAt(taskID.length-1)) + 1
-}
-
-function setNextTaskStatus($status){
-    let taskStatus = $(".task-status");
-    taskStatus[taskStatus.length - 1].innerText = $status;
 }
 
 function updateDepartmentDetail(data){

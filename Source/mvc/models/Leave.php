@@ -17,7 +17,7 @@ class Leave
     public function __construct(
         $id,
         $used_leaves,
-        $total_leaves,
+        $total_leaves
 
     ) {
         $this->id = $id;

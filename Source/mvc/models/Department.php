@@ -13,7 +13,7 @@ class DepartmentInfo
         $id,
         $roomQuantity,
         $managerID,
-        $description,
+        $description
     ) {
         $this->id = $id;
         $this->roomQuantity = $roomQuantity;
