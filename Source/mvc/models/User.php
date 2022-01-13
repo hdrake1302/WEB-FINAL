@@ -44,6 +44,19 @@ class User
         return $data;
     }
 
+    public static function getUsers()
+    {
+        $sql = "select * from account_info";
+        $conn = DB::getConnection();
+        $stm = $conn->query($sql);
+
+        $data = array();
+        foreach ($stm->fetchAll() as $item) {
+            $data[] = new User($item['id'], $item['firstname'], $item['lastname'], $item['email'], $item['phone'], $item['avatar'], $item['department']);
+        }
+        return $data;
+    }
+
     public static function get($id)
     {
         $sql = "select * from account_info where id = :id";

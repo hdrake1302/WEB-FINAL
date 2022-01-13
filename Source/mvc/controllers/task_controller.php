@@ -388,8 +388,21 @@ class TaskController extends BaseController
         }
     }
 
-    public function getLastID()
+    public function getTasks()
     {
-        echo Task::getLastID();
+        /*
+            API cho load dữ liệu ajax
+        */
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            http_response_code(405);
+            die(json_encode(array('code' => 4, 'message' => 'API này chỉ hỗ trợ POST')));
+        }
+
+        $tasks = Task::getAll($_SESSION['id']);
+        if ($tasks) {
+            echo json_encode($tasks);
+        } else {
+            die(json_encode(array("code" => 5, "message" => "Không có task")));
+        }
     }
 }

@@ -354,6 +354,7 @@ $(document).ready(() => {
                     if (response.code === 0) {
                         // SUCCESS
                         success(response.message);
+                        loadLeavesHistory();
                     }else{
                         // FAIL
                         showError(response.message);
@@ -476,7 +477,7 @@ $(document).ready(() => {
                         if (response.code === 0) {
                             // SUCCESS
                             success(response.message);
-                            appendTaskToTable(data_json);
+                            loadTasks();
                         }else{
                             // FAIL
                             showError(response.message);
@@ -508,6 +509,7 @@ $(document).ready(() => {
                     $("#success-alert2").fadeTo(2000, 500).slideUp(500, function() {
                         $("#success-alert2").slideUp(500);
                     });
+                    loadTasks();
                     setTimeout(function(){
                         $("#task-cancel-modal").modal("hide");
                     }, 2000);
@@ -956,6 +958,10 @@ $(document).ready(() => {
         })
     });
     // --------------------- END OF DEPARTMENT MANAGEMENT ---------------------
+
+    $("#test").click(function(){
+        loadTasks();
+    });
 });
 
 function getNextUserID(){
@@ -987,20 +993,72 @@ function updateDepartmentDetail(data){
     $("#department-quantity").text(data.roomQuantity);
 }
 
+function loadLeavesHistory(){
+    $.ajax({
+        url: "?controller=leave&action=getLeavesHistory",
+        method: "POST",
+        success: function(data){
+            data = JSON.parse(data);
+            $("#table-body tr").remove();
+            
+            Object.values(data).forEach(function(row){
+                appendLeaveToTable(row);
+            })
+            
+        }
+    });
+}
+
+function loadTasks(){
+    $.ajax({
+        url: "?controller=task&action=getTasks",
+        method: "POST",
+        success: function(data){
+            data = JSON.parse(data);
+            $("#table-body tr").remove();
+            
+            Object.values(data).forEach(function(row){
+                appendTaskToTable(row);
+            })
+            
+        }
+    });
+}
+
+function appendLeaveToTable(data){
+    let tableCell = $("<tr> \
+                        <td>"+`${data.id}`+"</td> \
+                        <td>"+`${data.description}`+"</td> \
+                        <td>"+`${data.days}`+"</td> \
+                        <td>"+`${data.date_created}`+"</td> \
+                        <td>"+`${data.date_wanted}`+"</td> \
+                        <td>"+`${data.date_response}`+"</td> \
+                        <td class='leave-status text-success font-weight-bold'>"+`${data.status}`+"</td>\
+                    </tr>")
+    $("#table-body").append(tableCell);
+}
+
 // USER MANAGEMENT
 function appendUserToTable(data){
-    let userID = getNextUserID();
-    let tableCell = $("<tr> \
-                        <td>"+`${userID}`+"</td> \
-                        <td>"+`${data.username}`+"</td> \
-                        <td>"+`${data.firstname}`+"</td> \
-                        <td>"+`${data.email}`+"</td> \
-                        <td>"+`${data.phone}`+"</td> \
-                        <td> \
-                            <a class='btn btn-sm btn-primary' href='?controller=user&action=view&id="+`${userID}`+"'>View</a>\
-                        </td> \
-                    </tr>")
-    $("#table-body").append(tableCell)
+     $.ajax({
+            url: "?controller=user&action=getLastID",
+            method: "POST",
+            data: data,
+            success: function(userID){
+                userID = parseInt(userID);
+                let tableCell = $("<tr> \
+                                    <td>"+`${userID}`+"</td> \
+                                    <td>"+`${data.username}`+"</td> \
+                                    <td>"+`${data.firstname}`+"</td> \
+                                    <td>"+`${data.email}`+"</td> \
+                                    <td>"+`${data.phone}`+"</td> \
+                                    <td> \
+                                        <a class='btn btn-sm btn-primary' href='?controller=user&action=view&id="+`${userID}`+"'>View</a>\
+                                    </td> \
+                                </tr>")
+                $("#table-body").append(tableCell)
+            }
+        })
 }
 
 // DEPARTMENT MANAGEMENT
@@ -1018,21 +1076,18 @@ function appendDepartmentToTable(data){
 
 // TASK MANAGEMENT
 function appendTaskToTable(data){
-    $.get("?controller=task&action=getLastID", function(taskID){
-        taskID = taskID;
-        let tableCell = $("<tr> \
-                    <td class='task-id'>"+`${taskID}`+"</td> \
-                    <td>"+`${data.title}`+"</td> \
-                    <td class='task-status text-success font-weight-bold'>"+`${data.status}`+"</td> \
-                    <td>"+`${data.deadline}`+"</td> \
-                    <td> \
-                        <a class='btn btn-sm btn-primary' href='?controller=task&action=viewManager&id="+`${taskID}`+"'>View</a>\
-                        <a class='btn btn-sm btn-success' href='?controller=task&action=indexHistory&id="+`${taskID}`+"'>History</a>\
-                        <a onclick='cancelTask(this)' class='btn btn-sm btn-danger' data-toggle='modal' data-target='#task-cancel-modal' data="+`${taskID}`+">Cancel</a>\
-                    </td> \
-                </tr>")
-        $("#table-body").append(tableCell)
-    });
+    let tableCell = $("<tr> \
+                <td class='task-id'>"+`${data.id}`+"</td> \
+                <td>"+`${data.title}`+"</td> \
+                <td class='task-status text-success font-weight-bold'>"+`${data.status}`+"</td> \
+                <td>"+`${data.deadline}`+"</td> \
+                <td> \
+                    <a class='btn btn-sm btn-primary' href='?controller=task&action=viewManager&id="+`${data.id}`+"'>View</a>\
+                    <a class='btn btn-sm btn-success' href='?controller=task&action=indexHistory&id="+`${data.id}`+"'>History</a>\
+                    <a onclick='cancelTask(this)' class='btn btn-sm btn-danger' data-toggle='modal' data-target='#task-cancel-modal' data="+`${data.id}`+">Cancel</a>\
+                </td> \
+            </tr>")
+    $("#table-body").append(tableCell)
 }
 
 // Cancel Task

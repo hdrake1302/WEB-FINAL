@@ -1,8 +1,8 @@
 <?php
 $supported_controllers = array(
-    'user' => array('index', 'view', 'viewProfile', 'confirmChange', 'uploadAvatar', 'createAccount'),
-    'task' => array('indexStaff', 'viewStaff', 'indexManager', 'viewManager', 'indexHistory', 'viewHistory', 'createTask', 'startTask', 'submitTask', 'cancelTask', 'approveTask', 'rejectTask', 'getLastID'),
-    'leave' => array('index', 'view', 'indexRequest', 'viewRequest', 'createRequest', 'acceptRequest', 'rejectRequest'),
+    'user' => array('index', 'view', 'viewProfile', 'confirmChange', 'uploadAvatar', 'createAccount', 'getLastID'),
+    'task' => array('indexStaff', 'viewStaff', 'indexManager', 'viewManager', 'indexHistory', 'viewHistory', 'createTask', 'startTask', 'submitTask', 'cancelTask', 'approveTask', 'rejectTask', 'getTasks'),
+    'leave' => array('index', 'view', 'indexRequest', 'viewRequest', 'createRequest', 'acceptRequest', 'rejectRequest', "getLeavesHistory"),
     'department' => array('index', 'view', 'createDepartment', 'editDepartment', 'appointManager'),
     'login' => array(
         'login', 'logout',

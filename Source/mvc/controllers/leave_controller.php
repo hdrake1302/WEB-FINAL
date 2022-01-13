@@ -130,6 +130,7 @@ class LeaveController extends BaseController
         }
     }
 
+
     public function acceptRequest()
     {
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
@@ -175,6 +176,21 @@ class LeaveController extends BaseController
             echo json_encode(array('code' => 0, 'message' => 'Từ chối yêu cầu nghỉ phép thành công'));
         } else {
             die(json_encode(array('code' => 3, 'message' => 'Từ chối yêu cầu nghỉ phép thất bại!')));
+        }
+    }
+
+    public function getLeavesHistory()
+    {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            http_response_code(405);
+            die(json_encode(array('code' => 4, 'message' => 'API này chỉ hỗ trợ POST')));
+        }
+
+        $history = Leave::getRecord($_SESSION['id']);
+        if ($history) {
+            echo json_encode($history);
+        } else {
+            die(json_encode(array("code" => 5, "message" => "Không có history")));
         }
     }
 }

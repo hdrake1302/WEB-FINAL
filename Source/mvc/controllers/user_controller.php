@@ -177,5 +177,23 @@ class UserController extends BaseController
             die(json_encode(array('code' => 3, 'message' => 'Tạo tài khoản thất bại!')));
         }
     }
+
+    public function getLastID()
+    {
+        /*
+            API cho load dữ liệu ajax
+        */
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            http_response_code(405);
+            die(json_encode(array('code' => 4, 'message' => 'API này chỉ hỗ trợ POST')));
+        }
+
+        $id = User::getLastID();
+        if ($id) {
+            echo json_encode($id);
+        } else {
+            die(json_encode(array("code" => 5, "message" => "Không có user")));
+        }
+    }
     // ---------------- ADMIN --------------------
 }

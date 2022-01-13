@@ -1,4 +1,5 @@
 <div class="container-fluid">
+    <button type="button" id="test">Test</button>
     <div class="row">
         <div class="col-12 col-md-10 offset-md-1">
             <div class="profile-info">

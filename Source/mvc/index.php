@@ -22,7 +22,7 @@ $access_control = array(
             'view', 'viewChangePassword', 'changePassword'
         ),
         'user' => array('viewProfile', 'confirmChange', 'uploadAvatar'),
-        'leave' => array('index', 'createRequest'),
+        'leave' => array('index', 'createRequest', 'getLeavesHistory'),
         'task' => array('indexStaff', 'viewStaff', 'startTask', 'submitTask', 'indexHistory', 'viewHistory')
     ),
     2 => array(
@@ -31,15 +31,15 @@ $access_control = array(
             'view', 'viewChangePassword', 'changePassword'
         ),
         'user' => array('viewProfile', 'confirmChange', 'uploadAvatar'),
-        'leave' => array('index', 'indexRequest', 'viewRequest', 'createRequest', 'acceptRequest', 'rejectRequest'),
-        'task' => array('indexManager', 'viewManager', 'createTask', 'cancelTask', 'indexHistory', 'viewHistory', 'approveTask', 'rejectTask', 'getLastID')
+        'leave' => array('index', 'indexRequest', 'viewRequest', 'createRequest', 'acceptRequest', 'rejectRequest', 'getLeavesHistory'),
+        'task' => array('indexManager', 'viewManager', 'createTask', 'cancelTask', 'indexHistory', 'viewHistory', 'approveTask', 'rejectTask', 'getLastID', 'getTasks')
     ),
     3 => array(
         'login' => array(
             'login', 'logout',
             'view', 'viewChangePassword', 'changePassword'
         ),
-        'user' => array('index', 'view', 'viewProfile', 'confirmChange', 'uploadAvatar', 'createAccount'),
+        'user' => array('index', 'view', 'viewProfile', 'confirmChange', 'uploadAvatar', 'createAccount', 'getLastID'),
         'leave' => array('indexRequest', 'viewRequest', 'acceptRequest', 'rejectRequest'),
         'department' => array('index', 'view', 'createDepartment', 'editDepartment', 'appointManager')
     )
