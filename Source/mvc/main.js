@@ -706,12 +706,12 @@ $(document).ready(() => {
             let size = file.size;
 
             if (size >= MAX_FILE_SIZE) {
-                showError("File size exceeds the maximum size");
+                showError2("#fail-alert2", "File size exceeds the maximum size");
                 throw new Error("File size exceeds the maximum size");
             }
 
             if (!suppported_extensions.includes(extension)) {
-                showError("File type is not supported!");
+                showError2("#fail-alert2", "File type is not supported!");
                 throw new Error("File type is not supported!");
             }
 

@@ -3,7 +3,7 @@ define('HOST', '127.0.0.1');
 define('USER', 'root');
 define('PASS', '');
 define('DB', 'quanlytask');
-define('URL', "http://localhost/");
+define('URL', "");
 define('SUPPORTED_EXTENSIONS', array(
     "jpg", "png", "docx", "pdf"
 ));
