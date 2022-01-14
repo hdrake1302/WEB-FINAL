@@ -162,7 +162,7 @@ if ($s->status == 'Rejected') {
                     </div>
                     <div class="form-group">
                         <label for="task-reject-detail-file">Attachment:</label>
-                        <a <?php $rejectedHref ?> <?= $rejectedDownload ?>>
+                        <a <?= $rejectedHref ?> <?= $rejectedDownload ?>>
                             <button type="button" class="btn btn-primary mt-2" <?php if ($rejectedHref == "") echo "disabled"; ?>>
                                 <i class='bx bxs-download'></i> Click To Download
                             </button>

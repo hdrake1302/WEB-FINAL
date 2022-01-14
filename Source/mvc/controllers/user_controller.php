@@ -47,7 +47,7 @@ class UserController extends BaseController
         */
         $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
 
-        if ($_SESSION['role'] == 3) {
+        if ($_SESSION['role'] == 3 && $id != $_SESSION['id']) {
             // Giám đốc có thể reset password của nhân viên
             $isActivated = User::isActivated($id);
             if ($isActivated) {

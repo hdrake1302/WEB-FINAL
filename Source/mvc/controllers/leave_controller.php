@@ -146,6 +146,10 @@ class LeaveController extends BaseController
             die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
         }
 
+        if (!Leave::isAbleToResponse($_POST['id'])) {
+            die(json_encode(array('code' => 5, 'message' => 'Không thể accept vì ngày nghỉ phép đã được trả lời trước đó')));
+        }
+
         $result = Leave::acceptRequest($_POST['id'], $_POST['leave_id'], $_POST['days']);
 
         if ($result) {
@@ -168,6 +172,10 @@ class LeaveController extends BaseController
 
         if (empty($_POST['id'])) {
             die(json_encode(array('code' => 1, 'message' => 'Thiếu thông tin đầu vào')));
+        }
+
+        if (!Leave::isAbleToResponse($_POST['id'])) {
+            die(json_encode(array('code' => 5, 'message' => 'Không thể accept vì ngày nghỉ phép đã được trả lời trước đó')));
         }
 
         $result = Leave::rejectRequest($_POST['id']);

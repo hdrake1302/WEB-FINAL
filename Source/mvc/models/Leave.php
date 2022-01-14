@@ -211,6 +211,20 @@ class Leave
         return $stm->rowCount() == 1;
     }
 
+    public static function isAbleToResponse($id)
+    {
+        $sql = "SELECT status FROM leave_record WHERE id = :id AND status = 'waiting'";
+        $conn = DB::getConnection();
+
+        $stm = $conn->prepare($sql);
+        $stm->execute(array('id' => $id));
+
+        if ($stm->fetch()) {
+            return True;
+        }
+        return False;
+    }
+
     public static function acceptRequest($id, $personID, $days)
     {
         $usedDays = Leave::getUsedDays($personID);
@@ -218,7 +232,7 @@ class Leave
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         $dateResponse = new DateTime();
 
-        $dateResponse = $dateResponse->format('y-m-d H:i:s a');
+        $dateResponse = $dateResponse->format('y-m-d H:i:s');
 
         // Set status to approved
         $sql1 = "UPDATE leave_record SET status='approved' WHERE id = :id";
@@ -245,7 +259,7 @@ class Leave
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         $dateResponse = new DateTime();
 
-        $dateResponse = $dateResponse->format('y-m-d H:i:s a');
+        $dateResponse = $dateResponse->format('y-m-d H:i:s');
 
         // Set status to refused
         $sql1 = "UPDATE leave_record SET status='refused' WHERE id = :id";
